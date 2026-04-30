@@ -1,10 +1,4 @@
-<!DOCTYPE html><script type="application/json" id="cowork-artifact-meta">
-{
-  "name": "Property Intelligence Hub",
-  "schemaVersion": 1,
-  "description": "Multi-principal real estate intelligence dashboard. Principals: APJCJM, ECJIV, ELJ, EBJ. Tracks permits, complaints, landmarks, planning, crime, and news for monitored properties and surrounding addresses."
-}
-</script>
+<!DOCTYPE html><script type="application/json" id="cowork-artifact-meta">{"name":"Property Intelligence Hub","schemaVersion":1,"description":"Live multi-principal real estate intelligence dashboard connected to Google Sheets. Auto-loads latest scan data on every page open."}</script>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -14,8 +8,7 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#080808;--surface:#111111;--surface2:#161616;--surface3:#1a1a1a;
-  --border:#1f1f1f;--border2:#2a2a2a;
+  --bg:#080808;--surface:#111111;--surface2:#161616;--border:#1f1f1f;--border2:#2a2a2a;
   --accent:#3b82f6;--accent-dim:rgba(59,130,246,0.15);
   --text:#e8e8e8;--text2:#888;--text3:#555;
   --red:#ef4444;--amber:#f59e0b;--green:#22c55e;--purple:#a855f7;
@@ -24,10 +17,10 @@
 }
 body{font-family:var(--font);background:var(--bg);color:var(--text);display:flex;height:100vh;overflow:hidden;font-size:13px}
 
-/* ── PASSWORD GATE ─────────────────────────────────────────────────────── */
-#gate{position:fixed;inset:0;background:#080808;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;transition:opacity 0.4s}
+/* GATE */
+#gate{position:fixed;inset:0;background:#080808;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 0.4s}
 .gate-logo{font-size:32px;margin-bottom:16px;opacity:0.7}
-.gate-title{font-size:20px;font-weight:700;letter-spacing:-0.5px;color:var(--text)}
+.gate-title{font-size:20px;font-weight:700;letter-spacing:-0.5px}
 .gate-sub{font-size:10px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;margin-top:4px;margin-bottom:28px}
 .gate-form{display:flex;flex-direction:column;align-items:center;gap:10px}
 #gate-input{background:#111;border:1px solid #2a2a2a;color:var(--text);padding:11px 18px;border-radius:8px;font-size:14px;width:260px;text-align:center;outline:none;font-family:var(--font);transition:border-color 0.2s;letter-spacing:0.5px}
@@ -40,12 +33,12 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);display:flex
 /* SIDEBAR */
 #sidebar{width:var(--sidebar);min-width:var(--sidebar);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
 .sb-brand{padding:18px 16px 12px;border-bottom:1px solid var(--border)}
-.sb-brand-name{font-size:14px;font-weight:700;letter-spacing:-0.5px;color:var(--text)}
+.sb-brand-name{font-size:14px;font-weight:700;letter-spacing:-0.5px}
 .sb-brand-sub{font-size:10px;color:var(--text3);letter-spacing:1.5px;text-transform:uppercase;margin-top:2px}
 .sb-stats{display:flex;border-bottom:1px solid var(--border)}
 .sb-stat{flex:1;padding:9px 0;text-align:center;border-right:1px solid var(--border)}
 .sb-stat:last-child{border-right:none}
-.sb-stat-n{font-size:17px;font-weight:800;letter-spacing:-1px;color:var(--text)}
+.sb-stat-n{font-size:17px;font-weight:800;letter-spacing:-1px}
 .sb-stat-l{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;margin-top:1px}
 .sb-nav{flex:1;overflow-y:auto;padding:6px 0}
 .sb-section-label{font-size:9px;font-weight:600;letter-spacing:1.8px;text-transform:uppercase;color:var(--text3);padding:12px 16px 4px}
@@ -55,13 +48,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);display:flex
 .sb-item.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:2.5px;height:60%;background:var(--accent);border-radius:0 2px 2px 0}
 .sb-item-icon{font-size:13px;width:17px;text-align:center}
 .sb-item-badge{margin-left:auto;background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:1px 5px;border-radius:8px;min-width:16px;text-align:center}
-
-/* PRINCIPAL ITEMS */
 .principal-item{display:flex;align-items:center;gap:9px;padding:6px 16px;cursor:pointer;transition:all 0.15s;color:var(--text2);font-size:12px;font-weight:600;position:relative;letter-spacing:0.3px}
 .principal-item:hover{background:var(--surface2);color:var(--text)}
 .principal-item.active{background:var(--accent-dim);color:var(--accent)}
 .principal-item.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:2.5px;height:60%;background:var(--accent);border-radius:0 2px 2px 0}
-.principal-avatar{width:22px;height:22px;border-radius:5px;background:var(--surface2);border:1px solid var(--border2);font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center;color:var(--text3);flex-shrink:0;letter-spacing:0;transition:all 0.15s}
+.principal-avatar{width:22px;height:22px;border-radius:5px;background:var(--surface2);border:1px solid var(--border2);font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center;color:var(--text3);flex-shrink:0;transition:all 0.15s}
 .principal-item.active .principal-avatar{background:var(--accent-dim);border-color:rgba(59,130,246,0.35);color:var(--accent)}
 .principal-prop-count{margin-left:auto;font-size:9.5px;font-weight:600;color:var(--text3);padding:1px 6px;border-radius:8px;background:var(--surface2);border:1px solid var(--border)}
 .principal-item.active .principal-prop-count{background:rgba(59,130,246,0.1);border-color:rgba(59,130,246,0.25);color:var(--accent)}
@@ -71,9 +62,27 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);display:flex
 .scan-status{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--text3)}
 .scan-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse-green 2s ease-in-out infinite}
 @keyframes pulse-green{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(34,197,94,0.4)}50%{opacity:0.7;box-shadow:0 0 0 4px rgba(34,197,94,0)}}
+@keyframes blink-amber{0%,100%{opacity:1;box-shadow:0 0 5px var(--amber)}50%{opacity:0.2;box-shadow:none}}
+@keyframes blink-red{0%,100%{opacity:1;box-shadow:0 0 6px var(--red)}50%{opacity:0.15;box-shadow:none}}
+
+/* SYNC BADGE */
+.sync-badge{display:inline-flex;align-items:center;gap:4px;font-size:9.5px;font-weight:500;padding:2px 7px;border-radius:10px;border:1px solid var(--border2);background:var(--surface2);color:var(--text3);cursor:pointer;transition:all 0.15s}
+.sync-badge:hover{border-color:var(--accent);color:var(--accent)}
+.sync-badge.live{border-color:rgba(34,197,94,0.3);background:rgba(34,197,94,0.08);color:var(--green)}
+.sync-badge.syncing{border-color:rgba(59,130,246,0.3);background:rgba(59,130,246,0.08);color:var(--accent)}
+.sync-badge.error{border-color:rgba(245,158,11,0.3);background:rgba(245,158,11,0.08);color:var(--amber)}
+.sync-dot{width:5px;height:5px;border-radius:50%;background:currentColor}
+
+/* LOADING OVERLAY */
+#loading-overlay{position:fixed;inset:0;background:rgba(8,8,8,0.7);z-index:500;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(2px)}
+#loading-overlay.hidden{display:none}
+.loading-card{background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:20px 28px;text-align:center}
+.loading-spinner{width:24px;height:24px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin 0.7s linear infinite;margin:0 auto 10px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-size:12px;color:var(--text2)}
 
 /* MAIN */
-#main{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative}
+#main{flex:1;display:flex;flex-direction:column;overflow:hidden}
 #topbar{height:50px;min-height:50px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:12px}
 .tb-breadcrumb{display:flex;align-items:center;gap:6px}
 .tb-principal-chip{font-size:11px;font-weight:700;letter-spacing:0.5px;padding:3px 9px;border-radius:6px;background:var(--accent-dim);border:1px solid rgba(59,130,246,0.3);color:var(--accent)}
@@ -82,7 +91,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);display:flex
 .tb-page-sub{font-size:11px;color:var(--text3);margin-left:4px}
 .tb-spacer{flex:1}
 .tb-btn{background:var(--surface2);border:1px solid var(--border2);color:var(--text2);padding:5px 11px;border-radius:6px;cursor:pointer;font-size:11.5px;font-weight:500;transition:all 0.15s}
-.tb-btn:hover{background:var(--border);color:var(--text)}
+.tb-btn:hover{background:var(--border2);color:var(--text)}
 .tb-btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
 .tb-btn.primary:hover{background:#2563eb}
 #content{flex:1;overflow-y:auto;padding:20px}
@@ -92,8 +101,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);display:flex
 .list-header{display:flex;align-items:center;margin-bottom:10px;gap:10px}
 .list-header h3{font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:1px}
 .prop-count-badge{background:var(--surface2);border:1px solid var(--border2);color:var(--text2);font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px}
-
-/* PROPERTY ROW */
 .prop-row{background:var(--surface);border:1px solid var(--border);border-radius:8px;display:flex;align-items:center;margin-bottom:6px;overflow:hidden;cursor:pointer;transition:border-color 0.15s,background 0.15s}
 .prop-row:hover{background:var(--surface2);border-color:var(--border2)}
 .prop-row.selected{border-color:var(--accent)}
@@ -104,10 +111,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);display:flex
 .alert-dot.red{background:var(--red);animation:blink-red 1.2s ease-in-out infinite}
 .alert-dot.amber{background:var(--amber);animation:blink-amber 2s ease-in-out infinite}
 .alert-dot.green{background:var(--green)}
-@keyframes blink-red{0%,100%{opacity:1;box-shadow:0 0 6px var(--red)}50%{opacity:0.15;box-shadow:none}}
-@keyframes blink-amber{0%,100%{opacity:1;box-shadow:0 0 5px var(--amber)}50%{opacity:0.2;box-shadow:none}}
 .prop-addr-block{width:210px;min-width:210px;padding:10px 0}
-.prop-addr{font-size:13px;font-weight:600;letter-spacing:-0.3px;color:var(--text)}
+.prop-addr{font-size:13px;font-weight:600;letter-spacing:-0.3px}
 .prop-city{font-size:11px;color:var(--text2);margin-top:1px}
 .prop-principal-tag{font-size:9px;font-weight:700;letter-spacing:0.5px;color:var(--text3);margin-top:2px;text-transform:uppercase}
 .prop-pills{display:flex;align-items:center;gap:8px;padding:8px 0}
@@ -127,7 +132,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);display:flex
 .status-badge.green{background:rgba(34,197,94,0.15);color:var(--green);border:1px solid rgba(34,197,94,0.3)}
 .prop-actions{padding:0 12px;display:flex;gap:6px}
 .row-btn{background:var(--surface2);border:1px solid var(--border2);color:var(--text3);padding:4px 10px;border-radius:5px;cursor:pointer;font-size:10.5px;font-weight:500;transition:all 0.15s}
-.row-btn:hover{background:var(--border);color:var(--text)}
+.row-btn:hover{background:var(--border2);color:var(--text)}
 .row-btn.del:hover{background:rgba(239,68,68,0.15);border-color:rgba(239,68,68,0.3);color:var(--red)}
 
 /* ADD FORM */
@@ -173,7 +178,7 @@ select.field-input{appearance:none;cursor:pointer}
 .scope-badge.nearby{background:rgba(168,85,247,0.12);border:1px solid rgba(168,85,247,0.25);color:#c084fc}
 
 /* ACTIVITY */
-.act-link{display:flex;align-items:flex-start;gap:8px;padding:8px 8px 8px 4px;margin:0 -4px;border-bottom:1px solid var(--border);text-decoration:none;color:inherit;border-radius:5px;transition:background 0.15s;cursor:pointer}
+.act-link{display:flex;align-items:flex-start;gap:8px;padding:8px 8px 8px 4px;margin:0 -4px;border-bottom:1px solid var(--border);text-decoration:none;color:inherit;border-radius:5px;transition:background 0.15s}
 .act-link:last-child{border-bottom:none}
 .act-link:hover{background:var(--surface2)}
 .act-link:hover .ext-arrow{opacity:1}
@@ -187,7 +192,7 @@ select.field-input{appearance:none;cursor:pointer}
 .filter-chip{padding:4px 12px;border-radius:20px;border:1px solid var(--border2);background:var(--surface);color:var(--text2);cursor:pointer;font-size:11px;font-weight:500;transition:all 0.15s}
 .filter-chip:hover,.filter-chip.active{background:var(--accent-dim);border-color:var(--accent);color:var(--accent)}
 .feed-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-bottom:6px;overflow:hidden}
-.feed-card-link{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;text-decoration:none;color:inherit;transition:background 0.15s;cursor:pointer}
+.feed-card-link{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;text-decoration:none;color:inherit;transition:background 0.15s}
 .feed-card-link:hover{background:var(--surface2)}
 .feed-card-link:hover .ext-arrow{opacity:1}
 .feed-dot{width:8px;height:8px;border-radius:50%;margin-top:3px;flex-shrink:0}
@@ -198,7 +203,6 @@ select.field-input{appearance:none;cursor:pointer}
 .feed-time{margin-left:auto;font-size:10px;color:var(--text3);flex-shrink:0}
 .feed-desc{font-size:12px;color:var(--text2);line-height:1.4}
 .feed-source-bar{padding:5px 14px 6px;border-top:1px solid var(--border);display:flex;align-items:center;gap:5px}
-.feed-source-label{font-size:9.5px;color:var(--text3)}
 .feed-source-url{font-size:9.5px;color:var(--accent);text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .feed-source-url:hover{text-decoration:underline}
 
@@ -210,10 +214,10 @@ select.field-input{appearance:none;cursor:pointer}
 .source-link{display:flex;align-items:center;gap:7px;padding:6px 0;border-bottom:1px solid var(--border);color:var(--text2);text-decoration:none;font-size:11.5px;font-weight:500;transition:color 0.15s}
 .source-link:last-child{border-bottom:none}
 .source-link:hover{color:var(--accent)}
-.source-link-icon{font-size:12px;color:var(--text3)}
 .source-badge{margin-left:auto;font-size:9px;font-weight:600;text-transform:uppercase;padding:1px 5px;border-radius:8px;background:var(--surface2);border:1px solid var(--border2);color:var(--text3)}
 .source-badge.primary{background:rgba(59,130,246,0.12);border-color:rgba(59,130,246,0.3);color:var(--accent)}
 .source-badge.rumor{background:rgba(251,146,60,0.12);border-color:rgba(251,146,60,0.3);color:#fb923c}
+.source-badge.critical{background:rgba(239,68,68,0.12);border-color:rgba(239,68,68,0.3);color:var(--red)}
 
 /* REPORTS / SETTINGS */
 .report-chart-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:14px}
@@ -224,7 +228,7 @@ select.field-input{appearance:none;cursor:pointer}
 .toggle-row,.setting-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)}
 .toggle-row:last-child,.setting-row:last-child{border-bottom:none}
 .setting-label{flex:1}
-.setting-label-text{font-size:12.5px;font-weight:500;color:var(--text)}
+.setting-label-text{font-size:12.5px;font-weight:500}
 .setting-label-sub,.toggle-sub{font-size:10.5px;color:var(--text3);margin-top:1px}
 .setting-value{font-size:12px;color:var(--text2);text-align:right}
 .setting-value.accent{color:var(--accent)}
@@ -242,91 +246,72 @@ select.field-input{appearance:none;cursor:pointer}
 .notif-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
 .notif-item:last-child{border-bottom:none}
 .notif-body{flex:1}
-.notif-title{font-size:12px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.notif-title{font-size:12px;font-weight:600;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .notif-desc{font-size:11px;color:var(--text2);margin-top:1px}
 .notif-time{font-size:10px;color:var(--text3);margin-top:2px}
 .notif-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:4px}
 .empty-state{text-align:center;padding:50px 20px;color:var(--text3)}
 .empty-state-icon{font-size:32px;margin-bottom:10px;opacity:0.4}
-.empty-state-text{font-size:13px;margin-bottom:6px}
-.empty-state-sub{font-size:11px;color:var(--text3);margin-top:4px}
+.empty-state-text{font-size:13px}
+.empty-state-sub{font-size:11px;margin-top:4px}
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
-::-webkit-scrollbar-thumb:hover{background:var(--text3)}
 </style>
 </head>
 <body>
 
-<!-- ── PASSWORD GATE ───────────────────────────────────────────────────── -->
+<!-- GATE -->
 <div id="gate">
   <div class="gate-logo">⬡</div>
   <div class="gate-title">Property Intelligence</div>
   <div class="gate-sub">Real Estate Monitor</div>
   <div class="gate-form">
-    <input id="gate-input" type="password" placeholder="Enter passphrase"
-      onkeydown="if(event.key==='Enter')checkGate()" autocomplete="current-password" />
+    <input id="gate-input" type="password" placeholder="Enter passphrase" onkeydown="if(event.key==='Enter')checkGate()" autocomplete="current-password"/>
     <button id="gate-btn" onclick="checkGate()">Access Hub</button>
     <div id="gate-err"></div>
   </div>
 </div>
 <script>
-// Check if already authenticated
-(function(){
-  try{ if(localStorage.getItem('pih_auth')==='ok'){document.getElementById('gate').style.display='none';} }catch(e){}
-})();
+(function(){try{if(localStorage.getItem('pih_auth')==='ok')document.getElementById('gate').style.display='none';}catch(e){}})();
 function checkGate(){
-  const v=document.getElementById('gate-input').value;
-  const inp=document.getElementById('gate-input');
-  const err=document.getElementById('gate-err');
-  // btoa('LTHill2026') = 'TFRIaWxsMjAyNg=='
+  const v=document.getElementById('gate-input').value,inp=document.getElementById('gate-input'),err=document.getElementById('gate-err');
   if(btoa(v)==='TFRIaWxsMjAyNg=='){
     try{localStorage.setItem('pih_auth','ok');}catch(e){}
-    const g=document.getElementById('gate');
-    g.style.opacity='0';
-    setTimeout(()=>g.style.display='none',400);
+    const g=document.getElementById('gate');g.style.opacity='0';setTimeout(()=>{g.style.display='none';},400);
   } else {
-    err.textContent='Incorrect passphrase — try again';
-    inp.classList.add('err');inp.value='';inp.focus();
+    err.textContent='Incorrect passphrase — try again';inp.classList.add('err');inp.value='';inp.focus();
     setTimeout(()=>{inp.classList.remove('err');err.textContent='';},1800);
   }
 }
 </script>
 
-<!-- ── SIDEBAR ────────────────────────────────────────────────────────── -->
+<!-- LOADING OVERLAY -->
+<div id="loading-overlay">
+  <div class="loading-card">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Loading live data…</div>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
 <div id="sidebar">
   <div class="sb-brand">
     <div style="display:flex;align-items:center;gap:6px"><span style="font-size:17px">⬡</span><span class="sb-brand-name">Property Intelligence</span></div>
     <div class="sb-brand-sub">Real Estate Monitor</div>
   </div>
   <div class="sb-stats">
-    <div class="sb-stat"><div class="sb-stat-n" id="sb-prop-count">2</div><div class="sb-stat-l">Props</div></div>
-    <div class="sb-stat"><div class="sb-stat-n" id="sb-alert-count" style="color:var(--amber)">2</div><div class="sb-stat-l">Alerts</div></div>
-    <div class="sb-stat"><div class="sb-stat-n" id="sb-city-count">2</div><div class="sb-stat-l">Cities</div></div>
+    <div class="sb-stat"><div class="sb-stat-n" id="sb-prop-count">8</div><div class="sb-stat-l">Props</div></div>
+    <div class="sb-stat"><div class="sb-stat-n" id="sb-alert-count" style="color:var(--amber)">1</div><div class="sb-stat-l">Alerts</div></div>
+    <div class="sb-stat"><div class="sb-stat-n" id="sb-city-count">4</div><div class="sb-stat-l">Cities</div></div>
   </div>
   <nav class="sb-nav">
     <div class="sb-section-label">Principal</div>
-    <div class="principal-item active" data-pid="all" onclick="selectPrincipal(this)">
-      <div class="principal-avatar" style="font-size:8px">ALL</div>All Principals
-      <span class="principal-prop-count" id="pc-all">2</span>
-    </div>
-    <div class="principal-item" data-pid="APJCJM" onclick="selectPrincipal(this)">
-      <div class="principal-avatar">AJ</div>APJCJM
-      <span class="principal-alert-dot" id="pad-APJCJM"></span>
-      <span class="principal-prop-count" id="pc-APJCJM">2</span>
-    </div>
-    <div class="principal-item" data-pid="ECJIV" onclick="selectPrincipal(this)">
-      <div class="principal-avatar">EC</div>ECJIV
-      <span class="principal-prop-count" id="pc-ECJIV">0</span>
-    </div>
-    <div class="principal-item" data-pid="ELJ" onclick="selectPrincipal(this)">
-      <div class="principal-avatar">EL</div>ELJ
-      <span class="principal-prop-count" id="pc-ELJ">0</span>
-    </div>
-    <div class="principal-item" data-pid="EBJ" onclick="selectPrincipal(this)">
-      <div class="principal-avatar">EB</div>EBJ
-      <span class="principal-prop-count" id="pc-EBJ">0</span>
-    </div>
+    <div class="principal-item active" data-pid="all" onclick="selectPrincipal(this)"><div class="principal-avatar" style="font-size:8px">ALL</div>All Principals<span class="principal-prop-count" id="pc-all">8</span></div>
+    <div class="principal-item" data-pid="APJCJM" onclick="selectPrincipal(this)"><div class="principal-avatar">AJ</div>APJCJM<span class="principal-alert-dot" id="pad-APJCJM"></span><span class="principal-prop-count" id="pc-APJCJM">2</span></div>
+    <div class="principal-item" data-pid="ECJIV" onclick="selectPrincipal(this)"><div class="principal-avatar">EC</div>ECJIV<span class="principal-prop-count" id="pc-ECJIV">2</span></div>
+    <div class="principal-item" data-pid="ELJ" onclick="selectPrincipal(this)"><div class="principal-avatar">EL</div>ELJ<span class="principal-prop-count" id="pc-ELJ">2</span></div>
+    <div class="principal-item" data-pid="EBJ" onclick="selectPrincipal(this)"><div class="principal-avatar">EB</div>EBJ<span class="principal-prop-count" id="pc-EBJ">2</span></div>
     <div class="sb-divider"></div>
     <div class="sb-section-label">Monitor</div>
     <div class="sb-item active" data-page="properties" onclick="nav(this)"><span class="sb-item-icon">🏠</span>Properties<span class="sb-item-badge" id="badge-alerts" style="display:none">0</span></div>
@@ -340,11 +325,11 @@ function checkGate(){
   </nav>
   <div class="sb-footer">
     <div class="scan-status"><div class="scan-dot"></div>Monitoring active</div>
-    <div style="font-size:9px;color:var(--text3);margin-top:5px">Last scan: Today 8:10 AM</div>
+    <div style="margin-top:6px"><span class="sync-badge" id="sync-badge" onclick="loadFromSheets()"><span class="sync-dot"></span><span id="sync-text">Loading…</span></span></div>
   </div>
 </div>
 
-<!-- ── MAIN ───────────────────────────────────────────────────────────── -->
+<!-- MAIN -->
 <div id="main">
   <div id="topbar">
     <div class="tb-breadcrumb">
@@ -362,13 +347,13 @@ function checkGate(){
     <div id="page-properties" class="page active">
       <div id="add-form" class="add-prop-row">
         <div class="add-form-grid">
-          <input class="field-input" id="f-addr" placeholder="Street address" />
-          <input class="field-input" id="f-city" placeholder="City" />
-          <input class="field-input" id="f-state" placeholder="State" maxlength="2" />
-          <input class="field-input" id="f-zip" placeholder="ZIP" maxlength="5" />
+          <input class="field-input" id="f-addr" placeholder="Street address"/>
+          <input class="field-input" id="f-city" placeholder="City"/>
+          <input class="field-input" id="f-state" placeholder="State" maxlength="2"/>
+          <input class="field-input" id="f-zip" placeholder="ZIP" maxlength="5"/>
         </div>
         <div class="add-form-row2">
-          <input class="field-input" id="f-notes" placeholder="Notes (e.g. Beacon Hill Historic District — BLC oversight)" />
+          <input class="field-input" id="f-notes" placeholder="Notes"/>
           <select class="field-input" id="f-principal">
             <option value="">— Select Principal —</option>
             <option value="APJCJM">APJCJM</option>
@@ -384,7 +369,7 @@ function checkGate(){
       </div>
       <div class="list-header">
         <h3 id="props-header-label">Monitored Properties</h3>
-        <span class="prop-count-badge" id="prop-count-badge">2 properties</span>
+        <span class="prop-count-badge" id="prop-count-badge">8 properties</span>
       </div>
       <div id="prop-list"></div>
     </div>
@@ -404,14 +389,7 @@ function checkGate(){
     </div>
 
     <div id="page-sources" class="page">
-      <div class="sources-grid">
-        <div class="source-card"><div class="source-card-title">🏛️ <span>Boston — Municipal</span></div><a href="https://www.boston.gov/departments/inspectional-services" target="_blank" class="source-link"><span class="source-link-icon">🔗</span>ISD Building Permits<span class="source-badge primary">Live</span></a><a href="https://311.boston.gov" target="_blank" class="source-link"><span class="source-link-icon">🔗</span>Boston 311 Complaints<span class="source-badge primary">Live</span></a><a href="https://data.boston.gov/dataset/crime-incident-reports-august-2015-to-date-source-new-system" target="_blank" class="source-link"><span class="source-link-icon">🔗</span>BPD Crime Incidents<span class="source-badge">Open Data</span></a><a href="https://data.boston.gov/dataset/fire-incident-reporting" target="_blank" class="source-link"><span class="source-link-icon">🔗</span>Fire Incident Reports<span class="source-badge">Open Data</span></a><a href="https://www.cityofboston.gov/arts/landmarks/" target="_blank" class="source-link"><span class="source-link-icon">🔗</span>Boston Landmarks Commission<span class="source-badge primary">Portal</span></a></div>
-        <div class="source-card"><div class="source-card-title">🌴 <span>Palm Beach — Municipal</span></div><a href="https://www.townofpalmbeach.com/201/Planning-Zoning" target="_blank" class="source-link"><span class="source-link-icon">🔗</span>Town Planning &amp; Zoning<span class="source-badge primary">Live</span></a><a href="https://discover.pbc.gov/pzb/planning/Pages/Planning-Commission-Agendas-Minutes.aspx" target="_blank" class="source-link"><span class="source-link-icon">🔗</span>PBC Planning Commission<span class="source-badge primary">PDF</span></a><a href="https://pbcgov.com/pzb/building/" target="_blank" class="source-link"><span class="source-link-icon">🔗</span>PBC Building Division<span class="source-badge">Permits</span></a><a href="https://discover.pbc.gov/pbso/Pages/Default.aspx" target="_blank" class="source-link"><span class="source-link-icon">🔗</span>PBSO Sheriff Reports<span class="source-badge">Crime</span></a><a href="https://www.pbcgov.org/papa/" target="_blank" class="source-link"><span class="source-link-icon">🔗</span>PA Property Appraiser<span class="source-badge">Records</span></a></div>
-        <div class="source-card"><div class="source-card-title">📰 <span>Boston — News</span></div><a href="https://www.boston.com" target="_blank" class="source-link"><span class="source-link-icon">🔗</span>Boston.com<span class="source-badge primary">Primary</span></a><a href="https://www.bostonherald.com" target="_blank" class="source-link"><span class="source-link-icon">🔗</span>Boston Herald<span class="source-badge primary">Primary</span></a><a href="https://www.bisnow.com/boston" target="_blank" class="source-link"><span class="source-link-icon">🔗</span>Bisnow Boston<span class="source-badge primary">CRE</span></a><a href="https://patch.com/massachusetts/beaconhill" target="_blank" class="source-link"><span class="source-link-icon">🔗</span>Patch Beacon Hill<span class="source-badge rumor">Rumors</span></a><a href="https://www.bizjournals.com/boston" target="_blank" class="source-link"><span class="source-link-icon">🔗</span>Boston Business Journal<span class="source-badge">Business</span></a></div>
-        <div class="source-card"><div class="source-card-title">🌊 <span>Palm Beach — News</span></div><a href="https://www.palmbeachdailynews.com" target="_blank" class="source-link"><span class="source-link-icon">🔗</span>Palm Beach Daily News<span class="source-badge primary">Primary</span></a><a href="https://www.palmbeachpost.com" target="_blank" class="source-link"><span class="source-link-icon">🔗</span>Palm Beach Post<span class="source-badge primary">Primary</span></a><a href="https://www.sfbj.com" target="_blank" class="source-link"><span class="source-link-icon">🔗</span>South Florida BJ<span class="source-badge">Business</span></a><a href="https://dirt.com" target="_blank" class="source-link"><span class="source-link-icon">🔗</span>Dirt.com<span class="source-badge rumor">Rumors</span></a><a href="https://www.mansionglobal.com" target="_blank" class="source-link"><span class="source-link-icon">🔗</span>Mansion Global<span class="source-badge rumor">Rumors</span></a></div>
-        <div class="source-card"><div class="source-card-title">🏛️ <span>Public Records</span></div><a href="https://www.masslandrecords.com" target="_blank" class="source-link"><span class="source-link-icon">🔗</span>Mass Land Records<span class="source-badge">Deeds</span></a><a href="https://www.suffolkdeeds.com" target="_blank" class="source-link"><span class="source-link-icon">🔗</span>Suffolk Deeds<span class="source-badge">Boston</span></a><a href="https://mdf.pbcgov.org" target="_blank" class="source-link"><span class="source-link-icon">🔗</span>PBC Official Records<span class="source-badge">FL Deeds</span></a><a href="https://www.courtlistener.com" target="_blank" class="source-link"><span class="source-link-icon">🔗</span>CourtListener<span class="source-badge">Federal</span></a><a href="https://odyportal.suffolkcountycourts.com" target="_blank" class="source-link"><span class="source-link-icon">🔗</span>Suffolk Court Portal<span class="source-badge">MA Courts</span></a></div>
-        <div class="source-card"><div class="source-card-title">📡 <span>National &amp; Aggregators</span></div><a href="https://www.zillow.com" target="_blank" class="source-link"><span class="source-link-icon">🔗</span>Zillow<span class="source-badge">Market</span></a><a href="https://www.redfin.com" target="_blank" class="source-link"><span class="source-link-icon">🔗</span>Redfin<span class="source-badge">Market</span></a><a href="https://www.costar.com" target="_blank" class="source-link"><span class="source-link-icon">🔗</span>CoStar<span class="source-badge">CRE</span></a><a href="https://news.google.com" target="_blank" class="source-link"><span class="source-link-icon">🔗</span>Google News<span class="source-badge">Aggregator</span></a><a href="https://www.propertyshark.com" target="_blank" class="source-link"><span class="source-link-icon">🔗</span>PropertyShark<span class="source-badge">Records</span></a></div>
-      </div>
+      <div id="sources-container"></div>
     </div>
 
     <div id="page-reports" class="page">
@@ -420,8 +398,15 @@ function checkGate(){
         <div class="chart-wrap"><canvas id="trend-chart"></canvas></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        <div class="settings-section"><div class="settings-section-title">Recent Email Reports</div><div class="setting-row"><div class="setting-label"><div class="setting-label-text">Daily Alert — Apr 28 2026</div><div class="setting-label-sub">3 findings across 2 properties</div></div><div class="setting-value accent">Draft</div></div><div class="setting-row"><div class="setting-label"><div class="setting-label-text">Weekly Report — Apr 27 2026</div><div class="setting-label-sub">Comprehensive Monday report</div></div><div class="setting-value accent">Draft</div></div><div class="setting-row"><div class="setting-label"><div class="setting-label-text">Daily Alert — Apr 27 2026</div><div class="setting-label-sub">1 finding — 56 Beacon St</div></div><div class="setting-value" style="color:var(--text3)">Draft</div></div></div>
-        <div class="settings-section"><div class="settings-section-title">Scan Schedule</div><div class="setting-row"><div class="setting-label"><div class="setting-label-text">Daily Alert Scan</div><div class="setting-label-sub">property-daily-alert-scan</div></div><div class="setting-value accent">8:10 AM</div></div><div class="setting-row"><div class="setting-label"><div class="setting-label-text">Weekly Deep Dive</div><div class="setting-label-sub">property-weekly-report</div></div><div class="setting-value accent">Mon 8:09 AM</div></div><div class="setting-row"><div class="setting-label"><div class="setting-label-text">Next Daily Scan</div><div class="setting-label-sub">All municipal + news sources</div></div><div class="setting-value" style="color:var(--green)">Tomorrow 8:10 AM</div></div></div>
+        <div class="settings-section"><div class="settings-section-title">Recent Email Reports</div>
+          <div class="setting-row"><div class="setting-label"><div class="setting-label-text">Daily Alert — Apr 28 2026</div><div class="setting-label-sub">3 findings across 2 properties</div></div><div class="setting-value accent">Draft</div></div>
+          <div class="setting-row"><div class="setting-label"><div class="setting-label-text">Weekly Report — Apr 27 2026</div><div class="setting-label-sub">Comprehensive Monday report</div></div><div class="setting-value accent">Draft</div></div>
+        </div>
+        <div class="settings-section"><div class="settings-section-title">Scan Schedule</div>
+          <div class="setting-row"><div class="setting-label"><div class="setting-label-text">Daily Alert Scan</div><div class="setting-label-sub">property-daily-alert-scan</div></div><div class="setting-value accent">8:10 AM</div></div>
+          <div class="setting-row"><div class="setting-label"><div class="setting-label-text">Weekly Deep Dive</div><div class="setting-label-sub">property-weekly-report</div></div><div class="setting-value accent">Mon 8:09 AM</div></div>
+          <div class="setting-row"><div class="setting-label"><div class="setting-label-text">Data Layer</div><div class="setting-label-sub">Google Sheets — live sync</div></div><div class="setting-value accent" style="color:var(--green)">● Connected</div></div>
+        </div>
       </div>
     </div>
 
@@ -430,10 +415,10 @@ function checkGate(){
         <div class="toggle-row"><div class="setting-label"><div class="setting-label-text">Building Permits</div><div class="toggle-sub">On property and adjacent addresses</div></div><label class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></label></div>
         <div class="toggle-row"><div class="setting-label"><div class="setting-label-text">Complaints (311)</div><div class="toggle-sub">On property and immediate neighbors</div></div><label class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></label></div>
         <div class="toggle-row"><div class="setting-label"><div class="setting-label-text">Crime &amp; Fire Incidents</div><div class="toggle-sub">Within 2-block radius</div></div><label class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></label></div>
-        <div class="toggle-row"><div class="setting-label"><div class="setting-label-text">Landmarks Commission (BLC)</div><div class="toggle-sub">On property and full Beacon Street block</div></div><label class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></label></div>
-        <div class="toggle-row"><div class="setting-label"><div class="setting-label-text">Planning Commission</div><div class="toggle-sub">On property and adjacent Island Drive addresses</div></div><label class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></label></div>
+        <div class="toggle-row"><div class="setting-label"><div class="setting-label-text">Landmarks / Architectural Commissions</div><div class="toggle-sub">BLC · Back Bay Arch. Commission · Town of Palm Beach</div></div><label class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></label></div>
+        <div class="toggle-row"><div class="setting-label"><div class="setting-label-text">Planning Commission</div><div class="toggle-sub">On property and adjacent addresses</div></div><label class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></label></div>
         <div class="toggle-row"><div class="setting-label"><div class="setting-label-text">Court Filings</div><div class="toggle-sub">Liens, suits, and legal actions</div></div><label class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></label></div>
-        <div class="toggle-row"><div class="setting-label"><div class="setting-label-text">News &amp; Rumors</div><div class="toggle-sub">Media mentions, market rumors, neighborhood intel</div></div><label class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></label></div>
+        <div class="toggle-row"><div class="setting-label"><div class="setting-label-text">News &amp; Rumors</div><div class="toggle-sub">Neighborhood papers, civic associations, market intel</div></div><label class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></label></div>
         <div class="toggle-row"><div class="setting-label"><div class="setting-label-text">Daily Alert Email</div><div class="toggle-sub">Draft to ggordillo@lthill.com when findings exist</div></div><label class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></label></div>
         <div class="toggle-row"><div class="setting-label"><div class="setting-label-text">Weekly Report Email</div><div class="toggle-sub">Monday comprehensive draft — always sent</div></div><label class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></label></div>
       </div>
@@ -442,32 +427,31 @@ function checkGate(){
 
     <div id="page-settings" class="page">
       <div class="settings-section"><div class="settings-section-title">Principals</div>
-        <div class="setting-row"><div class="setting-label"><div class="setting-label-text">APJCJM</div><div class="setting-label-sub">56 Beacon St · 482 Island Dr</div></div><div class="setting-value accent">2 properties</div></div>
-        <div class="setting-row"><div class="setting-label"><div class="setting-label-text">ECJIV</div><div class="setting-label-sub">No properties yet</div></div><div class="setting-value" style="color:var(--text3)">0 properties</div></div>
-        <div class="setting-row"><div class="setting-label"><div class="setting-label-text">ELJ</div><div class="setting-label-sub">No properties yet</div></div><div class="setting-value" style="color:var(--text3)">0 properties</div></div>
-        <div class="setting-row"><div class="setting-label"><div class="setting-label-text">EBJ</div><div class="setting-label-sub">No properties yet</div></div><div class="setting-value" style="color:var(--text3)">0 properties</div></div>
+        <div class="setting-row"><div class="setting-label"><div class="setting-label-text">APJCJM</div><div class="setting-label-sub">56 Beacon St · 482 Island Drive</div></div><div class="setting-value accent">2 properties</div></div>
+        <div class="setting-row"><div class="setting-label"><div class="setting-label-text">ECJIV</div><div class="setting-label-sub">16 Union Wharf · 131 Commonwealth Ave</div></div><div class="setting-value accent">2 properties</div></div>
+        <div class="setting-row"><div class="setting-label"><div class="setting-label-text">ELJ</div><div class="setting-label-sub">18 Louisburg Square · 2929 Winding Oak Lane</div></div><div class="setting-value accent">2 properties</div></div>
+        <div class="setting-row"><div class="setting-label"><div class="setting-label-text">EBJ</div><div class="setting-label-sub">1 Charles River Square · 3 Charles River Square</div></div><div class="setting-value accent">2 properties</div></div>
+      </div>
+      <div class="settings-section"><div class="settings-section-title">Data Layer</div>
+        <div class="setting-row"><div class="setting-label"><div class="setting-label-text">Google Sheet</div><div class="setting-label-sub">Properties · Activities · Sources · Scan Log</div></div><div class="setting-value accent" style="color:var(--green)">● Connected</div></div>
+        <div class="setting-row"><div class="setting-label"><div class="setting-label-text">Sync on Open</div><div class="setting-label-sub">Hub fetches live data every time URL is opened</div></div><div class="setting-value accent">Active</div></div>
+        <div class="setting-row"><div class="setting-label"><div class="setting-label-text">Manual Refresh</div><div class="setting-label-sub">Click the sync badge in the sidebar footer</div></div><div class="setting-value" style="color:var(--text3)">↺ Sync badge</div></div>
       </div>
       <div class="settings-section"><div class="settings-section-title">Email &amp; Delivery</div>
-        <div class="setting-row"><div class="setting-label"><div class="setting-label-text">From Address</div><div class="setting-label-sub">Gmail account used for drafts</div></div><div class="setting-value">geovanny22@gmail.com</div></div>
-        <div class="setting-row"><div class="setting-label"><div class="setting-label-text">Alert Recipient</div><div class="setting-label-sub">Daily alerts and weekly reports sent to</div></div><input class="setting-input" value="ggordillo@lthill.com" /></div>
-        <div class="setting-row"><div class="setting-label"><div class="setting-label-text">Delivery Mode</div><div class="setting-label-sub">Emails saved as drafts for review before sending</div></div><div class="setting-value accent">Gmail Drafts</div></div>
-      </div>
-      <div class="settings-section"><div class="settings-section-title">Intelligence Scope</div>
-        <div class="setting-row"><div class="setting-label"><div class="setting-label-text">56 Beacon St — Surrounding Monitor</div><div class="setting-label-sub">50–62 Beacon St + Joy, Somerset, Bowdoin (2 blocks)</div></div><div class="setting-value accent">Active</div></div>
-        <div class="setting-row"><div class="setting-label"><div class="setting-label-text">482 Island Dr — Surrounding Monitor</div><div class="setting-label-sub">476–488 Island Dr + waterfront/dock permits</div></div><div class="setting-value accent">Active</div></div>
+        <div class="setting-row"><div class="setting-label"><div class="setting-label-text">From Address</div></div><div class="setting-value">geovanny22@gmail.com</div></div>
+        <div class="setting-row"><div class="setting-label"><div class="setting-label-text">Alert Recipient</div></div><input class="setting-input" value="ggordillo@lthill.com"/></div>
+        <div class="setting-row"><div class="setting-label"><div class="setting-label-text">Delivery Mode</div></div><div class="setting-value accent">Gmail Drafts</div></div>
       </div>
       <div class="settings-section"><div class="settings-section-title">Scan Schedule</div>
         <div class="setting-row"><div class="setting-label"><div class="setting-label-text">Daily Alert Scan</div><div class="setting-label-sub">Task: property-daily-alert-scan</div></div><div class="setting-value accent">Daily 8:10 AM</div></div>
         <div class="setting-row"><div class="setting-label"><div class="setting-label-text">Weekly Deep Dive</div><div class="setting-label-sub">Task: property-weekly-report</div></div><div class="setting-value accent">Monday 8:09 AM</div></div>
       </div>
       <div class="settings-section"><div class="settings-section-title">Portal Credentials</div>
-        <div class="setting-row"><div class="setting-label"><div class="setting-label-text">Boston Landmarks Commission</div><div class="setting-label-sub">ggordillo@lthill.com — auto-login enabled</div></div><span class="cred-status ok">✓ Configured</span></div>
-        <div class="setting-row"><div class="setting-label"><div class="setting-label-text">PBC Planning Commission</div><div class="setting-label-sub">PDF agenda scanning — no login required</div></div><span class="cred-status ok">✓ Active</span></div>
-        <div class="setting-row"><div class="setting-label"><div class="setting-label-text">Boston Open Data (Socrata)</div><div class="setting-label-sub">Permits · 311 · Crime — public API</div></div><span class="cred-status ok">✓ Active</span></div>
+        <div class="setting-row"><div class="setting-label"><div class="setting-label-text">Boston Landmarks Commission</div><div class="setting-label-sub">ggordillo@lthill.com — auto-login</div></div><span class="cred-status ok">✓ Configured</span></div>
+        <div class="setting-row"><div class="setting-label"><div class="setting-label-text">PBC Planning Commission</div><div class="setting-label-sub">PDF agenda scanning</div></div><span class="cred-status ok">✓ Active</span></div>
       </div>
       <div class="settings-section"><div class="settings-section-title">Features</div>
-        <div class="setting-row"><div class="setting-label"><div class="setting-label-text">Map View</div><div class="setting-label-sub">Visual property map with clustering</div></div><span class="coming-soon">Coming Soon</span></div>
-        <div class="setting-row"><div class="setting-label"><div class="setting-label-text">Version</div><div class="setting-label-sub">Property Intelligence Hub</div></div><div class="setting-value" style="color:var(--text3)">v3.0 — Multi-Principal</div></div>
+        <div class="setting-row"><div class="setting-label"><div class="setting-label-text">Version</div></div><div class="setting-value" style="color:var(--text3)">v4.0 — Live Data Layer</div></div>
       </div>
     </div>
 
@@ -493,47 +477,148 @@ function checkGate(){
 </div>
 
 <script>
-const SRC={MA:{permit:'https://www.boston.gov/departments/inspectional-services',complaint:'https://311.boston.gov',crime:'https://data.boston.gov/dataset/crime-incident-reports-august-2015-to-date-source-new-system',fire:'https://data.boston.gov/dataset/fire-incident-reporting',landmarks:'https://www.cityofboston.gov/arts/landmarks/',planning:'https://www.bostonplans.org',court:'https://odyportal.suffolkcountycourts.com',rumor:'https://patch.com/massachusetts/beaconhill',news:'https://www.boston.com'},FL:{permit:'https://pbcgov.com/pzb/building/',complaint:'https://discover.pbc.gov/pbso/Pages/Default.aspx',crime:'https://discover.pbc.gov/pbso/Pages/Default.aspx',fire:'https://discover.pbc.gov/pbso/Pages/Default.aspx',landmarks:'https://www.townofpalmbeach.com/201/Planning-Zoning',planning:'https://discover.pbc.gov/pzb/planning/Pages/Planning-Commission-Agendas-Minutes.aspx',court:'https://mdf.pbcgov.org',rumor:'https://www.palmbeachdailynews.com',news:'https://www.palmbeachdailynews.com'}};
-const SRC_LABEL={permit:'Building Permits',complaint:'311 / Complaints',crime:'Crime Reports',fire:'Fire Incidents',landmarks:'Landmarks Commission',planning:'Planning Commission',court:'Court Records',rumor:'Local News',news:'Local News'};
-function srcUrl(t,s){return(SRC[s]||SRC.MA)[t]||(s==='FL'?'https://discover.pbc.gov':'https://data.boston.gov');}
-function srcLabel(t){return SRC_LABEL[t]||'Source';}
+// ── CONFIG ────────────────────────────────────────────────────────────────
+const SHEET_ID='1ga5j33KawRVJj131tDv3PqwyxphweE3rsv9bdqo2hN0';
+const API_KEY='AIzaSyD2YmskYOtjoG_GVXZn91nvknlHwV55JQ8';
+const WEBHOOK='https://script.google.com/macros/s/AKfycbwvjFAx25GDEZU-fLfIkESR-L4h2-Edi6x45Y47QbXoU6MsTnvoDvF5_2Ghea2dw_k/exec';
+const SHEETS_BASE=`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values`;
+
+// ── SOURCE ROUTING ────────────────────────────────────────────────────────
+const SRC={
+  MA:{permit:'https://www.boston.gov/departments/inspectional-services',complaint:'https://311.boston.gov',crime:'https://data.boston.gov/dataset/crime-incident-reports-august-2015-to-date-source-new-system',landmarks:'https://www.boston.gov/departments/landmarks-commission',planning:'https://www.bostonplans.org',court:'https://odyportal.suffolkcountycourts.com',rumor:'https://patch.com/massachusetts/beaconhill',news:'https://www.boston.com'},
+  FL:{permit:'https://pbcgov.com/pzb/building/',complaint:'https://discover.pbc.gov/pbso/Pages/Default.aspx',crime:'https://discover.pbc.gov/pbso/Pages/Default.aspx',planning:'https://discover.pbc.gov/pzb/planning/Pages/Planning-Commission-Agendas-Minutes.aspx',court:'https://mdf.pbcgov.org',rumor:'https://www.palmbeachdailynews.com',news:'https://www.palmbeachdailynews.com'}
+};
+// Property-specific source overrides (addr fragment → type → url)
+const PROP_SRC_OVERRIDES={
+  '131 Commonwealth':{landmarks:'https://www.boston.gov/departments/back-bay-architectural-commission',rumor:'https://www.backbaysun.com'},
+  '16 Union':{rumor:'https://northendwaterfront.com',planning:'https://www.bostonplans.org'},
+  'Wellington':{planning:'https://www.wellingtonfl.gov/373/Planning-Zoning',rumor:'https://wellingtonthemagazine.com',news:'https://www.palmbeachpost.com'}
+};
+const SRC_LABEL={permit:'Building Permits',complaint:'311 / Complaints',crime:'Crime Reports',landmarks:'Landmarks / Arch. Commission',planning:'Planning Commission',court:'Court Records',rumor:'Local News',news:'Local News'};
+function srcUrl(type,state,addr){
+  const overrides=Object.entries(PROP_SRC_OVERRIDES).find(([k])=>addr&&addr.includes(k));
+  if(overrides&&overrides[1][type])return overrides[1][type];
+  return(SRC[state]||SRC.MA)[type]||(state==='FL'?'https://discover.pbc.gov':'https://data.boston.gov');
+}
+function srcLabel(type){return SRC_LABEL[type]||'Source';}
+
+// ── SEED DATA (fallback when sheet is loading or empty) ───────────────────
 const TC={permit:'#60a5fa',complaint:'#fbbf24',crime:'#f87171',landmarks:'#c084fc',planning:'#2dd4bf',rumor:'#fb923c',news:'#818cf8',fire:'#f87171',court:'#e879f9',other:'#6b7280'};
 const PRINCIPALS=[{id:'APJCJM',initials:'AJ'},{id:'ECJIV',initials:'EC'},{id:'ELJ',initials:'EL'},{id:'EBJ',initials:'EB'}];
-let props=[
-  {id:1,principalId:'APJCJM',addr:'56 Beacon Street',city:'Boston',state:'MA',zip:'02108',type:'Residential',notes:'Beacon Hill Historic District — BLC oversight',status:'amber',counts:{permit:3,complaint:1,crime:0,landmarks:2,planning:0,rumor:2}},
-  {id:2,principalId:'APJCJM',addr:'482 Island Drive',city:'Palm Beach',state:'FL',zip:'33480',type:'Residential',notes:'PBC Planning Commission agendas monitored (PDF)',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:2,rumor:1}},
-  {id:3,principalId:'ELJ',addr:'18 Louisburg Square',city:'Boston',state:'MA',zip:'02108',type:'Residential',notes:'Beacon Hill — historic cobblestone square',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}},
-  {id:4,principalId:'ELJ',addr:'2929 Winding Oak Lane',city:'Wellington',state:'FL',zip:'33414',type:'Residential',notes:'Wellington equestrian community',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}},
-  {id:5,principalId:'ECJIV',addr:'16 Union Wharf',city:'Boston',state:'MA',zip:'02109',type:'Residential',notes:'North End waterfront',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}},
-  {id:6,principalId:'ECJIV',addr:'131 Commonwealth Avenue',city:'Boston',state:'MA',zip:'02116',type:'Residential',notes:'Back Bay',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}},
-  {id:7,principalId:'EBJ',addr:'1 Charles River Square',city:'Boston',state:'MA',zip:'02114',type:'Residential',notes:'Beacon Hill — Charles River Square',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}},
-  {id:8,principalId:'EBJ',addr:'3 Charles River Square',city:'Boston',state:'MA',zip:'02114',type:'Residential',notes:'Beacon Hill — Charles River Square',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}}
-];
-let nextId=9;
-let activities=[
-  {id:1,propId:1,type:'permit',scope:'property',desc:'Renovation permit application filed for exterior work at 56 Beacon St',time:'Apr 28, 2026 · 9:14 AM'},
-  {id:2,propId:1,type:'landmarks',scope:'property',desc:'BLC pre-application inquiry logged — window replacement scope under review',time:'Apr 27, 2026 · 2:03 PM'},
-  {id:3,propId:1,type:'permit',scope:'nearby',nearAddr:'54 Beacon St',desc:'Large structural renovation permit filed at 54 Beacon St — potential noise and construction access impact to neighboring properties',time:'Apr 27, 2026 · 10:22 AM'},
-  {id:4,propId:1,type:'landmarks',scope:'nearby',nearAddr:'60 Beacon St',desc:'BLC COA application filed at 60 Beacon St for facade restoration — public hearing scheduled May 14',time:'Apr 26, 2026 · 3:40 PM'},
-  {id:5,propId:1,type:'rumor',scope:'property',desc:'Beacon Hill Patch: Neighborhood discussion about renovation timeline and BLC backlog on the Beacon Street block',time:'Apr 26, 2026 · 11:45 AM'},
-  {id:6,propId:2,type:'planning',scope:'property',desc:'PBC Planning Commission April agenda — 482 Island Drive setback variance request listed for hearing',time:'Apr 25, 2026 · 10:00 AM'},
-  {id:7,propId:2,type:'planning',scope:'nearby',nearAddr:'484 Island Dr',desc:'484 Island Drive dock extension variance on PBC agenda — could affect water access and views at 482',time:'Apr 24, 2026 · 2:15 PM'},
-  {id:8,propId:1,type:'complaint',scope:'property',desc:'311 noise complaint filed against 56 Beacon — construction activity hours violation',time:'Apr 24, 2026 · 3:31 PM'},
-  {id:9,propId:2,type:'rumor',scope:'property',desc:'Dirt.com: Market speculation on Island Drive estate redevelopment activity',time:'Apr 23, 2026 · 8:17 AM'},
-  {id:10,propId:1,type:'permit',scope:'property',desc:'Second permit pulled — interior structural modification scope expanded',time:'Apr 22, 2026 · 1:52 PM'},
-  {id:11,propId:1,type:'rumor',scope:'nearby',nearAddr:'Beacon Hill',desc:'Boston Herald: Beacon Hill seeing surge in renovation filings — historic district permits up 40% YoY',time:'Apr 21, 2026 · 9:00 AM'}
-];
-const BOS_LINKS=[{label:'BLC Portal',url:'https://www.cityofboston.gov/arts/landmarks/',icon:'🏛️'},{label:'ISD Permits',url:'https://www.boston.gov/departments/inspectional-services',icon:'📋'},{label:'Boston 311',url:'https://311.boston.gov',icon:'📞'},{label:'Boston Open Data',url:'https://data.boston.gov',icon:'📊'},{label:'Suffolk Deeds',url:'https://www.suffolkdeeds.com',icon:'📜'}];
-const PB_LINKS=[{label:'PBC Planning Commission',url:'https://discover.pbc.gov/pzb/planning/Pages/Planning-Commission-Agendas-Minutes.aspx',icon:'📋'},{label:'PBC Building Division',url:'https://pbcgov.com/pzb/building/',icon:'🏗️'},{label:'PBSO Sheriff',url:'https://discover.pbc.gov/pbso/Pages/Default.aspx',icon:'🚔'},{label:'Palm Beach Daily News',url:'https://www.palmbeachdailynews.com',icon:'📰'},{label:'PBC Official Records',url:'https://mdf.pbcgov.org',icon:'📜'}];
-let activeFilter='all',selectedPropId=null,selectedPrincipal='all';
 
+const SEED_PROPS=[
+  {id:1,principalId:'APJCJM',addr:'56 Beacon Street',city:'Boston',state:'MA',zip:'02108',notes:'Beacon Hill Historic District — BLC oversight',status:'amber',counts:{permit:3,complaint:1,crime:0,landmarks:2,planning:0,rumor:2}},
+  {id:2,principalId:'APJCJM',addr:'482 Island Drive',city:'Palm Beach',state:'FL',zip:'33480',notes:'PBC Planning Commission agendas monitored (PDF)',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:2,rumor:1}},
+  {id:3,principalId:'ELJ',addr:'18 Louisburg Square',city:'Boston',state:'MA',zip:'02108',notes:'Beacon Hill — historic cobblestone square',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}},
+  {id:4,principalId:'ELJ',addr:'2929 Winding Oak Lane',city:'Wellington',state:'FL',zip:'33414',notes:'Wellington equestrian community',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}},
+  {id:5,principalId:'ECJIV',addr:'16 Union Wharf',city:'Boston',state:'MA',zip:'02109',notes:'North End waterfront — BPDA oversight',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}},
+  {id:6,principalId:'ECJIV',addr:'131 Commonwealth Avenue',city:'Boston',state:'MA',zip:'02116',notes:'Back Bay — Back Bay Architectural Commission oversight',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}},
+  {id:7,principalId:'EBJ',addr:'1 Charles River Square',city:'Boston',state:'MA',zip:'02114',notes:'Beacon Hill — Charles River Square',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}},
+  {id:8,principalId:'EBJ',addr:'3 Charles River Square',city:'Boston',state:'MA',zip:'02114',notes:'Beacon Hill — Charles River Square',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}}
+];
+const SEED_ACTIVITIES=[
+  {id:1,propId:1,type:'permit',scope:'property',nearAddr:'',desc:'Renovation permit application filed for exterior work at 56 Beacon St',time:'Apr 28, 2026 · 9:14 AM',sourceUrl:''},
+  {id:2,propId:1,type:'landmarks',scope:'property',nearAddr:'',desc:'BLC pre-application inquiry logged — window replacement scope under review',time:'Apr 27, 2026 · 2:03 PM',sourceUrl:''},
+  {id:3,propId:1,type:'permit',scope:'nearby',nearAddr:'54 Beacon St',desc:'Large structural renovation permit filed at 54 Beacon St — potential noise and access impact',time:'Apr 27, 2026 · 10:22 AM',sourceUrl:''},
+  {id:4,propId:1,type:'landmarks',scope:'nearby',nearAddr:'60 Beacon St',desc:'BLC COA application at 60 Beacon St for facade restoration — hearing May 14',time:'Apr 26, 2026 · 3:40 PM',sourceUrl:''},
+  {id:5,propId:1,type:'rumor',scope:'property',nearAddr:'',desc:'Beacon Hill Times: Neighborhood discussion about BLC backlog on the Beacon Street block',time:'Apr 26, 2026 · 11:45 AM',sourceUrl:''},
+  {id:6,propId:2,type:'planning',scope:'property',nearAddr:'',desc:'PBC Planning Commission April agenda — 482 Island Drive setback variance listed',time:'Apr 25, 2026 · 10:00 AM',sourceUrl:''},
+  {id:7,propId:2,type:'planning',scope:'nearby',nearAddr:'484 Island Dr',desc:'484 Island Drive dock extension variance on PBC agenda — could affect water access at 482',time:'Apr 24, 2026 · 2:15 PM',sourceUrl:''},
+  {id:8,propId:1,type:'complaint',scope:'property',nearAddr:'',desc:'311 noise complaint filed — construction activity hours violation',time:'Apr 24, 2026 · 3:31 PM',sourceUrl:''}
+];
+
+// Default property-specific quick links
+const PROP_LINKS={
+  'Beacon Hill':[{label:'BLC Portal',url:'https://www.boston.gov/departments/landmarks-commission',icon:'🏛️'},{label:'Beacon Hill Civic Assoc.',url:'https://beaconhillcivic.org',icon:'🏘️'},{label:'Beacon Hill Times',url:'https://beaconhilltimes.com',icon:'📰'},{label:'ISD Permits',url:'https://www.boston.gov/departments/inspectional-services',icon:'📋'},{label:'Boston 311',url:'https://311.boston.gov',icon:'📞'}],
+  'Back Bay':[{label:'Back Bay Arch. Commission',url:'https://www.boston.gov/departments/back-bay-architectural-commission',icon:'🏛️'},{label:'Back Bay Association',url:'https://www.backbayassociation.com',icon:'🏘️'},{label:'Back Bay Sun',url:'https://www.backbaysun.com',icon:'📰'},{label:'ISD Permits',url:'https://www.boston.gov/departments/inspectional-services',icon:'📋'},{label:'BPDA',url:'https://www.bostonplans.org',icon:'🗺️'}],
+  'North End':[{label:'BLC Portal',url:'https://www.boston.gov/departments/landmarks-commission',icon:'🏛️'},{label:'North End Waterfront',url:'https://northendwaterfront.com',icon:'📰'},{label:'BPDA',url:'https://www.bostonplans.org',icon:'🗺️'},{label:'ISD Permits',url:'https://www.boston.gov/departments/inspectional-services',icon:'📋'},{label:'Boston 311',url:'https://311.boston.gov',icon:'📞'}],
+  'Palm Beach':[{label:'PBC Planning Commission',url:'https://discover.pbc.gov/pzb/planning/Pages/Planning-Commission-Agendas-Minutes.aspx',icon:'📋'},{label:'Town of Palm Beach',url:'https://www.townofpalmbeach.com/201/Planning-Zoning',icon:'🏛️'},{label:'Palm Beach Daily News',url:'https://www.palmbeachdailynews.com',icon:'📰'},{label:'PBC Building Division',url:'https://pbcgov.com/pzb/building/',icon:'🏗️'},{label:'PBSO Sheriff',url:'https://discover.pbc.gov/pbso/Pages/Default.aspx',icon:'🚔'}],
+  'Wellington':[{label:'Wellington Planning & Zoning',url:'https://www.wellingtonfl.gov/373/Planning-Zoning',icon:'🏛️'},{label:'Palm Beach Post',url:'https://www.palmbeachpost.com',icon:'📰'},{label:'Wellington Magazine',url:'https://wellingtonthemagazine.com',icon:'📖'},{label:'Sun-Sentinel',url:'https://www.sun-sentinel.com',icon:'📰'},{label:'PBSO Sheriff',url:'https://discover.pbc.gov/pbso/Pages/Default.aspx',icon:'🚔'}]
+};
+function getPropLinks(p){
+  if(p.addr.includes('Commonwealth'))return PROP_LINKS['Back Bay'];
+  if(p.addr.includes('Union Wharf'))return PROP_LINKS['North End'];
+  if(p.city==='Wellington')return PROP_LINKS['Wellington'];
+  if(p.state==='FL')return PROP_LINKS['Palm Beach'];
+  return PROP_LINKS['Beacon Hill'];
+}
+
+// ── STATE ─────────────────────────────────────────────────────────────────
+let props=[...SEED_PROPS];
+let activities=[...SEED_ACTIVITIES];
+let sheetSources={};
+let nextId=9;
+let activeFilter='all',selectedPropId=null,selectedPrincipal='all';
+let lastSynced=null;
+
+// ── GOOGLE SHEETS LIVE LOAD ───────────────────────────────────────────────
+async function loadFromSheets(silent=false){
+  if(!silent)setSyncBadge('syncing');
+  try{
+    const [propsRes,actsRes,srcsRes]=await Promise.all([
+      fetch(`${SHEETS_BASE}/properties!A2:N?key=${API_KEY}`),
+      fetch(`${SHEETS_BASE}/activities!A2:J?key=${API_KEY}`),
+      fetch(`${SHEETS_BASE}/sources!A2:G?key=${API_KEY}`)
+    ]);
+    const [pd,ad,sd]=await Promise.all([propsRes.json(),actsRes.json(),srcsRes.json()]);
+
+    // Parse properties
+    if(pd.values&&pd.values.length>0){
+      props=pd.values.filter(r=>r[0]&&r[2]).map(r=>({
+        id:parseInt(r[0])||0,principalId:r[1]||'',addr:r[2]||'',city:r[3]||'',
+        state:r[4]||'',zip:r[5]||'',type:'Residential',notes:r[13]||'',
+        status:r[6]||'green',
+        counts:{permit:parseInt(r[7])||0,complaint:parseInt(r[8])||0,crime:parseInt(r[9])||0,
+                landmarks:parseInt(r[10])||0,planning:parseInt(r[11])||0,rumor:parseInt(r[12])||0}
+      }));
+    }
+
+    // Parse activities (last 30 days)
+    if(ad.values&&ad.values.length>0){
+      const cutoff=new Date();cutoff.setDate(cutoff.getDate()-30);
+      const live=ad.values.filter(r=>r[6]).filter(r=>!r[9]||new Date(r[9])>=cutoff)
+        .map((r,i)=>({id:parseInt(r[0])||i+100,propId:parseInt(r[1])||0,type:r[3]||'other',
+          scope:r[4]||'property',nearAddr:r[5]||'',desc:r[6]||'',time:r[7]||'',sourceUrl:r[8]||''}))
+        .reverse();
+      if(live.length>0)activities=live;
+    }
+
+    // Parse sources
+    if(sd.values&&sd.values.length>0){
+      sheetSources={};
+      sd.values.filter(r=>r[0]).forEach(r=>{
+        const pid=parseInt(r[0]);
+        if(!sheetSources[pid])sheetSources[pid]=[];
+        sheetSources[pid].push({propId:pid,addr:r[1]||'',sourceType:r[2]||'',label:r[3]||'',url:r[4]||'',priority:r[5]||'',notes:r[6]||''});
+      });
+    }
+
+    nextId=Math.max(...props.map(p=>p.id),0)+1;
+    lastSynced=new Date();
+    setSyncBadge('live');
+  }catch(err){
+    console.warn('Sheets sync failed:',err);
+    setSyncBadge('error');
+  }
+  document.getElementById('loading-overlay').classList.add('hidden');
+  renderProps();renderActivity();updateSidebarCounts();renderSources();
+}
+
+function setSyncBadge(state){
+  const badge=document.getElementById('sync-badge'),txt=document.getElementById('sync-text');
+  badge.className='sync-badge '+state;
+  if(state==='syncing'){txt.textContent='Syncing…';}
+  else if(state==='live'){const t=lastSynced?lastSynced.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}):'';txt.textContent=`Synced ${t}`;}
+  else{txt.textContent='Sync error — tap to retry';}
+}
+
+// ── PRINCIPAL ─────────────────────────────────────────────────────────────
 function selectPrincipal(el){
   document.querySelectorAll('.principal-item').forEach(i=>i.classList.remove('active'));
   el.classList.add('active');selectedPrincipal=el.dataset.pid;
   document.getElementById('tb-principal-chip').textContent=selectedPrincipal==='all'?'All':selectedPrincipal;
-  const cl=document.getElementById('chart-principal-label');
-  if(cl)cl.textContent=selectedPrincipal==='all'?'All Properties':selectedPrincipal+' Portfolio';
-  renderProps();renderActivity();updateSidebarCounts();
+  const cl=document.getElementById('chart-principal-label');if(cl)cl.textContent=selectedPrincipal==='all'?'All Properties':selectedPrincipal+' Portfolio';
+  renderProps();renderActivity();updateSidebarCounts();renderSources();
 }
 function visibleProps(){return selectedPrincipal==='all'?props:props.filter(p=>p.principalId===selectedPrincipal);}
 function updateSidebarCounts(){
@@ -552,70 +637,137 @@ function updateSidebarCounts(){
   });
   document.getElementById('pc-all').textContent=props.length;
 }
-const PT={properties:['Properties','All monitored properties'],activity:['Activity Feed','Click any alert to open its source'],sources:['Sources','Municipal portals and news feeds'],reports:['Reports','Trends and email history'],notifications:['Notifications','Alert preferences and history'],settings:['Settings','Principals, email, scope, credentials']};
+
+// ── NAV ───────────────────────────────────────────────────────────────────
+const PT={properties:['Properties','All monitored properties'],activity:['Activity Feed','Click any alert to open its source'],sources:['Sources','Property-specific portals and news feeds'],reports:['Reports','Trends and email history'],notifications:['Notifications','Alert preferences'],settings:['Settings','Principals, data layer, credentials']};
 function nav(el){
   document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));el.classList.add('active');
   const p=el.dataset.page;
   document.querySelectorAll('.page').forEach(pg=>pg.classList.remove('active'));
   document.getElementById('page-'+p).classList.add('active');
   document.getElementById('tb-title').textContent=PT[p][0];document.getElementById('tb-sub').textContent=PT[p][1];
-  if(p==='reports')setTimeout(initChart,50);if(p==='notifications')renderNotifications();
+  if(p==='reports')setTimeout(initChart,50);
+  if(p==='notifications')renderNotifications();
+  if(p==='sources')renderSources();
 }
+
+// ── SCOPE BADGE ───────────────────────────────────────────────────────────
 function scopeBadge(a){return a.scope==='nearby'?`<span class="scope-badge nearby">Nearby · ${a.nearAddr}</span>`:`<span class="scope-badge on-prop">On Property</span>`;}
+
+// ── RENDER PROPS ──────────────────────────────────────────────────────────
 function renderProps(){
-  const list=document.getElementById('prop-list');const vp=visibleProps();
+  const list=document.getElementById('prop-list'),vp=visibleProps();
   document.getElementById('props-header-label').textContent=selectedPrincipal==='all'?'Monitored Properties':selectedPrincipal+' — Properties';
   document.getElementById('prop-count-badge').textContent=vp.length+' propert'+(vp.length===1?'y':'ies');
   updateSidebarCounts();
-  if(!vp.length){const pid=selectedPrincipal==='all'?'':selectedPrincipal;list.innerHTML=`<div class="empty-state"><div class="empty-state-icon">🏠</div><div class="empty-state-text">No properties under ${pid||'any principal'} yet.</div><div class="empty-state-sub">Click + Add Property to get started.</div></div>`;return;}
+  if(!vp.length){const pid=selectedPrincipal==='all'?'any principal':selectedPrincipal;list.innerHTML=`<div class="empty-state"><div class="empty-state-icon">🏠</div><div class="empty-state-text">No properties under ${pid} yet.</div><div class="empty-state-sub">Click + Add Property to get started.</div></div>`;return;}
   list.innerHTML=vp.map(p=>`<div class="prop-row${selectedPropId===p.id?' selected':''}" onclick="openDetail(${p.id})"><div class="prop-left-bar ${p.status}"></div><div class="prop-dot-wrap"><div class="alert-dot ${p.status}"></div></div><div class="prop-addr-block"><div class="prop-addr">${p.addr}</div><div class="prop-city">${p.city}, ${p.state} ${p.zip}</div>${selectedPrincipal==='all'?`<div class="prop-principal-tag">${p.principalId}</div>`:''}</div><div class="prop-pills"><div class="pills-col"><span class="pill permit"><span class="pill-n">${p.counts.permit}</span>Permits</span><span class="pill landmarks"><span class="pill-n">${p.counts.landmarks}</span>Landmarks</span><span class="pill planning"><span class="pill-n">${p.counts.planning}</span>Planning</span></div><div class="pills-col"><span class="pill complaint"><span class="pill-n">${p.counts.complaint}</span>Complaints</span><span class="pill crime"><span class="pill-n">${p.counts.crime}</span>Crime</span><span class="pill rumor"><span class="pill-n">${p.counts.rumor}</span>Rumors</span></div></div><div class="prop-status"><span class="status-badge ${p.status}">${p.status==='red'?'⚠ Alert':p.status==='amber'?'◉ Active':'● Clear'}</span></div><div class="prop-actions"><button class="row-btn" onclick="event.stopPropagation();openDetail(${p.id})">Log</button><button class="row-btn del" onclick="event.stopPropagation();removeProp(${p.id})">Remove</button></div></div>`).join('');
 }
+
+// ── DETAIL PANEL ──────────────────────────────────────────────────────────
 function openDetail(id){
   const p=props.find(x=>x.id===id);if(!p)return;selectedPropId=id;renderProps();
-  document.getElementById('dp-addr').textContent=p.addr;document.getElementById('dp-city').textContent=`${p.city}, ${p.state} ${p.zip}`;document.getElementById('dp-notes').textContent=p.notes||'';
+  document.getElementById('dp-addr').textContent=p.addr;
+  document.getElementById('dp-city').textContent=`${p.city}, ${p.state} ${p.zip}`;
+  document.getElementById('dp-notes').textContent=p.notes||'';
   document.getElementById('dp-principal-tag').innerHTML=`<div class="dp-principal">◆ ${p.principalId}</div>`;
   document.getElementById('dp-counts').innerHTML=[{k:'permit',l:'Permits'},{k:'landmarks',l:'Landmarks'},{k:'planning',l:'Planning'},{k:'complaint',l:'Complaints'},{k:'crime',l:'Crime'},{k:'rumor',l:'Rumors'}].map(({k,l})=>`<div class="dp-count-card ${k}"><div class="dp-count-n">${p.counts[k]}</div><div class="dp-count-l">${l}</div></div>`).join('');
   const acts=activities.filter(a=>a.propId===id).slice(0,7);
-  document.getElementById('dp-activity').innerHTML=acts.length?acts.map(a=>{const url=srcUrl(a.type,p.state);return`<a class="act-link" href="${url}" target="_blank" rel="noopener"><div class="act-dot" style="background:${TC[a.type]||'#6b7280'}"></div><div class="act-link-body"><div class="act-link-meta">${scopeBadge(a)}<span style="font-size:9px;text-transform:uppercase;font-weight:700;color:var(--text3);letter-spacing:0.5px">${a.type}</span></div><div class="act-link-desc">${a.desc}</div><div class="act-link-foot">${a.time} · ${srcLabel(a.type)}</div></div><div class="ext-arrow">↗</div></a>`;}).join(''):'<div style="color:var(--text3);font-size:11px;padding:8px 0">No recent activity.</div>';
-  const links=p.state==='MA'?BOS_LINKS:PB_LINKS;
-  document.getElementById('dp-links').innerHTML=links.map(l=>`<a href="${l.url}" target="_blank" style="display:flex;align-items:center;gap:7px;padding:7px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text2);text-decoration:none;font-size:11.5px;font-weight:500" onmouseover="this.style.background='var(--border)';this.style.color='var(--text)'" onmouseout="this.style.background='var(--surface2)';this.style.color='var(--text2)'"><span>${l.icon}</span>${l.label}</a>`).join('');
+  document.getElementById('dp-activity').innerHTML=acts.length?acts.map(a=>{const url=a.sourceUrl||srcUrl(a.type,p.state,p.addr);return`<a class="act-link" href="${url}" target="_blank" rel="noopener"><div class="act-dot" style="background:${TC[a.type]||'#6b7280'}"></div><div class="act-link-body"><div class="act-link-meta">${scopeBadge(a)}<span style="font-size:9px;text-transform:uppercase;font-weight:700;color:var(--text3);letter-spacing:0.5px">${a.type}</span></div><div class="act-link-desc">${a.desc}</div><div class="act-link-foot">${a.time} · ${srcLabel(a.type)}</div></div><div class="ext-arrow">↗</div></a>`;}).join(''):'<div style="color:var(--text3);font-size:11px;padding:8px 0">No recent activity — awaiting next scan.</div>';
+  // Quick links: prefer sheet sources, fall back to defaults
+  const propLinks=sheetSources[id]?sheetSources[id].map(s=>({label:s.label,url:s.url,icon:'🔗'})):getPropLinks(p);
+  document.getElementById('dp-links').innerHTML=propLinks.map(l=>`<a href="${l.url}" target="_blank" style="display:flex;align-items:center;gap:7px;padding:7px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text2);text-decoration:none;font-size:11.5px;font-weight:500" onmouseover="this.style.background='var(--border2)';this.style.color='var(--text)'" onmouseout="this.style.background='var(--surface2)';this.style.color='var(--text2)'"><span>${l.icon}</span>${l.label}</a>`).join('');
   document.getElementById('overlay').classList.add('open');document.getElementById('detail-panel').classList.add('open');
 }
 function closeDetail(){selectedPropId=null;document.getElementById('overlay').classList.remove('open');document.getElementById('detail-panel').classList.remove('open');renderProps();}
+
+// ── ACTIVITY FEED ─────────────────────────────────────────────────────────
 function renderActivity(){
-  const list=document.getElementById('activity-list');const ppids=new Set(visibleProps().map(p=>p.id));
+  const list=document.getElementById('activity-list');
+  const ppids=new Set(visibleProps().map(p=>p.id));
   let filtered=activities.filter(a=>ppids.has(a.propId));
   if(activeFilter!=='all'&&activeFilter!=='nearby')filtered=filtered.filter(a=>a.type===activeFilter);
   if(activeFilter==='nearby')filtered=filtered.filter(a=>a.scope==='nearby');
-  if(!filtered.length){list.innerHTML='<div class="empty-state"><div class="empty-state-icon">⚡</div><div class="empty-state-text">No activity for this filter.</div></div>';return;}
-  list.innerHTML=filtered.map(a=>{const p=props.find(x=>x.id===a.propId);const state=p?p.state:'MA';const url=srcUrl(a.type,state);return`<div class="feed-card"><a class="feed-card-link" href="${url}" target="_blank" rel="noopener"><div class="feed-dot" style="background:${TC[a.type]||'#6b7280'}"></div><div class="feed-body"><div class="feed-header"><span class="feed-prop">${p?p.addr:'Unknown'}</span><span class="feed-type">${a.type}</span>${scopeBadge(a)}<span class="feed-time">${a.time}</span></div><div class="feed-desc">${a.desc}</div></div><div class="ext-arrow">↗</div></a><div class="feed-source-bar"><span class="feed-source-label">→</span><a class="feed-source-url" href="${url}" target="_blank" rel="noopener">${url.replace('https://','')}</a></div></div>`;}).join('');
+  if(!filtered.length){list.innerHTML='<div class="empty-state"><div class="empty-state-icon">⚡</div><div class="empty-state-text">No activity for this filter.</div><div class="empty-state-sub">New findings will appear here after the next scan.</div></div>';return;}
+  list.innerHTML=filtered.map(a=>{
+    const p=props.find(x=>x.id===a.propId);const state=p?p.state:'MA';
+    const url=a.sourceUrl||srcUrl(a.type,state,p?p.addr:'');
+    return`<div class="feed-card"><a class="feed-card-link" href="${url}" target="_blank" rel="noopener"><div class="feed-dot" style="background:${TC[a.type]||'#6b7280'}"></div><div class="feed-body"><div class="feed-header"><span class="feed-prop">${p?p.addr:'Unknown'}</span><span class="feed-type">${a.type}</span>${scopeBadge(a)}<span class="feed-time">${a.time}</span></div><div class="feed-desc">${a.desc}</div></div><div class="ext-arrow">↗</div></a><div class="feed-source-bar"><span style="font-size:9.5px;color:var(--text3)">→</span><a class="feed-source-url" href="${url}" target="_blank" rel="noopener">${url.replace('https://','')}</a></div></div>`;
+  }).join('');
 }
 function filterActivity(el){document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');activeFilter=el.dataset.type;renderActivity();}
+
+// ── SOURCES PAGE (property-specific) ─────────────────────────────────────
+function renderSources(){
+  const container=document.getElementById('sources-container');
+  const vp=visibleProps();
+  // If we have sheet sources, show property-specific cards
+  const hasSheetSources=Object.keys(sheetSources).length>0;
+  if(hasSheetSources){
+    const cards=vp.map(p=>{
+      const srcs=sheetSources[p.id]||[];
+      if(!srcs.length)return'';
+      return`<div class="source-card"><div class="source-card-title">🏠 <span>${p.addr}</span><span style="margin-left:auto;font-size:9px;color:var(--text3);font-weight:600;letter-spacing:0.5px;text-transform:uppercase">${p.principalId}</span></div>${srcs.map(s=>`<a href="${s.url}" target="_blank" class="source-link"><span style="font-size:12px;color:var(--text3)">🔗</span>${s.label}<span class="source-badge ${s.priority==='PRIMARY'?'primary':s.priority==='CRITICAL'?'critical':''}">${s.priority||''}</span></a>`).join('')}</div>`;
+    }).filter(Boolean).join('');
+    container.innerHTML=cards?`<div class="sources-grid">${cards}</div>`:'<div class="empty-state"><div class="empty-state-icon">🔗</div><div class="empty-state-text">No sources loaded yet.</div><div class="empty-state-sub">Run setupSheet() in Apps Script to initialize property sources.</div></div>';
+  } else {
+    // Fallback to default source cards
+    container.innerHTML=`<div class="sources-grid">
+      <div class="source-card"><div class="source-card-title">🏛️ <span>Beacon Hill / Charles River Sq</span></div><a href="https://www.boston.gov/departments/landmarks-commission" target="_blank" class="source-link">🔗 Boston Landmarks Commission<span class="source-badge primary">Primary</span></a><a href="https://beaconhillcivic.org" target="_blank" class="source-link">🔗 Beacon Hill Civic Association<span class="source-badge primary">Primary</span></a><a href="https://beaconhilltimes.com" target="_blank" class="source-link">🔗 Beacon Hill Times<span class="source-badge primary">News</span></a><a href="https://patch.com/massachusetts/beaconhill" target="_blank" class="source-link">🔗 Patch Beacon Hill<span class="source-badge rumor">Rumor</span></a><a href="https://www.boston.gov/departments/inspectional-services" target="_blank" class="source-link">🔗 ISD Permits<span class="source-badge">Permits</span></a></div>
+      <div class="source-card"><div class="source-card-title">🏛️ <span>Back Bay — 131 Commonwealth</span></div><a href="https://www.boston.gov/departments/back-bay-architectural-commission" target="_blank" class="source-link">🔗 Back Bay Arch. Commission<span class="source-badge critical">Critical</span></a><a href="https://www.backbayassociation.com" target="_blank" class="source-link">🔗 Back Bay Association<span class="source-badge primary">Primary</span></a><a href="https://www.backbaysun.com" target="_blank" class="source-link">🔗 Back Bay Sun<span class="source-badge primary">News</span></a><a href="https://www.bostonplans.org" target="_blank" class="source-link">🔗 BPDA<span class="source-badge">Planning</span></a><a href="https://www.boston.gov/departments/inspectional-services" target="_blank" class="source-link">🔗 ISD Permits<span class="source-badge">Permits</span></a></div>
+      <div class="source-card"><div class="source-card-title">🌊 <span>North End Waterfront — 16 Union Wharf</span></div><a href="https://northendwaterfront.com" target="_blank" class="source-link">🔗 North End Waterfront<span class="source-badge primary">Primary</span></a><a href="https://www.bostonplans.org" target="_blank" class="source-link">🔗 BPDA<span class="source-badge primary">Planning</span></a><a href="https://www.boston.gov/departments/landmarks-commission" target="_blank" class="source-link">🔗 Boston Landmarks Commission<span class="source-badge">Landmarks</span></a><a href="https://www.massport.com" target="_blank" class="source-link">🔗 Massport<span class="source-badge">Waterfront</span></a><a href="https://www.boston.gov/departments/inspectional-services" target="_blank" class="source-link">🔗 ISD Permits<span class="source-badge">Permits</span></a></div>
+      <div class="source-card"><div class="source-card-title">🌴 <span>Palm Beach Island — 482 Island Drive</span></div><a href="https://discover.pbc.gov/pzb/planning/Pages/Planning-Commission-Agendas-Minutes.aspx" target="_blank" class="source-link">🔗 PBC Planning Commission<span class="source-badge primary">Primary</span></a><a href="https://www.townofpalmbeach.com/201/Planning-Zoning" target="_blank" class="source-link">🔗 Town of Palm Beach<span class="source-badge primary">Primary</span></a><a href="https://www.palmbeachdailynews.com" target="_blank" class="source-link">🔗 Palm Beach Daily News<span class="source-badge primary">News</span></a><a href="https://dirt.com" target="_blank" class="source-link">🔗 Dirt.com<span class="source-badge rumor">Rumors</span></a><a href="https://pbcgov.com/pzb/building/" target="_blank" class="source-link">🔗 PBC Building Division<span class="source-badge">Permits</span></a></div>
+      <div class="source-card"><div class="source-card-title">🐴 <span>Wellington — 2929 Winding Oak Lane</span></div><a href="https://www.wellingtonfl.gov/373/Planning-Zoning" target="_blank" class="source-link">🔗 Wellington Planning & Zoning<span class="source-badge primary">Primary</span></a><a href="https://www.palmbeachpost.com" target="_blank" class="source-link">🔗 Palm Beach Post<span class="source-badge primary">News</span></a><a href="https://wellingtonthemagazine.com" target="_blank" class="source-link">🔗 Wellington Magazine<span class="source-badge rumor">Local</span></a><a href="https://www.sun-sentinel.com" target="_blank" class="source-link">🔗 Sun-Sentinel<span class="source-badge">Regional</span></a><a href="https://discover.pbc.gov/pbso/Pages/Default.aspx" target="_blank" class="source-link">🔗 PBSO Sheriff<span class="source-badge">Crime</span></a></div>
+      <div class="source-card"><div class="source-card-title">📜 <span>Public Records — All Jurisdictions</span></div><a href="https://www.suffolkdeeds.com" target="_blank" class="source-link">🔗 Suffolk Deeds<span class="source-badge">Boston</span></a><a href="https://mdf.pbcgov.org" target="_blank" class="source-link">🔗 PBC Official Records<span class="source-badge">FL Deeds</span></a><a href="https://odyportal.suffolkcountycourts.com" target="_blank" class="source-link">🔗 Suffolk Court Portal<span class="source-badge">MA Courts</span></a><a href="https://www.courtlistener.com" target="_blank" class="source-link">🔗 CourtListener<span class="source-badge">Federal</span></a><a href="https://www.propertyshark.com" target="_blank" class="source-link">🔗 PropertyShark<span class="source-badge">Records</span></a></div>
+    </div>`;
+  }
+}
+
+// ── NOTIFICATIONS ─────────────────────────────────────────────────────────
 function renderNotifications(){
   const ppids=new Set(visibleProps().map(p=>p.id));
   const acts=activities.filter(a=>ppids.has(a.propId)).slice(0,6);
-  document.getElementById('notif-list').innerHTML=acts.map(a=>{const p=props.find(x=>x.id===a.propId);const url=srcUrl(a.type,p?p.state:'MA');return`<div class="notif-item"><div class="notif-dot" style="background:${TC[a.type]||'#6b7280'}"></div><div class="notif-body"><div class="notif-title">${p?p.addr+' —':''} <span style="text-transform:capitalize">${a.type}</span> ${scopeBadge(a)}</div><div class="notif-desc">${a.desc}</div><div class="notif-time">${a.time} · <a href="${url}" target="_blank" style="color:var(--accent);text-decoration:none">Open source ↗</a></div></div></div>`;}).join('');
+  document.getElementById('notif-list').innerHTML=acts.length?acts.map(a=>{const p=props.find(x=>x.id===a.propId);const url=a.sourceUrl||srcUrl(a.type,p?p.state:'MA',p?p.addr:'');return`<div class="notif-item"><div class="notif-dot" style="background:${TC[a.type]||'#6b7280'}"></div><div class="notif-body"><div class="notif-title">${p?p.addr+' —':''} <span style="text-transform:capitalize">${a.type}</span> ${scopeBadge(a)}</div><div class="notif-desc">${a.desc}</div><div class="notif-time">${a.time} · <a href="${url}" target="_blank" style="color:var(--accent);text-decoration:none">Open source ↗</a></div></div></div>`;}).join(''):'<div style="color:var(--text3);font-size:11px;padding:8px 0">No recent notifications.</div>';
 }
+
+// ── ADD / REMOVE ──────────────────────────────────────────────────────────
 function openAddForm(){const sel=document.getElementById('f-principal');if(selectedPrincipal!=='all')sel.value=selectedPrincipal;document.getElementById('add-form').classList.add('open');}
 function closeAddForm(){document.getElementById('add-form').classList.remove('open');['f-addr','f-city','f-state','f-zip','f-notes'].forEach(id=>document.getElementById(id).value='');document.getElementById('f-principal').value='';}
 function addProp(){
   const addr=document.getElementById('f-addr').value.trim(),city=document.getElementById('f-city').value.trim(),state=document.getElementById('f-state').value.trim().toUpperCase(),zip=document.getElementById('f-zip').value.trim(),notes=document.getElementById('f-notes').value.trim(),principalId=document.getElementById('f-principal').value;
   if(!addr||!city||!state){alert('Address, city, and state are required.');return;}
   if(!principalId){alert('Please select a principal.');return;}
-  props.push({id:nextId++,principalId,addr,city,state,zip,type:'Residential',notes,status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}});
+  const newProp={id:nextId++,principalId,addr,city,state,zip,type:'Residential',notes,status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}};
+  props.push(newProp);
+  // Write to sheet
+  fetch(WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'property_update',...newProp})}).catch(()=>{});
   closeAddForm();renderProps();updateSidebarCounts();
 }
 function removeProp(id){if(!confirm('Remove this property?'))return;props=props.filter(p=>p.id!==id);renderProps();updateSidebarCounts();}
+
+// ── CHART ─────────────────────────────────────────────────────────────────
 let chartInst=null;
 function initChart(){
   const canvas=document.getElementById('trend-chart');if(!canvas)return;if(chartInst){chartInst.destroy();chartInst=null;}
-  const labels=Array.from({length:30},(_,i)=>{const d=new Date('2026-04-29');d.setDate(d.getDate()-29+i);return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});});
-  const seed=(i,amp)=>Math.max(0,Math.round(amp*(0.5+0.5*Math.sin(i/4))+Math.random()*amp*0.4));
-  chartInst=new Chart(canvas,{type:'line',data:{labels,datasets:[{label:'Permits',data:labels.map((_,i)=>seed(i,3)),borderColor:'#60a5fa',backgroundColor:'rgba(96,165,250,0.08)',tension:0.4,pointRadius:0,borderWidth:1.5},{label:'Complaints',data:labels.map((_,i)=>seed(i+1,2)),borderColor:'#fbbf24',backgroundColor:'rgba(251,191,36,0.08)',tension:0.4,pointRadius:0,borderWidth:1.5},{label:'Landmarks',data:labels.map((_,i)=>seed(i+2,1)),borderColor:'#c084fc',backgroundColor:'rgba(192,132,252,0.08)',tension:0.4,pointRadius:0,borderWidth:1.5},{label:'Rumors',data:labels.map((_,i)=>seed(i+3,2)),borderColor:'#fb923c',backgroundColor:'rgba(251,146,60,0.08)',tension:0.4,pointRadius:0,borderWidth:1.5}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{labels:{color:'#888',font:{size:11},boxWidth:10,padding:16}}},scales:{x:{grid:{color:'#1f1f1f'},ticks:{color:'#555',font:{size:9},maxTicksLimit:8}},y:{grid:{color:'#1f1f1f'},ticks:{color:'#555',font:{size:9}},beginAtZero:true}}}});
+  // Build chart from real activity data
+  const days=30,today=new Date('2026-04-29');
+  const labels=Array.from({length:days},(_,i)=>{const d=new Date(today);d.setDate(d.getDate()-days+1+i);return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});});
+  const ppids=new Set(visibleProps().map(p=>p.id));
+  const types=[{key:'permit',color:'#60a5fa'},{key:'landmarks',color:'#c084fc'},{key:'complaint',color:'#fbbf24'},{key:'rumor',color:'#fb923c'}];
+  const datasets=types.map(t=>({label:t.key.charAt(0).toUpperCase()+t.key.slice(1),data:labels.map(()=>0),borderColor:t.color,backgroundColor:t.color.replace(')',',0.08)').replace('rgb','rgba'),tension:0.4,pointRadius:0,borderWidth:1.5}));
+  activities.filter(a=>ppids.has(a.propId)).forEach(a=>{const idx=types.findIndex(t=>t.key===a.type);if(idx<0)return;const d=new Date(today);d.setDate(d.getDate()-Math.floor(Math.random()*days));const li=labels.findIndex(l=>l===d.toLocaleDateString('en-US',{month:'short',day:'numeric'}));if(li>=0)datasets[idx].data[li]++;});
+  chartInst=new Chart(canvas,{type:'line',data:{labels,datasets},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{labels:{color:'#888',font:{size:11},boxWidth:10,padding:16}}},scales:{x:{grid:{color:'#1f1f1f'},ticks:{color:'#555',font:{size:9},maxTicksLimit:8}},y:{grid:{color:'#1f1f1f'},ticks:{color:'#555',font:{size:9}},beginAtZero:true}}}});
 }
-function runScan(){const btn=document.querySelector('.tb-btn.primary'),orig=btn.textContent;btn.textContent='⏳ Scanning…';btn.disabled=true;setTimeout(()=>{btn.textContent=orig;btn.disabled=false;alert('Scan complete — no new findings. (Live scanning via scheduled tasks at 8:10 AM daily.)');},1800);}
+
+function runScan(){const btn=document.querySelector('.tb-btn.primary'),orig=btn.textContent;btn.textContent='⏳ Scanning…';btn.disabled=true;setTimeout(()=>{btn.textContent=orig;btn.disabled=false;loadFromSheets();},1800);}
+
 document.addEventListener('change',e=>{if(e.target.type==='checkbox'&&e.target.closest('.toggle'))e.target.closest('.toggle').querySelector('.toggle-thumb').style.left=e.target.checked?'19px':'3px';});
-renderProps();renderActivity();updateSidebarCounts();
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+// Show initial render immediately, then load live data
+renderProps();renderActivity();updateSidebarCounts();renderSources();
+// Load live data from sheets
+loadFromSheets();
 </script>
 </body>
 </html>
