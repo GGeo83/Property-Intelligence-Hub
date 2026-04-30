@@ -501,9 +501,15 @@ const TC={permit:'#60a5fa',complaint:'#fbbf24',crime:'#f87171',landmarks:'#c084f
 const PRINCIPALS=[{id:'APJCJM',initials:'AJ'},{id:'ECJIV',initials:'EC'},{id:'ELJ',initials:'EL'},{id:'EBJ',initials:'EB'}];
 let props=[
   {id:1,principalId:'APJCJM',addr:'56 Beacon Street',city:'Boston',state:'MA',zip:'02108',type:'Residential',notes:'Beacon Hill Historic District — BLC oversight',status:'amber',counts:{permit:3,complaint:1,crime:0,landmarks:2,planning:0,rumor:2}},
-  {id:2,principalId:'APJCJM',addr:'482 Island Drive',city:'Palm Beach',state:'FL',zip:'33480',type:'Residential',notes:'PBC Planning Commission agendas monitored (PDF)',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:2,rumor:1}}
+  {id:2,principalId:'APJCJM',addr:'482 Island Drive',city:'Palm Beach',state:'FL',zip:'33480',type:'Residential',notes:'PBC Planning Commission agendas monitored (PDF)',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:2,rumor:1}},
+  {id:3,principalId:'ELJ',addr:'18 Louisburg Square',city:'Boston',state:'MA',zip:'02108',type:'Residential',notes:'Beacon Hill — historic cobblestone square',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}},
+  {id:4,principalId:'ELJ',addr:'2929 Winding Oak Lane',city:'Wellington',state:'FL',zip:'33414',type:'Residential',notes:'Wellington equestrian community',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}},
+  {id:5,principalId:'ECJIV',addr:'16 Union Wharf',city:'Boston',state:'MA',zip:'02109',type:'Residential',notes:'North End waterfront',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}},
+  {id:6,principalId:'ECJIV',addr:'131 Commonwealth Avenue',city:'Boston',state:'MA',zip:'02116',type:'Residential',notes:'Back Bay',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}},
+  {id:7,principalId:'EBJ',addr:'1 Charles River Square',city:'Boston',state:'MA',zip:'02114',type:'Residential',notes:'Beacon Hill — Charles River Square',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}},
+  {id:8,principalId:'EBJ',addr:'3 Charles River Square',city:'Boston',state:'MA',zip:'02114',type:'Residential',notes:'Beacon Hill — Charles River Square',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}}
 ];
-let nextId=3;
+let nextId=9;
 let activities=[
   {id:1,propId:1,type:'permit',scope:'property',desc:'Renovation permit application filed for exterior work at 56 Beacon St',time:'Apr 28, 2026 · 9:14 AM'},
   {id:2,propId:1,type:'landmarks',scope:'property',desc:'BLC pre-application inquiry logged — window replacement scope under review',time:'Apr 27, 2026 · 2:03 PM'},
