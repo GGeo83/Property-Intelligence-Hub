@@ -152,8 +152,8 @@ select.field-input{appearance:none;cursor:pointer}
 /* DETAIL PANEL */
 #overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:100;display:none;opacity:0;transition:opacity 0.25s}
 #overlay.open{display:block;opacity:1}
-#detail-panel{position:fixed;top:0;right:-440px;width:420px;height:100vh;background:var(--surface);border-left:1px solid var(--border);z-index:101;transition:right 0.28s cubic-bezier(0.16,1,0.3,1);display:flex;flex-direction:column;overflow:hidden}
-#detail-panel.open{right:0}
+#detail-panel{position:fixed;top:0;right:-440px;width:420px;height:100vh;background:var(--surface);border-left:1px solid var(--border);z-index:101;transition:right 0.28s cubic-bezier(0.16,1,0.3,1);display:flex;flex-direction:column;overflow:hidden;box-shadow:-8px 0 32px rgba(0,0,0,0)}
+#detail-panel.open{right:0;box-shadow:-8px 0 40px rgba(0,0,0,0.55)}
 .dp-header{padding:18px 20px 14px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:10px}
 .dp-close{background:none;border:none;color:var(--text3);cursor:pointer;font-size:18px;line-height:1;padding:0;margin-left:auto;transition:color 0.15s}
 .dp-close:hover{color:var(--text)}
@@ -264,6 +264,54 @@ select.field-input{appearance:none;cursor:pointer}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
 
+/* ── MOBILE ────────────────────────────────────────────────────────────── */
+#mob-menu-btn{display:none;background:none;border:none;color:var(--text2);cursor:pointer;padding:4px 6px;font-size:20px;line-height:1;align-items:center;justify-content:center;flex-shrink:0}
+#mob-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:199;display:none;backdrop-filter:blur(2px)}
+#mob-overlay.open{display:block}
+@media(max-width:768px){
+  body{overflow:hidden}
+  /* Sidebar becomes a slide-in drawer */
+  #sidebar{position:fixed;left:-244px;top:0;height:100vh;z-index:200;transition:left 0.28s cubic-bezier(0.16,1,0.3,1);box-shadow:4px 0 32px rgba(0,0,0,0.6)}
+  #sidebar.mob-open{left:0}
+  #mob-menu-btn{display:flex}
+  /* Main fills full width */
+  #main{width:100%}
+  /* Topbar */
+  #topbar{padding:0 10px;gap:6px}
+  .tb-page-sub{display:none}
+  .tb-btn:not(.primary){display:none}
+  /* Content */
+  #content{padding:10px}
+  /* Property rows reflow */
+  .prop-row{flex-wrap:wrap;align-items:flex-start}
+  .prop-addr-block{min-width:0;flex:1;padding:10px 0 4px}
+  .prop-pills{width:100%;padding:0 8px 8px 36px;order:10}
+  .pills-col{flex-direction:row;flex-wrap:wrap;gap:4px}
+  .prop-status{padding:8px 10px 0 0}
+  .prop-actions{display:none}
+  /* Add form */
+  .add-form-grid{grid-template-columns:1fr 1fr}
+  .add-form-row2{grid-template-columns:1fr}
+  /* Detail panel full-width */
+  #detail-panel{width:100%;right:-100%;border-left:none;border-top:1px solid var(--border);border-radius:16px 16px 0 0;top:auto;bottom:-100%;height:92vh;transition:bottom 0.3s cubic-bezier(0.16,1,0.3,1)}
+  #detail-panel.open{right:0;bottom:0}
+  /* Activity filters wrap */
+  .activity-filters{gap:5px}
+  .filter-chip{font-size:10.5px;padding:3px 9px}
+  /* Sources grid single column */
+  .sources-grid{grid-template-columns:1fr}
+  /* Reports grid */
+  .report-chart-card~div[style*="grid"]{grid-template-columns:1fr!important}
+  /* Map */
+  .map-toolbar{flex-wrap:wrap;gap:6px}
+  .map-legend{display:none}
+  #map-container{height:calc(100vh - 130px)}
+  /* Settings/Notif rows */
+  .setting-input{width:100%;margin-top:4px}
+  .setting-row{flex-wrap:wrap}
+  /* dp counts grid stays 3-col — compact enough */
+}
+
 /* MAP */
 #map-container .leaflet-container{background:#080808}
 .leaflet-container{background:#0d0d0d!important}
@@ -358,8 +406,10 @@ function checkGate(){
 </div>
 
 <!-- MAIN -->
+<div id="mob-overlay" onclick="closeMobMenu()"></div>
 <div id="main">
   <div id="topbar">
+    <button id="mob-menu-btn" onclick="toggleMobMenu()" aria-label="Menu">☰</button>
     <div class="tb-breadcrumb">
       <span class="tb-principal-chip" id="tb-principal-chip">All</span>
       <span class="tb-sep">›</span>
@@ -680,6 +730,7 @@ function setSyncBadge(state){
 function selectPrincipal(el){
   document.querySelectorAll('.principal-item').forEach(i=>i.classList.remove('active'));
   el.classList.add('active');selectedPrincipal=el.dataset.pid;
+  closeMobMenu();
   document.getElementById('tb-principal-chip').textContent=selectedPrincipal==='all'?'All':selectedPrincipal;
   const cl=document.getElementById('chart-principal-label');if(cl)cl.textContent=selectedPrincipal==='all'?'All Properties':selectedPrincipal+' Portfolio';
   renderProps();renderActivity();updateSidebarCounts();renderSources();
@@ -710,6 +761,7 @@ function updateSidebarCounts(){
 const PT={properties:['Properties','All monitored properties'],activity:['Activity Feed','Click any alert to open its source'],map:['Map View','Live property locations with alert status'],sources:['Sources','Property-specific portals and news feeds'],reports:['Reports','Trends and email history'],notifications:['Notifications','Alert preferences'],settings:['Settings','Principals, data layer, credentials']};
 function nav(el){
   document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));el.classList.add('active');
+  closeMobMenu();
   const p=el.dataset.page;
   document.querySelectorAll('.page').forEach(pg=>pg.classList.remove('active'));
   document.getElementById('page-'+p).classList.add('active');
@@ -749,7 +801,20 @@ function openDetail(id){
   renderDetailActs(id);
   const propLinks=sheetSources[id]?sheetSources[id].map(s=>({label:s.label,url:s.url,icon:'🔗'})):getPropLinks(p);
   document.getElementById('dp-links').innerHTML=propLinks.map(l=>`<a href="${l.url}" target="_blank" style="display:flex;align-items:center;gap:7px;padding:7px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text2);text-decoration:none;font-size:11.5px;font-weight:500" onmouseover="this.style.background='var(--border2)';this.style.color='var(--text)'" onmouseout="this.style.background='var(--surface2)';this.style.color='var(--text2)'"><span>${l.icon}</span>${l.label}</a>`).join('');
-  document.getElementById('overlay').classList.add('open');document.getElementById('detail-panel').classList.add('open');
+  const onMap=document.getElementById('page-map').classList.contains('active');
+  // On map page: slide panel over map without darkening overlay — map stays live
+  if(!onMap)document.getElementById('overlay').classList.add('open');
+  document.getElementById('detail-panel').classList.add('open');
+  // Pan map so selected pin is visible in the left portion (clear of the panel)
+  if(onMap&&mapInst){
+    const coords=getPropCoords(p);
+    if(coords){
+      const panelW=window.innerWidth<=768?0:420;
+      const offsetX=panelW/2; // shift map left so pin centers in visible area
+      mapInst.panTo(coords,{animate:true,duration:0.5});
+      setTimeout(()=>mapInst.panBy([offsetX/2,0],{animate:true,duration:0.3}),520);
+    }
+  }
 }
 function renderDetailCounts(id){
   const p=props.find(x=>x.id===id);if(!p)return;
@@ -773,7 +838,16 @@ function filterDetailActs(type,id){
   renderDetailCounts(id);
   renderDetailActs(id);
 }
-function closeDetail(){selectedPropId=null;detailActFilter='all';document.getElementById('overlay').classList.remove('open');document.getElementById('detail-panel').classList.remove('open');renderProps();}
+function closeDetail(){
+  selectedPropId=null;detailActFilter='all';
+  document.getElementById('overlay').classList.remove('open');
+  document.getElementById('detail-panel').classList.remove('open');
+  renderProps();
+  // Re-fit map after panel closes so full map is visible again
+  if(document.getElementById('page-map').classList.contains('active')&&mapInst){
+    setTimeout(()=>{mapInst.invalidateSize();},320);
+  }
+}
 
 // ── ACTIVITY FEED ─────────────────────────────────────────────────────────
 function renderActivity(){
@@ -859,62 +933,4 @@ function initMap(){
   if(!mapInst){
     mapInst=L.map('map-container',{zoomControl:true,scrollWheelZoom:true});
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
-      attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/attributions">CARTO</a>',
-      subdomains:'abcd',maxZoom:19
-    }).addTo(mapInst);
-  }
-  setTimeout(()=>{mapInst.invalidateSize();renderMapMarkers();},80);
-}
-function renderMapMarkers(){
-  if(!mapInst)return;
-  mapLayers.forEach(l=>l.remove());mapLayers=[];
-  const vp=visibleProps();
-  const bounds=[];
-  const cntEl=document.getElementById('map-prop-count');
-  if(cntEl)cntEl.textContent=vp.length+' propert'+(vp.length===1?'y':'ies');
-  vp.forEach(p=>{
-    const coords=getPropCoords(p);if(!coords)return;
-    bounds.push(coords);
-    const col=p.status==='red'?'#ef4444':p.status==='amber'?'#f59e0b':'#22c55e';
-    const isPulsing=(p.status==='red'||p.status==='amber')&&!seenProps.has(p.id);
-    const totalActs=Object.values(p.counts).reduce((a,b)=>a+b,0);
-    const ring=isPulsing?`<div class="map-pin-ring" style="border-color:${col}"></div>`:'';
-    const icon=L.divIcon({
-      className:'',
-      html:`<div class="map-marker-wrap">${ring}<div class="map-pin" style="background:${col}99;box-shadow:0 0 12px ${col}66" onclick="openDetail(${p.id})"><span class="map-pin-label">${totalActs||'●'}</span></div></div>`,
-      iconSize:[36,36],iconAnchor:[18,18]
-    });
-    const ttip=`<div style="font-weight:700;margin-bottom:2px">${p.addr}</div><div style="color:#aaa;font-size:11px">${p.city}, ${p.state} &nbsp;·&nbsp; <span style="color:#60a5fa">${p.principalId}</span></div>${totalActs?`<div style="color:#666;font-size:10px;margin-top:3px">${totalActs} alert${totalActs===1?'':'s'} in 30 days</div>`:''}`;
-    const marker=L.marker(coords,{icon})
-      .bindTooltip(ttip,{direction:'top',offset:[0,-14],opacity:1})
-      .on('click',()=>openDetail(p.id));
-    marker.addTo(mapInst);
-    mapLayers.push(marker);
-    const circle=L.circle(coords,{color:col,fillColor:col,fillOpacity:0.06,opacity:0.25,weight:1,radius:p.state==='MA'?200:320,interactive:false,dashArray:'4,4'});
-    circle.addTo(mapInst);
-    mapLayers.push(circle);
-  });
-  if(bounds.length===1){mapInst.setView(bounds[0],16);}
-  else if(bounds.length>1){try{mapInst.fitBounds(L.latLngBounds(bounds),{padding:[60,60],maxZoom:15});}catch(e){mapInst.setView(bounds[0],13);}}
-}
-function mapGoTo(region){
-  if(!mapInst)return;
-  if(region==='boston')mapInst.flyTo([42.3573,-71.0705],14,{duration:1});
-  else if(region==='florida')mapInst.flyTo([26.6750,-80.1700],11,{duration:1});
-}
-function mapFitAll(){
-  if(!mapInst)return;
-  const pts=visibleProps().map(p=>getPropCoords(p)).filter(Boolean);
-  if(pts.length>0)mapInst.fitBounds(L.latLngBounds(pts),{padding:[60,60],maxZoom:15});
-}
-
-function runScan(){const btn=document.querySelector('.tb-btn.primary'),orig=btn.textContent;btn.textContent='⏳ Scanning…';btn.disabled=true;setTimeout(()=>{btn.textContent=orig;btn.disabled=false;loadFromSheets();},1800);}
-
-document.addEventListener('change',e=>{if(e.target.type==='checkbox'&&e.target.closest('.toggle'))e.target.closest('.toggle').querySelector('.toggle-thumb').style.left=e.target.checked?'19px':'3px';});
-
-// ── INIT ──────────────────────────────────────────────────────────────────
-renderProps();renderActivity();updateSidebarCounts();renderSources();
-loadFromSheets();
-</script>
-</body>
-</html>
+      attribution:'© <a href="
