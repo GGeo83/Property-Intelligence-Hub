@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Property Intelligence Hub</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -261,6 +263,27 @@ select.field-input{appearance:none;cursor:pointer}
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+/* MAP */
+#map-container .leaflet-container{background:#080808}
+.leaflet-container{background:#0d0d0d!important}
+.leaflet-control-attribution{background:rgba(8,8,8,0.7)!important;color:var(--text3)!important;font-size:9px!important}
+.leaflet-control-attribution a{color:var(--text3)!important}
+.leaflet-control-zoom a{background:var(--surface)!important;color:var(--text2)!important;border-color:var(--border2)!important}
+.leaflet-control-zoom a:hover{background:var(--surface2)!important;color:var(--text)!important}
+.leaflet-tooltip{background:var(--surface)!important;border:1px solid var(--border2)!important;color:var(--text)!important;font-family:var(--font)!important;font-size:12px!important;padding:7px 11px!important;box-shadow:0 4px 16px rgba(0,0,0,0.5)!important;border-radius:7px!important}
+.leaflet-tooltip::before{display:none!important}
+.map-marker-wrap{position:relative;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.map-pin{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 12px rgba(0,0,0,0.5);border:2.5px solid rgba(255,255,255,0.2);position:relative;z-index:2}
+.map-pin-label{font-size:10px;font-weight:800;color:#fff;line-height:1;pointer-events:none}
+.map-pin-ring{position:absolute;inset:-9px;border-radius:50%;border:2px solid;animation:map-ring 2s ease-out infinite;z-index:1;pointer-events:none}
+@keyframes map-ring{0%{transform:scale(0.8);opacity:1}100%{transform:scale(1.7);opacity:0}}
+.map-toolbar{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.map-region-btn{background:var(--surface2);border:1px solid var(--border2);color:var(--text2);padding:5px 12px;border-radius:6px;cursor:pointer;font-size:11.5px;font-weight:500;transition:all 0.15s;font-family:var(--font)}
+.map-region-btn:hover{background:var(--border2);color:var(--text)}
+.map-legend{display:flex;align-items:center;gap:14px;margin-left:auto;font-size:10.5px;color:var(--text3)}
+.map-legend-item{display:flex;align-items:center;gap:5px}
+.map-legend-dot{width:9px;height:9px;border-radius:50%}
 </style>
 </head>
 <body>
@@ -320,6 +343,7 @@ function checkGate(){
     <div class="sb-section-label">Monitor</div>
     <div class="sb-item active" data-page="properties" onclick="nav(this)"><span class="sb-item-icon">🏠</span>Properties<span class="sb-item-badge" id="badge-alerts" style="display:none">0</span></div>
     <div class="sb-item" data-page="activity" onclick="nav(this)"><span class="sb-item-icon">⚡</span>Activity Feed</div>
+    <div class="sb-item" data-page="map" onclick="nav(this)"><span class="sb-item-icon">🗺️</span>Map View</div>
     <div class="sb-section-label">Analyze</div>
     <div class="sb-item" data-page="sources" onclick="nav(this)"><span class="sb-item-icon">🔗</span>Sources</div>
     <div class="sb-item" data-page="reports" onclick="nav(this)"><span class="sb-item-icon">📊</span>Reports</div>
@@ -390,6 +414,23 @@ function checkGate(){
         <span class="filter-chip" data-type="nearby" onclick="filterActivity(this)">Nearby Only</span>
       </div>
       <div id="activity-list"></div>
+    </div>
+
+    <div id="page-map" class="page">
+      <div class="map-toolbar">
+        <h3 style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:1px">Property Locations</h3>
+        <span class="prop-count-badge" id="map-prop-count">8 properties</span>
+        <button class="map-region-btn" onclick="mapGoTo('boston')">🏙 Boston</button>
+        <button class="map-region-btn" onclick="mapGoTo('florida')">🌴 Florida</button>
+        <button class="map-region-btn" onclick="mapFitAll()">⊞ Fit All</button>
+        <div class="map-legend">
+          <div class="map-legend-item"><div class="map-legend-dot" style="background:var(--red);box-shadow:0 0 5px var(--red)"></div>Alert</div>
+          <div class="map-legend-item"><div class="map-legend-dot" style="background:var(--amber);box-shadow:0 0 5px var(--amber)"></div>Active</div>
+          <div class="map-legend-item"><div class="map-legend-dot" style="background:var(--green)"></div>Clear</div>
+          <div class="map-legend-item" style="border-left:1px solid var(--border);padding-left:14px;color:var(--text3);font-style:italic">Ring = monitoring radius</div>
+        </div>
+      </div>
+      <div id="map-container" style="height:calc(100vh - 162px);border-radius:10px;overflow:hidden;border:1px solid var(--border)"></div>
     </div>
 
     <div id="page-sources" class="page">
@@ -547,6 +588,22 @@ function getPropLinks(p){
   return PROP_LINKS['Beacon Hill'];
 }
 
+// ── PROPERTY COORDINATES ─────────────────────────────────────────────────
+const PROP_COORDS_MAP=[
+  {match:'56 Beacon',       coords:[42.3570,-71.0676]},
+  {match:'482 Island',      coords:[26.6913,-80.0390]},
+  {match:'Union Wharf',     coords:[42.3638,-71.0513]},
+  {match:'131 Commonwealth',coords:[42.3500,-71.0819]},
+  {match:'Louisburg',       coords:[42.3573,-71.0710]},
+  {match:'Winding Oak',     coords:[26.6597,-80.2518]},
+  {match:'1 Charles River', coords:[42.3591,-71.0718]},
+  {match:'3 Charles River', coords:[42.3591,-71.0720]}
+];
+function getPropCoords(p){
+  const m=PROP_COORDS_MAP.find(x=>p.addr.includes(x.match));
+  return m?m.coords:null;
+}
+
 // ── STATE ─────────────────────────────────────────────────────────────────
 let props=[...SEED_PROPS];
 let activities=[...SEED_ACTIVITIES];
@@ -626,6 +683,7 @@ function selectPrincipal(el){
   document.getElementById('tb-principal-chip').textContent=selectedPrincipal==='all'?'All':selectedPrincipal;
   const cl=document.getElementById('chart-principal-label');if(cl)cl.textContent=selectedPrincipal==='all'?'All Properties':selectedPrincipal+' Portfolio';
   renderProps();renderActivity();updateSidebarCounts();renderSources();
+  if(document.getElementById('page-map').classList.contains('active'))renderMapMarkers();
 }
 function visibleProps(){return selectedPrincipal==='all'?props:props.filter(p=>p.principalId===selectedPrincipal);}
 function updateSidebarCounts(){
@@ -649,7 +707,7 @@ function updateSidebarCounts(){
 }
 
 // ── NAV ───────────────────────────────────────────────────────────────────
-const PT={properties:['Properties','All monitored properties'],activity:['Activity Feed','Click any alert to open its source'],sources:['Sources','Property-specific portals and news feeds'],reports:['Reports','Trends and email history'],notifications:['Notifications','Alert preferences'],settings:['Settings','Principals, data layer, credentials']};
+const PT={properties:['Properties','All monitored properties'],activity:['Activity Feed','Click any alert to open its source'],map:['Map View','Live property locations with alert status'],sources:['Sources','Property-specific portals and news feeds'],reports:['Reports','Trends and email history'],notifications:['Notifications','Alert preferences'],settings:['Settings','Principals, data layer, credentials']};
 function nav(el){
   document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));el.classList.add('active');
   const p=el.dataset.page;
@@ -659,6 +717,7 @@ function nav(el){
   if(p==='reports')setTimeout(initChart,50);
   if(p==='notifications')renderNotifications();
   if(p==='sources')renderSources();
+  if(p==='map')setTimeout(initMap,50);
 }
 
 // ── SCOPE BADGE ───────────────────────────────────────────────────────────
@@ -774,7 +833,6 @@ function addProp(){
   if(!principalId){alert('Please select a principal.');return;}
   const newProp={id:nextId++,principalId,addr,city,state,zip,type:'Residential',notes,status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}};
   props.push(newProp);
-  // Write to sheet
   fetch(WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'property_update',...newProp})}).catch(()=>{});
   closeAddForm();renderProps();updateSidebarCounts();
 }
@@ -784,7 +842,6 @@ function removeProp(id){if(!confirm('Remove this property?'))return;props=props.
 let chartInst=null;
 function initChart(){
   const canvas=document.getElementById('trend-chart');if(!canvas)return;if(chartInst){chartInst.destroy();chartInst=null;}
-  // Build chart from real activity data
   const days=30,today=new Date('2026-04-29');
   const labels=Array.from({length:days},(_,i)=>{const d=new Date(today);d.setDate(d.getDate()-days+1+i);return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});});
   const ppids=new Set(visibleProps().map(p=>p.id));
@@ -794,14 +851,69 @@ function initChart(){
   chartInst=new Chart(canvas,{type:'line',data:{labels,datasets},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{labels:{color:'#888',font:{size:11},boxWidth:10,padding:16}}},scales:{x:{grid:{color:'#1f1f1f'},ticks:{color:'#555',font:{size:9},maxTicksLimit:8}},y:{grid:{color:'#1f1f1f'},ticks:{color:'#555',font:{size:9}},beginAtZero:true}}}});
 }
 
+// ── MAP ───────────────────────────────────────────────────────────────────
+let mapInst=null,mapLayers=[];
+function initMap(){
+  if(!window.L){setTimeout(initMap,200);return;}
+  const el=document.getElementById('map-container');if(!el)return;
+  if(!mapInst){
+    mapInst=L.map('map-container',{zoomControl:true,scrollWheelZoom:true});
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
+      attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/attributions">CARTO</a>',
+      subdomains:'abcd',maxZoom:19
+    }).addTo(mapInst);
+  }
+  setTimeout(()=>{mapInst.invalidateSize();renderMapMarkers();},80);
+}
+function renderMapMarkers(){
+  if(!mapInst)return;
+  mapLayers.forEach(l=>l.remove());mapLayers=[];
+  const vp=visibleProps();
+  const bounds=[];
+  const cntEl=document.getElementById('map-prop-count');
+  if(cntEl)cntEl.textContent=vp.length+' propert'+(vp.length===1?'y':'ies');
+  vp.forEach(p=>{
+    const coords=getPropCoords(p);if(!coords)return;
+    bounds.push(coords);
+    const col=p.status==='red'?'#ef4444':p.status==='amber'?'#f59e0b':'#22c55e';
+    const isPulsing=(p.status==='red'||p.status==='amber')&&!seenProps.has(p.id);
+    const totalActs=Object.values(p.counts).reduce((a,b)=>a+b,0);
+    const ring=isPulsing?`<div class="map-pin-ring" style="border-color:${col}"></div>`:'';
+    const icon=L.divIcon({
+      className:'',
+      html:`<div class="map-marker-wrap">${ring}<div class="map-pin" style="background:${col}99;box-shadow:0 0 12px ${col}66" onclick="openDetail(${p.id})"><span class="map-pin-label">${totalActs||'●'}</span></div></div>`,
+      iconSize:[36,36],iconAnchor:[18,18]
+    });
+    const ttip=`<div style="font-weight:700;margin-bottom:2px">${p.addr}</div><div style="color:#aaa;font-size:11px">${p.city}, ${p.state} &nbsp;·&nbsp; <span style="color:#60a5fa">${p.principalId}</span></div>${totalActs?`<div style="color:#666;font-size:10px;margin-top:3px">${totalActs} alert${totalActs===1?'':'s'} in 30 days</div>`:''}`;
+    const marker=L.marker(coords,{icon})
+      .bindTooltip(ttip,{direction:'top',offset:[0,-14],opacity:1})
+      .on('click',()=>openDetail(p.id));
+    marker.addTo(mapInst);
+    mapLayers.push(marker);
+    const circle=L.circle(coords,{color:col,fillColor:col,fillOpacity:0.06,opacity:0.25,weight:1,radius:p.state==='MA'?200:320,interactive:false,dashArray:'4,4'});
+    circle.addTo(mapInst);
+    mapLayers.push(circle);
+  });
+  if(bounds.length===1){mapInst.setView(bounds[0],16);}
+  else if(bounds.length>1){try{mapInst.fitBounds(L.latLngBounds(bounds),{padding:[60,60],maxZoom:15});}catch(e){mapInst.setView(bounds[0],13);}}
+}
+function mapGoTo(region){
+  if(!mapInst)return;
+  if(region==='boston')mapInst.flyTo([42.3573,-71.0705],14,{duration:1});
+  else if(region==='florida')mapInst.flyTo([26.6750,-80.1700],11,{duration:1});
+}
+function mapFitAll(){
+  if(!mapInst)return;
+  const pts=visibleProps().map(p=>getPropCoords(p)).filter(Boolean);
+  if(pts.length>0)mapInst.fitBounds(L.latLngBounds(pts),{padding:[60,60],maxZoom:15});
+}
+
 function runScan(){const btn=document.querySelector('.tb-btn.primary'),orig=btn.textContent;btn.textContent='⏳ Scanning…';btn.disabled=true;setTimeout(()=>{btn.textContent=orig;btn.disabled=false;loadFromSheets();},1800);}
 
 document.addEventListener('change',e=>{if(e.target.type==='checkbox'&&e.target.closest('.toggle'))e.target.closest('.toggle').querySelector('.toggle-thumb').style.left=e.target.checked?'19px':'3px';});
 
 // ── INIT ──────────────────────────────────────────────────────────────────
-// Show initial render immediately, then load live data
 renderProps();renderActivity();updateSidebarCounts();renderSources();
-// Load live data from sheets
 loadFromSheets();
 </script>
 </body>
