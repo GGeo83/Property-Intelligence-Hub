@@ -111,6 +111,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);display:flex
 .alert-dot.red{background:var(--red);animation:blink-red 1.2s ease-in-out infinite}
 .alert-dot.amber{background:var(--amber);animation:blink-amber 2s ease-in-out infinite}
 .alert-dot.green{background:var(--green)}
+.alert-dot.acknowledged{animation:none!important;opacity:0.38}
 .prop-addr-block{width:210px;min-width:210px;padding:10px 0}
 .prop-addr{font-size:13px;font-weight:600;letter-spacing:-0.3px}
 .prop-city{font-size:11px;color:var(--text2);margin-top:1px}
@@ -162,7 +163,10 @@ select.field-input{appearance:none;cursor:pointer}
 .dp-section{margin-bottom:18px}
 .dp-section-title{font-size:9.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:10px}
 .dp-counts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
-.dp-count-card{background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:10px 8px;text-align:center}
+.dp-count-card{background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:10px 8px;text-align:center;cursor:pointer;transition:background 0.15s,border-color 0.15s,opacity 0.15s;user-select:none}
+.dp-count-card:hover{background:var(--border2)}
+.dp-count-card.active{border-color:var(--accent);background:var(--accent-dim)}
+.dp-count-card.dimmed{opacity:0.35}
 .dp-count-n{font-size:22px;font-weight:800;letter-spacing:-1px}
 .dp-count-l{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;margin-top:2px}
 .dp-count-card.permit .dp-count-n{color:#60a5fa}
@@ -471,7 +475,7 @@ function checkGate(){
   </div>
   <div class="dp-body">
     <div class="dp-section"><div class="dp-section-title">Activity Counts (30 days)</div><div class="dp-counts-grid" id="dp-counts"></div></div>
-    <div class="dp-section"><div class="dp-section-title">Recent Activity — click to open source ↗</div><div id="dp-activity"></div></div>
+    <div class="dp-section"><div class="dp-section-title" id="dp-activity-title">Recent Activity — click to open source ↗</div><div id="dp-activity"></div></div>
     <div class="dp-section"><div class="dp-section-title">Quick Links</div><div id="dp-links" style="display:flex;flex-direction:column;gap:5px"></div></div>
   </div>
 </div>
@@ -550,6 +554,9 @@ let sheetSources={};
 let nextId=9;
 let activeFilter='all',selectedPropId=null,selectedPrincipal='all';
 let lastSynced=null;
+let detailActFilter='all';
+let seenProps=new Set();
+try{const _s=localStorage.getItem('pih_seen');if(_s)JSON.parse(_s).forEach(id=>seenProps.add(id));}catch(e){}
 
 // ── GOOGLE SHEETS LIVE LOAD ───────────────────────────────────────────────
 async function loadFromSheets(silent=false){
@@ -623,17 +630,20 @@ function selectPrincipal(el){
 function visibleProps(){return selectedPrincipal==='all'?props:props.filter(p=>p.principalId===selectedPrincipal);}
 function updateSidebarCounts(){
   const vp=visibleProps();
-  const alerts=vp.filter(p=>p.status==='red'||p.status==='amber').length;
+  // Only count unseen alerts for sidebar badge — seen ones are acknowledged
+  const unseenAlerts=vp.filter(p=>(p.status==='red'||p.status==='amber')&&!seenProps.has(p.id)).length;
+  const totalAlerts=vp.filter(p=>p.status==='red'||p.status==='amber').length;
   document.getElementById('sb-prop-count').textContent=vp.length;
-  document.getElementById('sb-alert-count').textContent=alerts;
+  document.getElementById('sb-alert-count').textContent=totalAlerts;
   document.getElementById('sb-city-count').textContent=[...new Set(vp.map(p=>p.city))].length;
   const badge=document.getElementById('badge-alerts');
-  alerts>0?(badge.style.display='',badge.textContent=alerts):badge.style.display='none';
+  unseenAlerts>0?(badge.style.display='',badge.textContent=unseenAlerts):badge.style.display='none';
   PRINCIPALS.forEach(pr=>{
     const cnt=props.filter(p=>p.principalId===pr.id).length;
     const el=document.getElementById('pc-'+pr.id);if(el)el.textContent=cnt;
     const dot=document.getElementById('pad-'+pr.id);
-    if(dot){const ha=props.filter(p=>p.principalId===pr.id&&(p.status==='red'||p.status==='amber')).length>0;dot.style.display=ha?'':'none';}
+    // Principal dot only blinks if there are UNSEEN alerts for that principal
+    if(dot){const hasUnseen=props.filter(p=>p.principalId===pr.id&&(p.status==='red'||p.status==='amber')&&!seenProps.has(p.id)).length>0;dot.style.display=hasUnseen?'':'none';}
   });
   document.getElementById('pc-all').textContent=props.length;
 }
@@ -661,25 +671,50 @@ function renderProps(){
   document.getElementById('prop-count-badge').textContent=vp.length+' propert'+(vp.length===1?'y':'ies');
   updateSidebarCounts();
   if(!vp.length){const pid=selectedPrincipal==='all'?'any principal':selectedPrincipal;list.innerHTML=`<div class="empty-state"><div class="empty-state-icon">🏠</div><div class="empty-state-text">No properties under ${pid} yet.</div><div class="empty-state-sub">Click + Add Property to get started.</div></div>`;return;}
-  list.innerHTML=vp.map(p=>`<div class="prop-row${selectedPropId===p.id?' selected':''}" onclick="openDetail(${p.id})"><div class="prop-left-bar ${p.status}"></div><div class="prop-dot-wrap"><div class="alert-dot ${p.status}"></div></div><div class="prop-addr-block"><div class="prop-addr">${p.addr}</div><div class="prop-city">${p.city}, ${p.state} ${p.zip}</div>${selectedPrincipal==='all'?`<div class="prop-principal-tag">${p.principalId}</div>`:''}</div><div class="prop-pills"><div class="pills-col"><span class="pill permit"><span class="pill-n">${p.counts.permit}</span>Permits</span><span class="pill landmarks"><span class="pill-n">${p.counts.landmarks}</span>Landmarks</span><span class="pill planning"><span class="pill-n">${p.counts.planning}</span>Planning</span></div><div class="pills-col"><span class="pill complaint"><span class="pill-n">${p.counts.complaint}</span>Complaints</span><span class="pill crime"><span class="pill-n">${p.counts.crime}</span>Crime</span><span class="pill rumor"><span class="pill-n">${p.counts.rumor}</span>Rumors</span></div></div><div class="prop-status"><span class="status-badge ${p.status}">${p.status==='red'?'⚠ Alert':p.status==='amber'?'◉ Active':'● Clear'}</span></div><div class="prop-actions"><button class="row-btn" onclick="event.stopPropagation();openDetail(${p.id})">Log</button><button class="row-btn del" onclick="event.stopPropagation();removeProp(${p.id})">Remove</button></div></div>`).join('');
+  list.innerHTML=vp.map(p=>{const dotCls=p.status!=='green'&&seenProps.has(p.id)?p.status+' acknowledged':p.status;return`<div class="prop-row${selectedPropId===p.id?' selected':''}" onclick="openDetail(${p.id})"><div class="prop-left-bar ${p.status}"></div><div class="prop-dot-wrap"><div class="alert-dot ${dotCls}"></div></div><div class="prop-addr-block"><div class="prop-addr">${p.addr}</div><div class="prop-city">${p.city}, ${p.state} ${p.zip}</div>${selectedPrincipal==='all'?`<div class="prop-principal-tag">${p.principalId}</div>`:''}</div><div class="prop-pills"><div class="pills-col"><span class="pill permit"><span class="pill-n">${p.counts.permit}</span>Permits</span><span class="pill landmarks"><span class="pill-n">${p.counts.landmarks}</span>Landmarks</span><span class="pill planning"><span class="pill-n">${p.counts.planning}</span>Planning</span></div><div class="pills-col"><span class="pill complaint"><span class="pill-n">${p.counts.complaint}</span>Complaints</span><span class="pill crime"><span class="pill-n">${p.counts.crime}</span>Crime</span><span class="pill rumor"><span class="pill-n">${p.counts.rumor}</span>Rumors</span></div></div><div class="prop-status"><span class="status-badge ${p.status}">${p.status==='red'?'⚠ Alert':p.status==='amber'?'◉ Active':'● Clear'}</span></div><div class="prop-actions"><button class="row-btn" onclick="event.stopPropagation();openDetail(${p.id})">Log</button><button class="row-btn del" onclick="event.stopPropagation();removeProp(${p.id})">Remove</button></div></div>`).join('');
 }
 
 // ── DETAIL PANEL ──────────────────────────────────────────────────────────
 function openDetail(id){
-  const p=props.find(x=>x.id===id);if(!p)return;selectedPropId=id;renderProps();
+  const p=props.find(x=>x.id===id);if(!p)return;
+  selectedPropId=id;
+  // Mark as seen — stops the blinking alert dot
+  seenProps.add(id);try{localStorage.setItem('pih_seen',JSON.stringify([...seenProps]));}catch(e){}
+  detailActFilter='all';
+  renderProps();updateSidebarCounts();
   document.getElementById('dp-addr').textContent=p.addr;
   document.getElementById('dp-city').textContent=`${p.city}, ${p.state} ${p.zip}`;
   document.getElementById('dp-notes').textContent=p.notes||'';
   document.getElementById('dp-principal-tag').innerHTML=`<div class="dp-principal">◆ ${p.principalId}</div>`;
-  document.getElementById('dp-counts').innerHTML=[{k:'permit',l:'Permits'},{k:'landmarks',l:'Landmarks'},{k:'planning',l:'Planning'},{k:'complaint',l:'Complaints'},{k:'crime',l:'Crime'},{k:'rumor',l:'Rumors'}].map(({k,l})=>`<div class="dp-count-card ${k}"><div class="dp-count-n">${p.counts[k]}</div><div class="dp-count-l">${l}</div></div>`).join('');
-  const acts=activities.filter(a=>a.propId===id).slice(0,7);
-  document.getElementById('dp-activity').innerHTML=acts.length?acts.map(a=>{const url=a.sourceUrl||srcUrl(a.type,p.state,p.addr);return`<a class="act-link" href="${url}" target="_blank" rel="noopener"><div class="act-dot" style="background:${TC[a.type]||'#6b7280'}"></div><div class="act-link-body"><div class="act-link-meta">${scopeBadge(a)}<span style="font-size:9px;text-transform:uppercase;font-weight:700;color:var(--text3);letter-spacing:0.5px">${a.type}</span></div><div class="act-link-desc">${a.desc}</div><div class="act-link-foot">${a.time} · ${srcLabel(a.type)}</div></div><div class="ext-arrow">↗</div></a>`;}).join(''):'<div style="color:var(--text3);font-size:11px;padding:8px 0">No recent activity — awaiting next scan.</div>';
-  // Quick links: prefer sheet sources, fall back to defaults
+  renderDetailCounts(id);
+  renderDetailActs(id);
   const propLinks=sheetSources[id]?sheetSources[id].map(s=>({label:s.label,url:s.url,icon:'🔗'})):getPropLinks(p);
   document.getElementById('dp-links').innerHTML=propLinks.map(l=>`<a href="${l.url}" target="_blank" style="display:flex;align-items:center;gap:7px;padding:7px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text2);text-decoration:none;font-size:11.5px;font-weight:500" onmouseover="this.style.background='var(--border2)';this.style.color='var(--text)'" onmouseout="this.style.background='var(--surface2)';this.style.color='var(--text2)'"><span>${l.icon}</span>${l.label}</a>`).join('');
   document.getElementById('overlay').classList.add('open');document.getElementById('detail-panel').classList.add('open');
 }
-function closeDetail(){selectedPropId=null;document.getElementById('overlay').classList.remove('open');document.getElementById('detail-panel').classList.remove('open');renderProps();}
+function renderDetailCounts(id){
+  const p=props.find(x=>x.id===id);if(!p)return;
+  const types=[{k:'permit',l:'Permits'},{k:'landmarks',l:'Landmarks'},{k:'planning',l:'Planning'},{k:'complaint',l:'Complaints'},{k:'crime',l:'Crime'},{k:'rumor',l:'Rumors'}];
+  document.getElementById('dp-counts').innerHTML=types.map(({k,l})=>{
+    const isActive=detailActFilter===k,isDimmed=detailActFilter!=='all'&&!isActive;
+    return`<div class="dp-count-card ${k}${isActive?' active':''}${isDimmed?' dimmed':''}" onclick="filterDetailActs('${k}',${id})" title="${isActive?'Clear filter':'Show '+l+' only'}"><div class="dp-count-n">${p.counts[k]}</div><div class="dp-count-l">${l}</div></div>`;
+  }).join('');
+}
+function renderDetailActs(id){
+  const p=props.find(x=>x.id===id);if(!p)return;
+  let acts=activities.filter(a=>a.propId===id);
+  if(detailActFilter!=='all')acts=acts.filter(a=>a.type===detailActFilter);
+  acts=acts.slice(0,7);
+  const titleEl=document.getElementById('dp-activity-title');
+  if(titleEl)titleEl.textContent=detailActFilter==='all'?'Recent Activity — click to open source ↗':detailActFilter.charAt(0).toUpperCase()+detailActFilter.slice(1)+' Activity — click to clear filter';
+  document.getElementById('dp-activity').innerHTML=acts.length?acts.map(a=>{const url=a.sourceUrl||srcUrl(a.type,p.state,p.addr);return`<a class="act-link" href="${url}" target="_blank" rel="noopener"><div class="act-dot" style="background:${TC[a.type]||'#6b7280'}"></div><div class="act-link-body"><div class="act-link-meta">${scopeBadge(a)}<span style="font-size:9px;text-transform:uppercase;font-weight:700;color:var(--text3);letter-spacing:0.5px">${a.type}</span></div><div class="act-link-desc">${a.desc}</div><div class="act-link-foot">${a.time} · ${srcLabel(a.type)}</div></div><div class="ext-arrow">↗</div></a>`;}).join(''):`<div style="color:var(--text3);font-size:11px;padding:8px 0">${detailActFilter==='all'?'No recent activity — awaiting next scan.':'No '+detailActFilter+' activity recorded yet.'}</div>`;
+}
+function filterDetailActs(type,id){
+  detailActFilter=detailActFilter===type?'all':type; // toggle: click same type again → show all
+  renderDetailCounts(id);
+  renderDetailActs(id);
+}
+function closeDetail(){selectedPropId=null;detailActFilter='all';document.getElementById('overlay').classList.remove('open');document.getElementById('detail-panel').classList.remove('open');renderProps();}
 
 // ── ACTIVITY FEED ─────────────────────────────────────────────────────────
 function renderActivity(){
