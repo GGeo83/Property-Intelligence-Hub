@@ -933,4 +933,77 @@ function initMap(){
   if(!mapInst){
     mapInst=L.map('map-container',{zoomControl:true,scrollWheelZoom:true});
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
-      attribution:'© <a href="
+      attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>',
+      subdomains:'abcd',maxZoom:19
+    }).addTo(mapInst);
+  }
+  renderMapMarkers();
+  setTimeout(()=>{mapInst.invalidateSize();mapFitAll();},150);
+}
+function renderMapMarkers(){
+  if(!mapInst)return;
+  mapLayers.forEach(l=>mapInst.removeLayer(l));mapLayers=[];
+  const vp=visibleProps();
+  vp.forEach(p=>{
+    const coords=getPropCoords(p);if(!coords)return;
+    const hasAlert=!seenProps.has(p.id)&&Object.values(p.counts).some(v=>v>0);
+    const total=Object.values(p.counts).reduce((a,b)=>a+b,0);
+    const color=p.status==='red'?'#ef4444':p.status==='yellow'?'#f59e0b':'#22c55e';
+    const icon=L.divIcon({
+      className:'',
+      html:`<div style="position:relative;width:36px;height:36px">
+        ${hasAlert?`<div style="position:absolute;inset:-4px;border-radius:50%;border:2px solid ${color};animation:mapPulse 1.6s ease-out infinite;opacity:0.7"></div>`:''}
+        <div style="width:36px;height:36px;border-radius:50%;background:${color};border:2.5px solid #111;display:flex;align-items:center;justify-content:center;color:#111;font-size:11px;font-weight:800;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.6)">${total||'·'}</div>
+      </div>`,
+      iconSize:[36,36],iconAnchor:[18,18]
+    });
+    const marker=L.marker(coords,{icon}).addTo(mapInst);
+    marker.bindTooltip(`<strong>${p.addr}</strong><br>${p.city}, ${p.state}<br>${total} activit${total===1?'y':'ies'}`,{direction:'top',offset:[0,-20],className:'map-tooltip'});
+    marker.on('click',()=>openDetail(p.id));
+    mapLayers.push(marker);
+  });
+}
+function mapGoTo(id){
+  const p=props.find(x=>x.id===id);if(!p||!mapInst)return;
+  const coords=getPropCoords(p);if(!coords)return;
+  mapInst.flyTo(coords,16,{animate:true,duration:0.8});
+}
+function mapFitAll(){
+  if(!mapInst||!mapLayers.length)return;
+  const group=L.featureGroup(mapLayers);
+  try{mapInst.fitBounds(group.getBounds().pad(0.2));}catch(e){}
+}
+
+// ── MOBILE MENU ───────────────────────────────────────────────────────────
+function toggleMobMenu(){
+  const sb=document.getElementById('sidebar'),ov=document.getElementById('mob-overlay');
+  const open=sb.classList.contains('mob-open');
+  if(open){sb.classList.remove('mob-open');ov.style.display='none';}
+  else{sb.classList.add('mob-open');ov.style.display='block';}
+}
+function closeMobMenu(){
+  document.getElementById('sidebar').classList.remove('mob-open');
+  document.getElementById('mob-overlay').style.display='none';
+}
+
+// ── RUN SCAN ──────────────────────────────────────────────────────────────
+function runScan(){
+  const btn=document.querySelector('[onclick="runScan()"]');
+  if(btn){btn.textContent='Scanning…';btn.disabled=true;}
+  loadFromSheets(false).finally(()=>{
+    if(btn){btn.textContent='▶ Run Scan';btn.disabled=false;}
+    if(document.getElementById('page-map').classList.contains('active'))renderMapMarkers();
+  });
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded',()=>{
+  renderProps();
+  renderActivity();
+  updateSidebarCounts();
+  loadFromSheets(true);
+  setInterval(()=>loadFromSheets(true),300000); // auto-refresh every 5 min
+});
+</script>
+</body>
+</html>
