@@ -1,10 +1,4 @@
-<!DOCTYPE html><script type="application/json" id="cowork-artifact-meta">
-{
-  "name": "Property Intelligence Hub",
-  "schemaVersion": 1,
-  "description": "Property Intelligence Hub v4.0 — live dashboard connected to Google Sheets, with multi-principal view, neighborhood-specific sources, and 30-day rolling activity feed."
-}
-</script>
+<!DOCTYPE html><script type="application/json" id="cowork-artifact-meta">{"name":"Property Intelligence Hub","schemaVersion":1,"description":"Live multi-principal real estate intelligence dashboard connected to Google Sheets. Auto-loads latest scan data on every page open."}</script>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -683,11 +677,12 @@ async function loadFromSheets(silent=false){
     const [pd,ad,sd]=await Promise.all([propsRes.json(),actsRes.json(),srcsRes.json()]);
 
     // Parse properties
+    if(pd.error){throw new Error('Sheets API: '+pd.error.message);}
     if(pd.values&&pd.values.length>0){
       props=pd.values.filter(r=>r[0]&&r[2]).map(r=>({
-        id:parseInt(r[0])||0,principalId:r[1]||'',addr:r[2]||'',city:r[3]||'',
+        id:r[0],principalId:r[1]||'',addr:r[2]||'',city:r[3]||'',
         state:r[4]||'',zip:r[5]||'',type:'Residential',notes:r[13]||'',
-        status:r[6]||'green',
+        status:r[6]==='active'?'green':r[6]||'green',
         counts:{permit:parseInt(r[7])||0,complaint:parseInt(r[8])||0,crime:parseInt(r[9])||0,
                 landmarks:parseInt(r[10])||0,planning:parseInt(r[11])||0,rumor:parseInt(r[12])||0}
       }));
@@ -697,7 +692,7 @@ async function loadFromSheets(silent=false){
     if(ad.values&&ad.values.length>0){
       const cutoff=new Date();cutoff.setDate(cutoff.getDate()-30);
       const live=ad.values.filter(r=>r[6]).filter(r=>!r[9]||new Date(r[9])>=cutoff)
-        .map((r,i)=>({id:parseInt(r[0])||i+100,propId:parseInt(r[1])||0,type:r[3]||'other',
+        .map((r,i)=>({id:r[0]||('act_'+i),propId:r[1]||'',type:r[3]||'other',
           scope:r[4]||'property',nearAddr:r[5]||'',desc:r[6]||'',time:r[7]||'',sourceUrl:r[8]||''}))
         .reverse();
       if(live.length>0)activities=live;
@@ -707,7 +702,7 @@ async function loadFromSheets(silent=false){
     if(sd.values&&sd.values.length>0){
       sheetSources={};
       sd.values.filter(r=>r[0]).forEach(r=>{
-        const pid=parseInt(r[0]);
+        const pid=r[0];
         if(!sheetSources[pid])sheetSources[pid]=[];
         sheetSources[pid].push({propId:pid,addr:r[1]||'',sourceType:r[2]||'',label:r[3]||'',url:r[4]||'',priority:r[5]||'',notes:r[6]||''});
       });
@@ -718,6 +713,13 @@ async function loadFromSheets(silent=false){
     setSyncBadge('live');
   }catch(err){
     console.warn('Sheets sync failed:',err);
+    // Distinguish permission errors (sheet not public) from network errors
+    const msg=err&&err.message?err.message:'';
+    if(msg.includes('Failed to fetch')||msg.includes('NetworkError')){
+      document.getElementById('sync-text').textContent='Network error — check API key restrictions';
+    } else if(msg.includes('403')||msg.includes('permission')){
+      document.getElementById('sync-text').textContent='Sheet not public — share with Anyone';
+    }
     setSyncBadge('error');
   }
   document.getElementById('loading-overlay').classList.add('hidden');
@@ -788,7 +790,7 @@ function renderProps(){
   document.getElementById('prop-count-badge').textContent=vp.length+' propert'+(vp.length===1?'y':'ies');
   updateSidebarCounts();
   if(!vp.length){const pid=selectedPrincipal==='all'?'any principal':selectedPrincipal;list.innerHTML=`<div class="empty-state"><div class="empty-state-icon">🏠</div><div class="empty-state-text">No properties under ${pid} yet.</div><div class="empty-state-sub">Click + Add Property to get started.</div></div>`;return;}
-  list.innerHTML=vp.map(p=>{const dotCls=p.status!=='green'&&seenProps.has(p.id)?p.status+' acknowledged':p.status;return`<div class="prop-row${selectedPropId===p.id?' selected':''}" onclick="openDetail(${p.id})"><div class="prop-left-bar ${p.status}"></div><div class="prop-dot-wrap"><div class="alert-dot ${dotCls}"></div></div><div class="prop-addr-block"><div class="prop-addr">${p.addr}</div><div class="prop-city">${p.city}, ${p.state} ${p.zip}</div>${selectedPrincipal==='all'?`<div class="prop-principal-tag">${p.principalId}</div>`:''}</div><div class="prop-pills"><div class="pills-col"><span class="pill permit"><span class="pill-n">${p.counts.permit}</span>Permits</span><span class="pill landmarks"><span class="pill-n">${p.counts.landmarks}</span>Landmarks</span><span class="pill planning"><span class="pill-n">${p.counts.planning}</span>Planning</span></div><div class="pills-col"><span class="pill complaint"><span class="pill-n">${p.counts.complaint}</span>Complaints</span><span class="pill crime"><span class="pill-n">${p.counts.crime}</span>Crime</span><span class="pill rumor"><span class="pill-n">${p.counts.rumor}</span>Rumors</span></div></div><div class="prop-status"><span class="status-badge ${p.status}">${p.status==='red'?'⚠ Alert':p.status==='amber'?'◉ Active':'● Clear'}</span></div><div class="prop-actions"><button class="row-btn" onclick="event.stopPropagation();openDetail(${p.id})">Log</button><button class="row-btn del" onclick="event.stopPropagation();removeProp(${p.id})">Remove</button></div></div>`}).join('');
+  list.innerHTML=vp.map(p=>{const dotCls=p.status!=='green'&&seenProps.has(p.id)?p.status+' acknowledged':p.status;return`<div class="prop-row${selectedPropId===p.id?' selected':''}" onclick="openDetail('${p.id}')"><div class="prop-left-bar ${p.status}"></div><div class="prop-dot-wrap"><div class="alert-dot ${dotCls}"></div></div><div class="prop-addr-block"><div class="prop-addr">${p.addr}</div><div class="prop-city">${p.city}, ${p.state} ${p.zip}</div>${selectedPrincipal==='all'?`<div class="prop-principal-tag">${p.principalId}</div>`:''}</div><div class="prop-pills"><div class="pills-col"><span class="pill permit"><span class="pill-n">${p.counts.permit}</span>Permits</span><span class="pill landmarks"><span class="pill-n">${p.counts.landmarks}</span>Landmarks</span><span class="pill planning"><span class="pill-n">${p.counts.planning}</span>Planning</span></div><div class="pills-col"><span class="pill complaint"><span class="pill-n">${p.counts.complaint}</span>Complaints</span><span class="pill crime"><span class="pill-n">${p.counts.crime}</span>Crime</span><span class="pill rumor"><span class="pill-n">${p.counts.rumor}</span>Rumors</span></div></div><div class="prop-status"><span class="status-badge ${p.status}">${p.status==='red'?'⚠ Alert':p.status==='amber'?'◉ Active':'● Clear'}</span></div><div class="prop-actions"><button class="row-btn" onclick="event.stopPropagation();openDetail(${p.id})">Log</button><button class="row-btn del" onclick="event.stopPropagation();removeProp(${p.id})">Remove</button></div></div>`}).join('');
 }
 
 // ── DETAIL PANEL ──────────────────────────────────────────────────────────
