@@ -612,7 +612,8 @@ const SEED_PROPS=[
   {id:'prop_131_commonwealth',principalId:'ECJIV',addr:'131 Commonwealth Avenue',city:'Boston',state:'MA',zip:'02116',notes:'Back Bay — Back Bay Architectural Commission oversight',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}},
   {id:'prop_1_charles_river',principalId:'EBJ',addr:'1 Charles River Square',city:'Boston',state:'MA',zip:'02114',notes:'Beacon Hill — Charles River Square',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}},
   {id:'prop_3_charles_river',principalId:'EBJ',addr:'3 Charles River Square',city:'Boston',state:'MA',zip:'02114',notes:'Beacon Hill — Charles River Square',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}},
-  {id:'prop_1196_canton',principalId:'APJCJM',addr:'1196 Canton Ave',city:'Milton',state:'MA',zip:'02186',notes:'Milton — Planning Board and local news monitored',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}}
+  {id:'prop_1196_canton',principalId:'APJCJM',addr:'1196 Canton Ave',city:'Milton',state:'MA',zip:'02186',notes:'Milton — Planning Board and local news monitored',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}},
+  {id:'prop_35_hayride',principalId:'APJCJM',addr:'35 Hayride Drive',city:'Stowe',state:'VT',zip:'05672',notes:'Stowe — Vermont Act 250 / Lamoille County / Stowe Reporter monitored',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}}
 ];
 const SEED_ACTIVITIES=[
   {id:1,propId:'prop_56_beacon',type:'permit',scope:'property',nearAddr:'',desc:'Renovation permit application filed for exterior work at 56 Beacon St',time:'Apr 28, 2026 · 9:14 AM',sourceUrl:''},
@@ -651,7 +652,8 @@ const PROP_COORDS_MAP=[
   {match:'Winding Oak',     coords:[26.6597,-80.2518]},
   {match:'1 Charles River', coords:[42.3591,-71.0718]},
   {match:'3 Charles River', coords:[42.3591,-71.0720]},
-  {match:'1196 Canton',     coords:[42.2427,-71.0638]}
+  {match:'1196 Canton',     coords:[42.2427,-71.0638]},
+  {match:'35 Hayride',      coords:[44.4629,-72.6807]}
 ];
 function getPropCoords(p){
   const m=PROP_COORDS_MAP.find(x=>p.addr.includes(x.match));
