@@ -141,26 +141,29 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);display:flex
 .intel-empty{font-size:11px;color:var(--text3);padding:4px 0}
 
 /* PROPERTY LIST */
+#prop-list{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:1200px){#prop-list{grid-template-columns:1fr}}
 .list-header{display:flex;align-items:center;margin-bottom:10px;gap:10px}
 .list-header h3{font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:1px}
 .prop-count-badge{background:var(--surface2);border:1px solid var(--border2);color:var(--text2);font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px}
-.prop-row{background:var(--surface);border:1px solid var(--border);border-radius:8px;display:flex;align-items:center;margin-bottom:6px;overflow:hidden;cursor:pointer;transition:border-color 0.15s,background 0.15s}
+.prop-row{background:var(--surface);border:1px solid var(--border);border-radius:8px;display:flex;flex-direction:column;align-items:stretch;overflow:hidden;cursor:pointer;transition:border-color 0.15s,background 0.15s}
 .prop-row:hover{background:var(--surface2);border-color:var(--border2)}
 .prop-row.selected{border-color:var(--accent)}
-.prop-left-bar{width:3px;min-width:3px;align-self:stretch}
+.prop-left-bar{height:3px;min-height:3px;align-self:stretch;width:100%}
 .prop-left-bar.red{background:var(--red)}.prop-left-bar.amber{background:var(--amber)}.prop-left-bar.green{background:var(--green)}
-.prop-dot-wrap{padding:0 12px;display:flex;align-items:center}
+.prop-card-top{display:flex;align-items:center;min-width:0;width:100%}
+.prop-dot-wrap{padding:0 10px 0 12px;display:flex;align-items:center;flex-shrink:0}
 .alert-dot{width:8px;height:8px;border-radius:50%}
 .alert-dot.red{background:var(--red);animation:blink-red 1.2s ease-in-out infinite}
 .alert-dot.amber{background:var(--amber);animation:blink-amber 2s ease-in-out infinite}
 .alert-dot.green{background:var(--green)}
 .alert-dot.acknowledged{animation:none!important;opacity:0.38}
-.prop-addr-block{width:210px;min-width:210px;padding:10px 0}
+.prop-addr-block{flex:1;min-width:0;padding:4px 0}
 .prop-addr{font-size:13px;font-weight:600;letter-spacing:-0.3px}
 .prop-city{font-size:11px;color:var(--text2);margin-top:1px}
 .prop-principal-tag{font-size:9px;font-weight:700;letter-spacing:0.5px;color:var(--text3);margin-top:2px;text-transform:uppercase}
-.prop-pills{display:flex;align-items:center;gap:8px;padding:8px 0}
-.pills-col{display:flex;flex-direction:column;gap:3px}
+.prop-pills{display:flex;align-items:center;flex-wrap:wrap;gap:4px;padding:8px 12px 10px}
+.pills-col{display:contents}
 .pill{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:600;border:1px solid transparent;white-space:nowrap}
 .pill-n{font-size:11px;font-weight:700;margin-right:1px}
 .pill-click{cursor:pointer;opacity:1!important}
@@ -171,12 +174,12 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);display:flex
 .pill.landmarks{background:rgba(168,85,247,0.1);border-color:rgba(168,85,247,0.25);color:#c084fc}
 .pill.planning{background:rgba(20,184,166,0.1);border-color:rgba(20,184,166,0.25);color:#2dd4bf}
 .pill.rumor{background:rgba(251,146,60,0.1);border-color:rgba(251,146,60,0.25);color:#fb923c}
-.prop-status{padding:0 10px;display:flex;align-items:center}
+.prop-status{padding:0 8px 0 0;display:flex;align-items:center;flex-shrink:0}
 .status-badge{font-size:9.5px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;padding:3px 9px;border-radius:20px}
 .status-badge.red{background:rgba(239,68,68,0.15);color:var(--red);border:1px solid rgba(239,68,68,0.3)}
 .status-badge.amber{background:rgba(245,158,11,0.15);color:var(--amber);border:1px solid rgba(245,158,11,0.3)}
 .status-badge.green{background:rgba(34,197,94,0.15);color:var(--green);border:1px solid rgba(34,197,94,0.3)}
-.prop-actions{padding:0 12px;display:flex;gap:6px}
+.prop-actions{padding:0 10px 0 0;display:flex;gap:6px;flex-shrink:0}
 .row-btn{background:var(--surface2);border:1px solid var(--border2);color:var(--text3);padding:4px 10px;border-radius:5px;cursor:pointer;font-size:10.5px;font-weight:500;transition:all 0.15s}
 .row-btn:hover{background:var(--border2);color:var(--text)}
 .row-btn.del:hover{background:rgba(239,68,68,0.15);border-color:rgba(239,68,68,0.3);color:var(--red)}
@@ -326,7 +329,7 @@ select.field-input{appearance:none;cursor:pointer}
   /* Content */
   #content{padding:10px}
   /* Property rows reflow */
-  .prop-row{flex-wrap:wrap;align-items:flex-start}
+  .prop-card-top{width:100%}
   .prop-addr-block{min-width:0;flex:1;padding:10px 0 4px}
   .prop-pills{width:100%;padding:0 8px 8px 36px;order:10}
   .pills-col{flex-direction:row;flex-wrap:wrap;gap:4px}
@@ -877,7 +880,7 @@ function renderProps(){
   document.getElementById('prop-count-badge').textContent=vp.length+' propert'+(vp.length===1?'y':'ies');
   updateSidebarCounts();
   if(!vp.length){const pid=selectedPrincipal==='all'?'any principal':selectedPrincipal;list.innerHTML=`<div class="empty-state"><div class="empty-state-icon">🏠</div><div class="empty-state-text">No properties under ${pid} yet.</div><div class="empty-state-sub">Click + Add Property to get started.</div></div>`;return;}
-  list.innerHTML=vp.map(p=>{const dotCls=p.status!=='green'&&seenProps.has(p.id)?p.status+' acknowledged':p.status;return`<div class="prop-row${selectedPropId===p.id?' selected':''}" onclick="openDetail('${p.id}')"><div class="prop-left-bar ${p.status}"></div><div class="prop-dot-wrap"><div class="alert-dot ${dotCls}"></div></div><div class="prop-addr-block"><div class="prop-addr">${p.addr}</div><div class="prop-city">${p.city}, ${p.state} ${p.zip}</div>${selectedPrincipal==='all'?`<div class="prop-principal-tag">${p.principalId}</div>`:''}</div><div class="prop-pills"><div class="pills-col"><span class="pill permit${p.counts.permit>0?' pill-click':''}" onclick="event.stopPropagation();openDetail('${p.id}','permit')" title="View permit activity"><span class="pill-n">${p.counts.permit}</span>Permits</span><span class="pill landmarks${p.counts.landmarks>0?' pill-click':''}" onclick="event.stopPropagation();openDetail('${p.id}','landmarks')" title="View landmarks activity"><span class="pill-n">${p.counts.landmarks}</span>Landmarks</span><span class="pill planning${p.counts.planning>0?' pill-click':''}" onclick="event.stopPropagation();openDetail('${p.id}','planning')" title="View planning activity"><span class="pill-n">${p.counts.planning}</span>Planning</span></div><div class="pills-col"><span class="pill complaint${p.counts.complaint>0?' pill-click':''}" onclick="event.stopPropagation();openDetail('${p.id}','complaint')" title="View complaint activity"><span class="pill-n">${p.counts.complaint}</span>Complaints</span><span class="pill crime${p.counts.crime>0?' pill-click':''}" onclick="event.stopPropagation();openDetail('${p.id}','crime')" title="View crime activity"><span class="pill-n">${p.counts.crime}</span>Crime</span><span class="pill rumor${p.counts.rumor>0?' pill-click':''}" onclick="event.stopPropagation();openDetail('${p.id}','rumor')" title="View rumor activity"><span class="pill-n">${p.counts.rumor}</span>Rumors</span></div></div><div class="prop-status"><span class="status-badge ${p.status}">${p.status==='red'?'⚠ Alert':p.status==='amber'?'◉ Active':'● Clear'}</span></div><div class="prop-actions"><button class="row-btn" onclick="event.stopPropagation();openDetail('${p.id}')">Log</button><button class="row-btn del" onclick="event.stopPropagation();removeProp('${p.id}')">Remove</button></div></div>`}).join('');
+  list.innerHTML=vp.map(p=>{const dotCls=p.status!=='green'&&seenProps.has(p.id)?p.status+' acknowledged':p.status;return`<div class="prop-row${selectedPropId===p.id?' selected':''}" onclick="openDetail('${p.id}')"><div class="prop-left-bar ${p.status}"></div><div class="prop-card-top"><div class="prop-dot-wrap"><div class="alert-dot ${dotCls}"></div></div><div class="prop-addr-block"><div class="prop-addr">${p.addr}</div><div class="prop-city">${p.city}, ${p.state} ${p.zip}</div>${selectedPrincipal==='all'?`<div class="prop-principal-tag">${p.principalId}</div>`:''}</div><div class="prop-status"><span class="status-badge ${p.status}">${p.status==='red'?'⚠ Alert':p.status==='amber'?'◉ Active':'● Clear'}</span></div><div class="prop-actions"><button class="row-btn" onclick="event.stopPropagation();openDetail('${p.id}')">Log</button><button class="row-btn del" onclick="event.stopPropagation();removeProp('${p.id}')">Remove</button></div></div><div class="prop-pills"><div class="pills-col"><span class="pill permit${p.counts.permit>0?' pill-click':''}" onclick="event.stopPropagation();openDetail('${p.id}','permit')" title="View permit activity"><span class="pill-n">${p.counts.permit}</span>Permits</span><span class="pill landmarks${p.counts.landmarks>0?' pill-click':''}" onclick="event.stopPropagation();openDetail('${p.id}','landmarks')" title="View landmarks activity"><span class="pill-n">${p.counts.landmarks}</span>Landmarks</span><span class="pill planning${p.counts.planning>0?' pill-click':''}" onclick="event.stopPropagation();openDetail('${p.id}','planning')" title="View planning activity"><span class="pill-n">${p.counts.planning}</span>Planning</span></div><div class="pills-col"><span class="pill complaint${p.counts.complaint>0?' pill-click':''}" onclick="event.stopPropagation();openDetail('${p.id}','complaint')" title="View complaint activity"><span class="pill-n">${p.counts.complaint}</span>Complaints</span><span class="pill crime${p.counts.crime>0?' pill-click':''}" onclick="event.stopPropagation();openDetail('${p.id}','crime')" title="View crime activity"><span class="pill-n">${p.counts.crime}</span>Crime</span><span class="pill rumor${p.counts.rumor>0?' pill-click':''}" onclick="event.stopPropagation();openDetail('${p.id}','rumor')" title="View rumor activity"><span class="pill-n">${p.counts.rumor}</span>Rumors</span></div></div></div>`}).join('');
   renderIntelPanel();
 }
 
