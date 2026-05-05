@@ -666,7 +666,7 @@ function srcUrl(type,state,addr){
 function srcLabel(type){return SRC_LABEL[type]||'Source';}
 
 // ── SEED DATA (fallback when sheet is loading or empty) ───────────────────
-const TC={permit:'#60a5fa',complaint:'#fbbf24',crime:'#f87171',landmarks:'#c084fc',planning:'#2dd4bf',rumor:'#fb923c',news:'#818cf8',fire:'#f87171',court:'#e879f9',other:'#6b7280'};
+const TC={permit:'#60a5fa',complaint:'#fbbf24',crime:'#f87171',landmarks:'#c084fc',planning:'#2dd4bf',rumor:'#fb923c',forsale:'#34d399',legal:'#f87171',news:'#818cf8',fire:'#f87171',court:'#e879f9',other:'#6b7280'};
 const PRINCIPALS=[{id:'APJCJM',initials:'AJ'},{id:'ECJIV',initials:'EC'},{id:'ELJ',initials:'EL'},{id:'EBJ',initials:'EB'}];
 
 const SEED_PROPS=[
@@ -787,14 +787,14 @@ async function loadFromSheets(silent=false){
         p.counts={
           permit:   pa.filter(a=>a.type==='permit').length,
           complaint:pa.filter(a=>a.type==='complaint').length,
-          crime:    pa.filter(a=>a.type==='crime').length,
+          crime:    pa.filter(a=>['crime','legal','court','fire'].includes(a.type)).length,
           landmarks:pa.filter(a=>a.type==='landmarks').length,
           planning: pa.filter(a=>a.type==='planning').length,
-          rumor:    pa.filter(a=>a.type==='rumor').length
+          rumor:    pa.filter(a=>['rumor','forsale','news','other'].includes(a.type)).length
         };
         // Drive status from counts: crime/legal = red, any activity = amber, else green
         const total=Object.values(p.counts).reduce((a,b)=>a+b,0);
-        const urgent=pa.some(a=>a.type==='crime'||a.type==='legal');
+        const urgent=pa.some(a=>['crime','legal','court','fire'].includes(a.type));
         p.status=urgent?'red':total>0?'amber':'green';
       });
     }
