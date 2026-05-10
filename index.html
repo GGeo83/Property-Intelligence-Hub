@@ -69,6 +69,80 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);display:flex
 @keyframes blink-amber{0%,100%{opacity:1;box-shadow:0 0 5px var(--amber)}50%{opacity:0.2;box-shadow:none}}
 @keyframes blink-red{0%,100%{opacity:1;box-shadow:0 0 6px var(--red)}50%{opacity:0.15;box-shadow:none}}
 
+/* REPORTS PAGE */
+.rpt-stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.rpt-stat{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:13px 15px;border-left:4px solid var(--rpt-acc,var(--border))}
+.rpt-stat-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:4px}
+.rpt-stat-val{font-size:26px;font-weight:800;color:var(--text);line-height:1}
+.rpt-stat-sub{font-size:10px;color:var(--text3);margin-top:3px}
+.rpt-section{margin-bottom:20px}
+.rpt-sec-lbl{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.rpt-sec-lbl::after{content:'';flex:1;height:1px;background:var(--border)}
+.rpt-sec-lbl span{font-size:9px;background:rgba(245,158,11,.15);color:var(--amber);padding:1px 6px;border-radius:8px;letter-spacing:.5px}
+.rpt-panel{background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.rpt-panel-hdr{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid var(--border);background:var(--surface2);font-size:12px;font-weight:600;color:var(--text2)}
+.rpt-event-row{display:grid;grid-template-columns:80px 1fr auto;gap:10px;padding:9px 14px;border-bottom:1px solid var(--border);align-items:center}
+.rpt-event-row:last-child{border:none}
+.rpt-event-row:hover{background:var(--surface2)}
+.rpt-event-day{font-size:20px;font-weight:800;color:var(--text);line-height:1}
+.rpt-event-mon{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em}
+.rpt-event-prop{font-size:11px;font-weight:700;color:var(--text2);margin-bottom:2px}
+.rpt-event-title{font-size:12px;color:var(--text);line-height:1.3}
+.rpt-days-badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;white-space:nowrap}
+.rpt-days-badge.soon{background:rgba(239,68,68,.15);color:var(--red);border:1px solid rgba(239,68,68,.25)}
+.rpt-days-badge.upcoming{background:rgba(245,158,11,.15);color:var(--amber);border:1px solid rgba(245,158,11,.25)}
+.rpt-days-badge.future{background:rgba(34,197,94,.15);color:var(--green);border:1px solid rgba(34,197,94,.25)}
+.rpt-alert-row{display:grid;grid-template-columns:28px 1fr auto;gap:10px;padding:9px 14px;border-bottom:1px solid var(--border);align-items:start;transition:background .12s}
+.rpt-alert-row:last-child{border:none}
+.rpt-alert-row:hover{background:var(--surface2)}
+.rpt-alert-row.resolved{opacity:.4}
+.rpt-alert-num{font-size:11px;font-weight:700;color:var(--text3);padding-top:3px;text-align:center}
+.rpt-alert-num.top{color:var(--red)}
+.rpt-al-prop{font-size:11px;font-weight:700;color:var(--text2);display:flex;align-items:center;gap:5px;margin-bottom:3px;flex-wrap:wrap}
+.rpt-al-desc{font-size:12px;color:var(--text);line-height:1.4}
+.rpt-al-desc.resolved{text-decoration:line-through;color:var(--text3)}
+.rpt-al-meta{font-size:11px;color:var(--text3);margin-top:3px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.rpt-resolve-btns{display:flex;gap:4px;margin-top:5px;flex-wrap:wrap}
+.rpt-rbtn{padding:3px 8px;border-radius:6px;font-size:10px;font-weight:600;cursor:pointer;border:1px solid;transition:all .15s;background:transparent;line-height:1.4;font-family:var(--font)}
+.rpt-rbtn.reviewed{border-color:var(--green);color:var(--green)}
+.rpt-rbtn.reviewed:hover{background:var(--green);color:#000}
+.rpt-rbtn.actioned{border-color:var(--accent);color:var(--accent)}
+.rpt-rbtn.actioned:hover{background:var(--accent);color:#fff}
+.rpt-resolved-tag{font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px}
+.rpt-resolved-tag.reviewed{background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.25)}
+.rpt-resolved-tag.actioned{background:rgba(59,130,246,.12);color:var(--accent);border:1px solid rgba(59,130,246,.25)}
+.rpt-stale-badge{background:rgba(245,158,11,.12);color:var(--amber);border:1px solid rgba(245,158,11,.25);font-size:9px;font-weight:700;padding:2px 5px;border-radius:3px;white-space:nowrap}
+.rpt-sbadge{font-size:9px;font-weight:700;padding:2px 5px;border-radius:3px;text-transform:uppercase}
+.rpt-tpill{display:inline-block;padding:2px 7px;border-radius:10px;font-size:10px;font-weight:700;text-transform:uppercase;white-space:nowrap}
+.rpt-show-more{width:100%;padding:9px;text-align:center;font-size:12px;font-weight:600;color:var(--accent);cursor:pointer;border:none;background:var(--surface2);border-top:1px solid var(--border);font-family:var(--font)}
+.rpt-show-more:hover{background:var(--border)}
+.rpt-cov-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.rpt-cov-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 14px;border-left:4px solid var(--rpt-cc,var(--border))}
+.rpt-cov-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:4px}
+.rpt-cov-val{font-size:18px;font-weight:800;color:var(--text);line-height:1}
+.rpt-cov-sub{font-size:10px;color:var(--text3);margin-top:3px}
+.rpt-cov-bar{height:3px;background:var(--border2);border-radius:2px;margin-top:8px;overflow:hidden}
+.rpt-cov-bar-fill{height:100%;border-radius:2px;background:var(--rpt-cc,var(--text3));transition:width .4s}
+.rpt-ch-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.rpt-ch-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px 16px}
+.rpt-ch-title{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:12px}
+.rpt-ch-empty{display:flex;align-items:center;justify-content:center;height:180px;color:var(--text3);font-size:12px;flex-direction:column;gap:6px}
+.rpt-risk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.rpt-risk-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;display:flex;align-items:center;gap:9px;cursor:pointer;transition:background .1s}
+.rpt-risk-card:hover{background:var(--surface2)}
+.rpt-rdot{width:9px;height:9px;border-radius:50%;flex-shrink:0;margin-top:1px}
+.rpt-rdot.red{background:var(--red)}
+.rpt-rdot.amber{background:var(--amber)}
+.rpt-rdot.green{background:var(--green)}
+.rpt-risk-body{flex:1;min-width:0}
+.rpt-risk-name{font-size:12px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rpt-risk-meta{font-size:10px;color:var(--text3);margin-top:1px}
+.rpt-risk-cnt{font-size:13px;font-weight:800;color:var(--text3);flex-shrink:0}
+.rpt-risk-cnt.has{color:var(--text)}
+@media(max-width:1100px){.rpt-stat-row{grid-template-columns:1fr 1fr}.rpt-cov-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:800px){.rpt-ch-grid{grid-template-columns:1fr}.rpt-risk-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:550px){.rpt-risk-grid{grid-template-columns:1fr}.rpt-cov-grid{grid-template-columns:1fr}}
+
 /* SYNC BADGE */
 .sync-badge{display:inline-flex;align-items:center;gap:4px;font-size:9.5px;font-weight:500;padding:2px 7px;border-radius:10px;border:1px solid var(--border2);background:var(--surface2);color:var(--text3);cursor:pointer;transition:all 0.15s}
 .sync-badge:hover{border-color:var(--accent);color:var(--accent)}
@@ -517,20 +591,58 @@ function checkGate(){
     </div>
 
     <div id="page-reports" class="page">
-      <div class="report-chart-card">
-        <div class="report-chart-title">30-Day Activity Trend — <span id="chart-principal-label">All Properties</span></div>
-        <div class="chart-wrap"><canvas id="trend-chart"></canvas></div>
+      <!-- TOOLBAR -->
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+        <span id="rpt-range" style="font-size:11px;color:var(--text3)"></span>
+        <div style="margin-left:auto;display:flex;gap:6px">
+          <button class="tb-btn" id="rpt-f-unreviewed" onclick="setRptFilter('unreviewed')">Unreviewed</button>
+          <button class="tb-btn" id="rpt-f-all" onclick="setRptFilter('all')">All Alerts</button>
+          <button class="tb-btn primary" id="rpt-digest-btn" onclick="rptDigest()">📧 Send Digest</button>
+        </div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        <div class="settings-section"><div class="settings-section-title">Recent Email Reports</div>
-          <div class="setting-row"><div class="setting-label"><div class="setting-label-text">Daily Alert — Apr 28 2026</div><div class="setting-label-sub">3 findings across 2 properties</div></div><div class="setting-value accent">Draft</div></div>
-          <div class="setting-row"><div class="setting-label"><div class="setting-label-text">Weekly Report — Apr 27 2026</div><div class="setting-label-sub">Comprehensive Monday report</div></div><div class="setting-value accent">Draft</div></div>
+      <!-- STATS -->
+      <div class="rpt-stat-row" id="rpt-stats"></div>
+      <!-- UPCOMING EVENTS -->
+      <div class="rpt-section">
+        <div class="rpt-sec-lbl">Upcoming Events <span id="rpt-ev-badge" style="display:none"></span></div>
+        <div class="rpt-panel">
+          <div class="rpt-panel-hdr"><span>Hearings · Meetings · Deadlines</span><span id="rpt-ev-sub">Next 60 days</span></div>
+          <div id="rpt-ev-list"></div>
         </div>
-        <div class="settings-section"><div class="settings-section-title">Scan Schedule</div>
-          <div class="setting-row"><div class="setting-label"><div class="setting-label-text">Daily Alert Scan</div><div class="setting-label-sub">property-daily-alert-scan</div></div><div class="setting-value accent">8:10 AM</div></div>
-          <div class="setting-row"><div class="setting-label"><div class="setting-label-text">Weekly Deep Dive</div><div class="setting-label-sub">property-weekly-report</div></div><div class="setting-value accent">Mon 8:09 AM</div></div>
-          <div class="setting-row"><div class="setting-label"><div class="setting-label-text">Data Layer</div><div class="setting-label-sub">Google Sheets — live sync</div></div><div class="setting-value accent" style="color:var(--green)">● Connected</div></div>
+      </div>
+      <!-- PRIORITY ALERTS -->
+      <div class="rpt-section">
+        <div class="rpt-sec-lbl">Priority Alerts</div>
+        <div class="rpt-panel">
+          <div class="rpt-panel-hdr"><span>Top Alerts by Priority</span><span id="rpt-al-sub">Ranked by sensitivity + recency</span></div>
+          <div id="rpt-al-list"></div>
         </div>
+      </div>
+      <!-- COVERAGE HEALTH -->
+      <div class="rpt-section">
+        <div class="rpt-sec-lbl">Source Coverage Health</div>
+        <div class="rpt-cov-grid" id="rpt-cov"></div>
+      </div>
+      <!-- CHARTS ROW 1 -->
+      <div class="rpt-section">
+        <div class="rpt-sec-lbl">Alert Breakdown</div>
+        <div class="rpt-ch-grid">
+          <div class="rpt-ch-card"><div class="rpt-ch-title">By Alert Type (30 days)</div><div id="rpt-ctwrap" style="position:relative;height:180px"><canvas id="rpt-c-types"></canvas></div></div>
+          <div class="rpt-ch-card"><div class="rpt-ch-title">By Property (30 days)</div><div id="rpt-cpwrap" style="position:relative;height:180px"><canvas id="rpt-c-props"></canvas></div></div>
+        </div>
+      </div>
+      <!-- CHARTS ROW 2 -->
+      <div class="rpt-section">
+        <div class="rpt-sec-lbl">Trend Analysis</div>
+        <div class="rpt-ch-grid">
+          <div class="rpt-ch-card"><div class="rpt-ch-title">Weekly Activity — 12 Weeks</div><div style="position:relative;height:180px"><canvas id="rpt-c-trend"></canvas></div></div>
+          <div class="rpt-ch-card"><div class="rpt-ch-title" id="rpt-yoy-title">Year-over-Year Monthly</div><div style="position:relative;height:180px"><canvas id="rpt-c-yoy"></canvas></div></div>
+        </div>
+      </div>
+      <!-- RISK MATRIX -->
+      <div class="rpt-section">
+        <div class="rpt-sec-lbl">Property Risk Status</div>
+        <div class="rpt-risk-grid" id="rpt-risk"></div>
       </div>
     </div>
 
@@ -682,6 +794,13 @@ function getPropLinks(p){
 
 
 // ── STATE ─────────────────────────────────────────────────────────────────
+const RPTS_SENS={prop_18_louisburg:1,prop_56_beacon:1,prop_131_commonwealth:1,prop_1_charles_river:2,prop_3_charles_river:2,prop_32b_hulbert:2,prop_29_hulbert:2,prop_1_sandy:2,prop_16_union:2,prop_dover_estate:2,prop_482_island:3,prop_92_blodgett:3,prop_1196_canton:4,prop_35_hayride:4,prop_2929_winding_oak:4};
+const RPTS_SN={prop_56_beacon:'56 Beacon St',prop_482_island:'482 Island Dr',prop_16_union:'16 Union Wharf',prop_131_commonwealth:'131 Commonwealth',prop_18_louisburg:'18 Louisburg Sq',prop_2929_winding_oak:'2929 Winding Oak',prop_1_charles_river:'1 Charles River',prop_3_charles_river:'3 Charles River',prop_1196_canton:'1196 Canton Ave',prop_35_hayride:'35 Hayride Dr',prop_92_blodgett:'92 Blodgett Way',prop_dover_estate:'Dover Estate',prop_1_sandy:'1 Sandy Dr',prop_32b_hulbert:'32B Hulbert Ave',prop_29_hulbert:'29 Hulbert Ave'};
+const RPTS_SLBL={1:'★★★ Critical',2:'★★ High',3:'★ Medium',4:'Standard'};
+const RPTS_SCSS={1:'background:rgba(239,68,68,.15);color:var(--red);border:1px solid rgba(239,68,68,.3)',2:'background:rgba(245,158,11,.15);color:var(--amber);border:1px solid rgba(245,158,11,.3)',3:'background:rgba(34,197,94,.15);color:var(--green);border:1px solid rgba(34,197,94,.3)',4:'background:var(--surface2);color:var(--text3);border:1px solid var(--border)'};
+const ETYPES_C={hearing:'#7c3aed',meeting:'#0891b2',deadline:'#dc2626',inspection:'#d97706',review:'#ea580c',other:'#64748b'};
+const TL={permit:'Permit',complaint:'Complaint',crime:'Crime',legal:'Legal',court:'Court',fire:'Fire',landmarks:'Landmarks',planning:'Planning',rumor:'Rumor',forsale:'For Sale',news:'News',other:'Other'};
+
 let props=[...SEED_PROPS];
 let activities=[...SEED_ACTIVITIES];
 let sheetSources={};
@@ -690,18 +809,22 @@ let activeFilter='all',selectedPropId=null,selectedPrincipal='all';
 let lastSynced=null;
 let detailActFilter='all';
 let seenProps=new Set();
+// Reports state
+let rEvents=[],rScanLog=[],resolvedIds=new Set(),reportFilter='unreviewed',reportAlertLimit=20,rptCharts={};
 try{const _s=localStorage.getItem('pih_seen');if(_s){const parsed=JSON.parse(_s);parsed.forEach(id=>seenProps.add(String(id)));};}catch(e){}
 
 // ── GOOGLE SHEETS LIVE LOAD ───────────────────────────────────────────────
 async function loadFromSheets(silent=false){
   if(!silent)setSyncBadge('syncing');
   try{
-    const [propsRes,actsRes,srcsRes]=await Promise.all([
+    const [propsRes,actsRes,srcsRes,evRes,logRes]=await Promise.all([
       fetch(`${SHEETS_BASE}/properties!A2:N?key=${API_KEY}`),
-      fetch(`${SHEETS_BASE}/activities!A2:J?key=${API_KEY}`),
-      fetch(`${SHEETS_BASE}/sources!A2:G?key=${API_KEY}`)
+      fetch(`${SHEETS_BASE}/activities!A2:K?key=${API_KEY}`),
+      fetch(`${SHEETS_BASE}/sources!A2:G?key=${API_KEY}`),
+      fetch(`${SHEETS_BASE}/events!A2:H?key=${API_KEY}`),
+      fetch(`${SHEETS_BASE}/scan_log!A2:D?key=${API_KEY}`)
     ]);
-    const [pd,ad,sd]=await Promise.all([propsRes.json(),actsRes.json(),srcsRes.json()]);
+    const [pd,ad,sd,ed,ld]=await Promise.all([propsRes.json(),actsRes.json(),srcsRes.json(),evRes.json(),logRes.json()]);
 
     // Parse properties
     if(pd.error){throw new Error('Sheets API: '+pd.error.message);}
@@ -715,14 +838,33 @@ async function loadFromSheets(silent=false){
       }));
     }
 
-    // Parse activities (last 30 days)
+    // Parse activities (all — needed for YoY + reports)
     if(ad.values&&ad.values.length>0){
-      const cutoff=new Date();cutoff.setDate(cutoff.getDate()-30);
-      const live=ad.values.filter(r=>r[6]).filter(r=>!r[9]||new Date(r[9])>=cutoff)
-        .map((r,i)=>({id:r[0]||('act_'+i),propId:r[1]||'',type:r[3]||'other',
-          scope:r[4]||'property',nearAddr:r[5]||'',desc:r[6]||'',time:r[7]||'',sourceUrl:r[8]||''}))
+      const live=ad.values.filter(r=>r[6])
+        .map((r,i)=>({id:r[0]||('act_'+i),propId:r[1]||'',principalId:r[2]||'',type:r[3]||'other',
+          scope:r[4]||'property',nearAddr:r[5]||'',desc:r[6]||'',time:r[7]||'',
+          sourceUrl:r[8]||'',createdAt:r[9]||r[7]||'',status:r[10]||''}))
         .reverse();
-      if(live.length>0)activities=live;
+      if(live.length>0){
+        activities=live;
+        resolvedIds=new Set();
+        activities.forEach(a=>{if(a.status&&a.status!=='new'&&a.status!=='')resolvedIds.add(String(a.id));});
+      }
+    }
+
+    // Parse events
+    if(ed&&ed.values&&!ed.error){
+      rEvents=ed.values.filter(r=>r[0]&&r[3]).map(r=>({
+        propId:r[0]||'',principalId:r[1]||'',eventType:r[2]||'hearing',eventDate:r[3]||'',
+        title:r[4]||'',desc:r[5]||'',url:r[6]||'',createdAt:r[7]||''
+      }));
+    }
+
+    // Parse scan log
+    if(ld&&ld.values&&!ld.error){
+      rScanLog=ld.values.filter(r=>r[0]).map(r=>({
+        scanType:r[0]||'daily',runDate:r[1]||'',findingsCount:parseInt(r[2])||0,summary:r[3]||''
+      }));
     }
 
     // Parse sources
@@ -769,6 +911,7 @@ async function loadFromSheets(silent=false){
   }
   document.getElementById('loading-overlay').classList.add('hidden');
   renderProps();renderActivity();updateSidebarCounts();renderSources();
+  if(document.getElementById('page-reports').classList.contains('active'))setTimeout(initReports,50);
 }
 
 function setSyncBadge(state){
@@ -785,8 +928,8 @@ function selectPrincipal(el){
   el.classList.add('active');selectedPrincipal=el.dataset.pid;
   closeMobMenu();
   document.getElementById('tb-principal-chip').textContent=selectedPrincipal==='all'?'All':selectedPrincipal;
-  const cl=document.getElementById('chart-principal-label');if(cl)cl.textContent=selectedPrincipal==='all'?'All Properties':selectedPrincipal+' Portfolio';
   renderProps();renderActivity();updateSidebarCounts();renderSources();
+  if(document.getElementById('page-reports').classList.contains('active'))setTimeout(initReports,50);
 }
 function visibleProps(){return selectedPrincipal==='all'?props:props.filter(p=>p.principalId===selectedPrincipal);}
 function updateSidebarCounts(){
@@ -818,7 +961,7 @@ function nav(el){
   document.querySelectorAll('.page').forEach(pg=>pg.classList.remove('active'));
   document.getElementById('page-'+p).classList.add('active');
   document.getElementById('tb-title').textContent=PT[p][0];document.getElementById('tb-sub').textContent=PT[p][1];
-  if(p==='reports')setTimeout(initChart,50);
+  if(p==='reports')setTimeout(initReports,50);
   if(p==='notifications')renderNotifications();
   if(p==='sources')renderSources();
 }
@@ -950,17 +1093,249 @@ function addProp(){
 }
 function removeProp(id){if(!confirm('Remove this property?'))return;props=props.filter(p=>p.id!==id);renderProps();updateSidebarCounts();}
 
-// ── CHART ─────────────────────────────────────────────────────────────────
-let chartInst=null;
-function initChart(){
-  const canvas=document.getElementById('trend-chart');if(!canvas)return;if(chartInst){chartInst.destroy();chartInst=null;}
-  const days=30,today=new Date('2026-04-29');
-  const labels=Array.from({length:days},(_,i)=>{const d=new Date(today);d.setDate(d.getDate()-days+1+i);return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});});
-  const ppids=new Set(visibleProps().map(p=>p.id));
-  const types=[{key:'permit',color:'#60a5fa'},{key:'landmarks',color:'#c084fc'},{key:'complaint',color:'#fbbf24'},{key:'rumor',color:'#fb923c'}];
-  const datasets=types.map(t=>({label:t.key.charAt(0).toUpperCase()+t.key.slice(1),data:labels.map(()=>0),borderColor:t.color,backgroundColor:t.color.replace(')',',0.08)').replace('rgb','rgba'),tension:0.4,pointRadius:0,borderWidth:1.5}));
-  activities.filter(a=>ppids.has(a.propId)).forEach(a=>{const idx=types.findIndex(t=>t.key===a.type);if(idx<0)return;const d=new Date(today);d.setDate(d.getDate()-Math.floor(Math.random()*days));const li=labels.findIndex(l=>l===d.toLocaleDateString('en-US',{month:'short',day:'numeric'}));if(li>=0)datasets[idx].data[li]++;});
-  chartInst=new Chart(canvas,{type:'line',data:{labels,datasets},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{labels:{color:'#888',font:{size:11},boxWidth:10,padding:16}}},scales:{x:{grid:{color:'#1f1f1f'},ticks:{color:'#555',font:{size:9},maxTicksLimit:8}},y:{grid:{color:'#1f1f1f'},ticks:{color:'#555',font:{size:9}},beginAtZero:true}}}});
+// ── REPORTS PAGE ──────────────────────────────────────────────────────────
+function rptPrincipalChip(pid){const pr=PRINCIPALS.find(p=>p.id===pid);return pr?`<span style="font-weight:800;color:${pr.color}">${pr.initials}</span>`:''}
+function rptPropPrincipal(propId){const p=props.find(x=>x.id===propId);return p?p.principalId:'';}
+function rptIsResolved(a){return resolvedIds.has(String(a.id))||(a.status&&a.status!=='new'&&a.status!=='');}
+function rptDaysAgo(s){if(!s)return null;const d=new Date(s);return isNaN(d)?null:Math.floor((new Date()-d)/86400000);}
+function rptFmtAge(da){if(da===null)return'';if(da===0)return'Today';if(da===1)return'1d ago';if(da<7)return da+'d ago';if(da<14)return'1 wk ago';return Math.floor(da/7)+' wks ago';}
+function rptScore(a){const now=new Date(),d=new Date(a.createdAt||a.time||now),days=isNaN(d)?15:(now-d)/86400000;const stale=days>14?-10:0;return(4-(RPTS_SENS[a.propId]||4))*25+(['crime','legal','court','fire'].includes(a.type)?20:['permit','complaint','landmarks'].includes(a.type)?12:5)+Math.max(0,30-days)+stale;}
+function rptFActs(days=30){
+  const cut=new Date();cut.setDate(cut.getDate()-days);
+  const vids=new Set(visibleProps().map(p=>p.id));
+  return activities.filter(a=>{const d=new Date(a.createdAt||a.time);return vids.has(a.propId)&&!isNaN(d)&&d>=cut;});
+}
+function rptAllActs(){return activities.filter(a=>visibleProps().some(p=>p.id===a.propId));}
+
+function setRptFilter(f){
+  reportFilter=f;
+  const bu=document.getElementById('rpt-f-unreviewed'),ba=document.getElementById('rpt-f-all');
+  if(bu)bu.className='tb-btn'+(f==='unreviewed'?' primary':'');
+  if(ba)ba.className='tb-btn'+(f==='all'?' primary':'');
+  const a=rptFActs(30);renderRptStats(a);renderRptAlerts(a);
+}
+
+async function rptDigest(){
+  const btn=document.getElementById('rpt-digest-btn');
+  if(btn){btn.disabled=true;btn.textContent='📧 Sending…';}
+  try{
+    await fetch(WEBHOOK,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'sendDigest'})});
+    if(btn){btn.textContent='📧 Sent ✓';setTimeout(()=>{btn.textContent='📧 Send Digest';btn.disabled=false;},4000);}
+  }catch(e){if(btn){btn.textContent='📧 Send Digest';btn.disabled=false;}}
+}
+
+async function rptResolve(actId,status){
+  resolvedIds.add(String(actId));
+  const row=document.getElementById('rpt-row-'+actId);
+  if(row){
+    row.classList.add('resolved');
+    const desc=row.querySelector('.rpt-al-desc');if(desc)desc.classList.add('resolved');
+    const btns=row.querySelector('.rpt-resolve-btns');
+    if(btns)btns.innerHTML=`<span class="rpt-resolved-tag ${status==='actioned'?'actioned':'reviewed'}">${status==='actioned'?'⚡ Actioned':'✓ Reviewed'}</span>`;
+  }
+  try{await fetch(WEBHOOK,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'resolveActivity',actId,status})});}catch(e){}
+  renderRptStats(rptFActs(30));
+}
+
+function rptShowMore(){reportAlertLimit+=10;renderRptAlerts(rptFActs(30));}
+
+function renderRptStats(acts){
+  const vis=reportFilter==='unreviewed'?acts.filter(a=>!rptIsResolved(a)):acts;
+  const crit=vis.filter(a=>['crime','legal','court','fire'].includes(a.type));
+  const stale=vis.filter(a=>{const da=rptDaysAgo(a.createdAt||a.time);return da!==null&&da>14;});
+  const active=new Set(vis.map(a=>a.propId));
+  const defs=[
+    {lbl:'Total Alerts',val:vis.length,sub:reportFilter==='unreviewed'?'unreviewed, 30 days':'last 30 days',acc:vis.length?'var(--amber)':'var(--green)'},
+    {lbl:'Critical',val:crit.length,sub:'crime · legal · fire',acc:crit.length?'var(--red)':'var(--green)'},
+    {lbl:'Stale (>14 days)',val:stale.length,sub:'awaiting review',acc:stale.length?'var(--amber)':'var(--green)'},
+    {lbl:'Properties Active',val:active.size,sub:`of ${visibleProps().length} monitored`,acc:active.size?'var(--amber)':'var(--green)'},
+  ];
+  const el=document.getElementById('rpt-stats');
+  if(el)el.innerHTML=defs.map(d=>`<div class="rpt-stat" style="--rpt-acc:${d.acc}"><div class="rpt-stat-lbl">${d.lbl}</div><div class="rpt-stat-val">${d.val}</div><div class="rpt-stat-sub">${d.sub}</div></div>`).join('');
+}
+
+function renderRptEvents(){
+  const now=new Date(),horizon=new Date();horizon.setDate(horizon.getDate()+60);
+  const vids=new Set(visibleProps().map(p=>p.id));
+  const upcoming=rEvents.filter(ev=>{
+    const d=new Date(ev.eventDate);
+    return !isNaN(d)&&d>=now&&d<=horizon&&(vids.has(ev.propId)||ev.propId==='');
+  }).sort((a,b)=>new Date(a.eventDate)-new Date(b.eventDate));
+  const badge=document.getElementById('rpt-ev-badge'),sub=document.getElementById('rpt-ev-sub');
+  if(badge){badge.textContent=upcoming.length?upcoming.length+' upcoming':'';badge.style.display=upcoming.length?'':'none';}
+  if(sub)sub.textContent=`Next 60 days${upcoming.length?' · '+upcoming.length+' event'+(upcoming.length>1?'s':''):''}`;
+  const el=document.getElementById('rpt-ev-list');if(!el)return;
+  if(!upcoming.length){el.innerHTML=`<div style="padding:24px;text-align:center;color:var(--text3);font-size:12px;line-height:1.6">📅<br>No upcoming events in the next 60 days.<br><span style="font-size:11px">Events are logged during scans when hearings, meetings, or deadlines are found.</span></div>`;return;}
+  el.innerHTML=upcoming.map(ev=>{
+    const d=new Date(ev.eventDate),du=Math.ceil((d-now)/86400000);
+    const pid=ev.principalId||rptPropPrincipal(ev.propId);
+    const pr=PRINCIPALS.find(p=>p.id===pid)||{};
+    const etc=ETYPES_C[ev.eventType]||'#64748b';
+    const dCls=du<=7?'soon':du<=21?'upcoming':'future';
+    const dTxt=du===0?'Today':du===1?'Tomorrow':'In '+du+'d';
+    const sn=RPTS_SN[ev.propId]||ev.propId;
+    return `<div class="rpt-event-row">
+      <div><div class="rpt-event-day">${d.getDate()}</div><div class="rpt-event-mon">${d.toLocaleDateString('en-US',{month:'short',year:'numeric'})}</div></div>
+      <div>
+        <div class="rpt-event-prop">${pr.initials?`<span style="font-weight:800;color:${pr.color}">${pr.initials}</span> `:''}${sn}</div>
+        <div class="rpt-event-title">${ev.title}${ev.desc?`<span style="color:var(--text3);font-size:11px;margin-left:6px">${ev.desc}</span>`:''}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+        <span class="rpt-days-badge ${dCls}">${dTxt}</span>
+        <span style="font-size:10px;font-weight:700;text-transform:uppercase;padding:2px 6px;border-radius:8px;background:${etc}20;color:${etc};border:1px solid ${etc}40">${ev.eventType.toUpperCase()}</span>
+        ${ev.url?`<a href="${ev.url}" target="_blank" style="font-size:10px;color:var(--accent);text-decoration:none">Details ↗</a>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderRptAlerts(acts){
+  let sorted=[...acts].sort((a,b)=>rptScore(b)-rptScore(a));
+  if(reportFilter==='unreviewed')sorted=sorted.filter(a=>!rptIsResolved(a));
+  const total=sorted.length,visible=sorted.slice(0,reportAlertLimit);
+  const sub=document.getElementById('rpt-al-sub');
+  if(sub)sub.textContent=`${total} alert${total!==1?'s':''}${reportFilter==='unreviewed'?' unreviewed':''} · ranked by sensitivity + recency`;
+  const el=document.getElementById('rpt-al-list');if(!el)return;
+  if(!visible.length){el.innerHTML=`<div style="padding:24px;text-align:center;color:var(--text3);font-size:12px;line-height:1.6">✅<br>${reportFilter==='unreviewed'?'All caught up — no unreviewed alerts.':'No alerts in the last 30 days.'}</div>`;return;}
+  el.innerHTML=visible.map((a,i)=>{
+    const sn=RPTS_SN[a.propId]||a.propId,pid=rptPropPrincipal(a.propId);
+    const tc=TC[a.type]||'#6b7280',tl=TL[a.type]||a.type;
+    const s=RPTS_SENS[a.propId]||4,da=rptDaysAgo(a.createdAt||a.time);
+    const age=rptFmtAge(da),isStale=da!==null&&da>14,res=rptIsResolved(a);
+    const resStatus=resolvedIds.has(String(a.id))?'local':a.status;
+    return `<div class="rpt-alert-row${res?' resolved':''}" id="rpt-row-${a.id}">
+      <div class="rpt-alert-num${i<3&&!res?' top':''}">#${i+1}</div>
+      <div>
+        <div class="rpt-al-prop">
+          ${rptPrincipalChip(pid)}
+          <span style="color:var(--text);font-weight:700">${sn}</span>
+          ${a.nearAddr?`<span style="color:var(--text3)">· ${a.nearAddr}</span>`:''}
+          <span class="rpt-sbadge" style="${RPTS_SCSS[s]}">${RPTS_SLBL[s]}</span>
+          ${isStale&&!res?`<span class="rpt-stale-badge">⏰ Stale</span>`:''}
+        </div>
+        <div class="rpt-al-desc${res?' resolved':''}">${a.desc}</div>
+        <div class="rpt-al-meta">
+          ${age}${a.sourceUrl?` · <a href="${a.sourceUrl}" target="_blank" style="color:var(--accent);text-decoration:none">Source ↗</a>`:''}
+          ${res?`<span class="rpt-resolved-tag ${resStatus==='actioned'?'actioned':'reviewed'}">${resStatus==='actioned'?'⚡ Actioned':'✓ Reviewed'}</span>`:''}
+        </div>
+        ${!res?`<div class="rpt-resolve-btns">
+          <button class="rpt-rbtn reviewed" onclick="rptResolve('${a.id}','reviewed')">✓ Mark Reviewed</button>
+          <button class="rpt-rbtn actioned" onclick="rptResolve('${a.id}','actioned')">⚡ Action Taken</button>
+        </div>`:''}
+      </div>
+      <div style="padding-top:2px"><span class="rpt-tpill" style="background:${tc}25;color:${tc};border:1px solid ${tc}40">${tl}</span></div>
+    </div>`;
+  }).join('')+(total>reportAlertLimit?`<button class="rpt-show-more" onclick="rptShowMore()">Show ${Math.min(10,total-reportAlertLimit)} more (${total-reportAlertLimit} remaining)</button>`:'');
+}
+
+function renderRptCoverage(){
+  const byType={};
+  rScanLog.forEach(r=>{const t=r.scanType||'daily';if(!byType[t]||new Date(r.runDate)>new Date(byType[t].runDate))byType[t]=r;});
+  const totalActs=activities.length,totalFindings=rScanLog.reduce((s,r)=>s+(r.findingsCount||0),0),totalScans=rScanLog.length;
+  function covCard(label,scanType,icon){
+    const last=byType[scanType],da=last?rptDaysAgo(last.runDate):null;
+    let color='var(--green)',label2='Never run';
+    if(da===null)color='var(--text3)';
+    else if(da===0)label2='Today';
+    else if(da<=1)label2='Yesterday';
+    else if(da<=3)label2=da+'d ago';
+    else if(da<=7){label2=da+'d ago';color='var(--amber)';}
+    else{label2=da+'d ago';color='var(--red)';}
+    const fillPct=da===null?0:Math.max(0,Math.min(100,100-da*14));
+    return `<div class="rpt-cov-card" style="--rpt-cc:${color}">
+      <div class="rpt-cov-lbl">${icon} ${label}</div>
+      <div class="rpt-cov-val">${da===null?'—':da===0?'Today':da+'d'}</div>
+      <div class="rpt-cov-sub">${da===null?'Never run':'Last: '+label2}${last&&last.findingsCount?' · '+last.findingsCount+' findings':''}</div>
+      <div class="rpt-cov-bar"><div class="rpt-cov-bar-fill" style="width:${fillPct}%"></div></div>
+    </div>`;
+  }
+  const scans=[
+    {label:'Beacon Hill',type:'weekly-beacon-hill',icon:'🏛️'},
+    {label:'Back Bay + North End',type:'weekly-back-bay',icon:'🏙️'},
+    {label:'Nantucket',type:'weekly-nantucket',icon:'🌊'},
+    {label:'New England Inland',type:'weekly-new-england',icon:'🌲'},
+    {label:'Florida',type:'weekly-florida',icon:'🌴'},
+    {label:'Weekly Report',type:'weekly',icon:'📋'},
+    {label:'Total Activity',type:'__stats',icon:'📊'}
+  ];
+  const el=document.getElementById('rpt-cov');
+  if(!el)return;
+  const statCard=`<div class="rpt-cov-card" style="--rpt-cc:var(--accent)">
+    <div class="rpt-cov-lbl">📊 Total Activity</div>
+    <div class="rpt-cov-val">${totalActs}</div>
+    <div class="rpt-cov-sub">${totalScans} scans · ${totalFindings} total findings</div>
+    <div class="rpt-cov-bar"><div class="rpt-cov-bar-fill" style="width:${Math.min(100,totalActs*5)}%"></div></div>
+  </div>`;
+  el.innerHTML=scans.filter(s=>s.type!=='__stats').map(s=>covCard(s.label,s.type,s.icon)).join('')+statCard;
+}
+
+function renderRptCharts(acts30,aAll){
+  Object.values(rptCharts).forEach(c=>{try{c.destroy();}catch(e){}});rptCharts={};
+  // Type donut
+  const tm={};acts30.forEach(a=>{const n=a.type||'other';tm[n]=(tm[n]||0)+1;});
+  const te=Object.entries(tm).sort((a,b)=>b[1]-a[1]);
+  const twEl=document.getElementById('rpt-ctwrap');
+  if(te.length){rptCharts.types=new Chart(document.getElementById('rpt-c-types'),{type:'doughnut',data:{labels:te.map(([t])=>TL[t]||t),datasets:[{data:te.map(([,v])=>v),backgroundColor:te.map(([t])=>TC[t]||'#6b7280'),borderWidth:2,borderColor:'#111'}]},options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{position:'right',labels:{color:'#888',font:{size:10},padding:8,boxWidth:10}}}}});}
+  else if(twEl)twEl.innerHTML='<div class="rpt-ch-empty">📭<br>No data yet</div>';
+  // Property bar
+  const pm={};acts30.forEach(a=>{const n=RPTS_SN[a.propId]||a.propId;pm[n]=(pm[n]||0)+1;});
+  const pe=Object.entries(pm).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  const pwEl=document.getElementById('rpt-cpwrap');
+  if(pe.length){rptCharts.props=new Chart(document.getElementById('rpt-c-props'),{type:'bar',data:{labels:pe.map(([n])=>n),datasets:[{data:pe.map(([,v])=>v),backgroundColor:'#3b82f620',borderColor:'#3b82f6',borderWidth:1,borderRadius:4}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#555',font:{size:9}},grid:{color:'#1f1f1f'}},y:{ticks:{color:'#888',font:{size:9}},grid:{color:'#1f1f1f'}}}}});}
+  else if(pwEl)pwEl.innerHTML='<div class="rpt-ch-empty">📭<br>No data yet</div>';
+  // Weekly trend
+  const now=new Date(),wks=[],wkd=[];
+  for(let w=11;w>=0;w--){const e=new Date(now);e.setDate(e.getDate()-w*7);const s=new Date(e);s.setDate(s.getDate()-7);wks.push(e.toLocaleDateString('en-US',{month:'short',day:'numeric'}));wkd.push(aAll.filter(a=>{const d=new Date(a.createdAt||a.time);return !isNaN(d)&&d>=s&&d<e;}).length);}
+  rptCharts.trend=new Chart(document.getElementById('rpt-c-trend'),{type:'line',data:{labels:wks,datasets:[{label:'Alerts',data:wkd,borderColor:'#3b82f6',backgroundColor:'#3b82f610',fill:true,tension:.4,pointRadius:2,pointBackgroundColor:'#3b82f6',borderWidth:1.5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#555',font:{size:9},maxRotation:40},grid:{color:'#1f1f1f'}},y:{ticks:{color:'#555',font:{size:9}},grid:{color:'#1f1f1f'},beginAtZero:true}}}});
+  // YoY
+  const yr=now.getFullYear(),mos=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const cy=new Array(12).fill(0),ly=new Array(12).fill(0);
+  aAll.forEach(a=>{const d=new Date(a.createdAt||a.time);if(isNaN(d))return;if(d.getFullYear()===yr)cy[d.getMonth()]++;else if(d.getFullYear()===yr-1)ly[d.getMonth()]++;});
+  const hasYoY=ly.some(v=>v>0);
+  const yoyT=document.getElementById('rpt-yoy-title');
+  if(yoyT)yoyT.textContent=hasYoY?`YoY — ${yr} vs ${yr-1}`:`${yr} Monthly Activity`;
+  rptCharts.yoy=new Chart(document.getElementById('rpt-c-yoy'),{type:'bar',data:{labels:mos,datasets:[{label:String(yr),data:cy,backgroundColor:'#3b82f640',borderColor:'#3b82f6',borderWidth:1,borderRadius:3},...(hasYoY?[{label:String(yr-1),data:ly,backgroundColor:'#ffffff15',borderColor:'#555',borderWidth:1,borderRadius:3}]:[])]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#888',font:{size:10}}}},scales:{x:{ticks:{color:'#555',font:{size:9}},grid:{color:'#1f1f1f'}},y:{ticks:{color:'#555',font:{size:9}},grid:{color:'#1f1f1f'},beginAtZero:true}}}});
+}
+
+function renderRptRisk(acts30){
+  const vp=visibleProps(),ids=vp.map(p=>p.id);
+  const sorted=[...ids].sort((a,b)=>{
+    const ac=acts30.filter(x=>x.propId===a&&!rptIsResolved(x)).length;
+    const bc=acts30.filter(x=>x.propId===b&&!rptIsResolved(x)).length;
+    return bc-ac||(RPTS_SENS[a]||4)-(RPTS_SENS[b]||4);
+  });
+  const el=document.getElementById('rpt-risk');if(!el)return;
+  el.innerHTML=sorted.map(id=>{
+    const a=acts30.filter(x=>x.propId===id),unresA=a.filter(x=>!rptIsResolved(x));
+    const unresCrit=unresA.filter(x=>['crime','legal','court','fire'].includes(x.type));
+    const st=unresCrit.length?'red':unresA.length>0?'amber':'green';
+    const pid=rptPropPrincipal(id),pr=PRINCIPALS.find(p=>p.id===pid)||{};
+    const s=RPTS_SENS[id]||4,sn=RPTS_SN[id]||id;
+    return `<div class="rpt-risk-card" onclick="openDetail('${id}')">
+      <div class="rpt-rdot ${st}"></div>
+      <div class="rpt-risk-body">
+        <div class="rpt-risk-name" title="${sn}">${sn}</div>
+        <div class="rpt-risk-meta">${RPTS_SLBL[s]}${pr.initials?` · <span style="color:${pr.color};font-weight:700">${pr.initials}</span>`:''}</div>
+      </div>
+      <div class="rpt-risk-cnt${unresA.length?' has':''}">${unresA.length||'—'}</div>
+    </div>`;
+  }).join('');
+}
+
+function initReports(){
+  const now=new Date(),cut=new Date();cut.setDate(cut.getDate()-30);
+  const rng=document.getElementById('rpt-range');
+  if(rng)rng.textContent=cut.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})+' – '+now.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  const fbu=document.getElementById('rpt-f-unreviewed'),fba=document.getElementById('rpt-f-all');
+  if(fbu)fbu.className='tb-btn'+(reportFilter==='unreviewed'?' primary':'');
+  if(fba)fba.className='tb-btn'+(reportFilter==='all'?' primary':'');
+  const acts30=rptFActs(30),aAll=rptAllActs();
+  renderRptStats(acts30);
+  renderRptEvents();
+  renderRptAlerts(acts30);
+  renderRptCoverage();
+  renderRptCharts(acts30,aAll);
+  renderRptRisk(acts30);
 }
 
 // ── INTELLIGENCE PANEL ───────────────────────────────────────────────────
