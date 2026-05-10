@@ -5,8 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Property Intelligence Hub</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css"/>
-<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -352,36 +350,12 @@ select.field-input{appearance:none;cursor:pointer}
   .sources-grid{grid-template-columns:1fr}
   /* Reports grid */
   .report-chart-card~div[style*="grid"]{grid-template-columns:1fr!important}
-  /* Map */
-  .map-toolbar{flex-wrap:wrap;gap:6px}
-  .map-legend{display:none}
-  #map-container{height:calc(100vh - 130px)}
   /* Settings/Notif rows */
   .setting-input{width:100%;margin-top:4px}
   .setting-row{flex-wrap:wrap}
   /* dp counts grid stays 3-col — compact enough */
 }
 
-/* MAP */
-#map-container .leaflet-container{background:#080808}
-.leaflet-container{background:#0d0d0d!important}
-.leaflet-control-attribution{background:rgba(8,8,8,0.7)!important;color:var(--text3)!important;font-size:9px!important}
-.leaflet-control-attribution a{color:var(--text3)!important}
-.leaflet-control-zoom a{background:var(--surface)!important;color:var(--text2)!important;border-color:var(--border2)!important}
-.leaflet-control-zoom a:hover{background:var(--surface2)!important;color:var(--text)!important}
-.leaflet-tooltip{background:var(--surface)!important;border:1px solid var(--border2)!important;color:var(--text)!important;font-family:var(--font)!important;font-size:12px!important;padding:7px 11px!important;box-shadow:0 4px 16px rgba(0,0,0,0.5)!important;border-radius:7px!important}
-.leaflet-tooltip::before{display:none!important}
-.map-marker-wrap{position:relative;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer}
-.map-pin{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 12px rgba(0,0,0,0.5);border:2.5px solid rgba(255,255,255,0.2);position:relative;z-index:2}
-.map-pin-label{font-size:10px;font-weight:800;color:#fff;line-height:1;pointer-events:none}
-.map-pin-ring{position:absolute;inset:-9px;border-radius:50%;border:2px solid;animation:map-ring 2s ease-out infinite;z-index:1;pointer-events:none}
-@keyframes map-ring{0%{transform:scale(0.8);opacity:1}100%{transform:scale(1.7);opacity:0}}
-.map-toolbar{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-.map-region-btn{background:var(--surface2);border:1px solid var(--border2);color:var(--text2);padding:5px 12px;border-radius:6px;cursor:pointer;font-size:11.5px;font-weight:500;transition:all 0.15s;font-family:var(--font)}
-.map-region-btn:hover{background:var(--border2);color:var(--text)}
-.map-legend{display:flex;align-items:center;gap:14px;margin-left:auto;font-size:10.5px;color:var(--text3)}
-.map-legend-item{display:flex;align-items:center;gap:5px}
-.map-legend-dot{width:9px;height:9px;border-radius:50%}
 </style>
 </head>
 <body>
@@ -434,14 +408,13 @@ function checkGate(){
     <div class="sb-section-label">Principal</div>
     <div class="principal-item active" data-pid="all" onclick="selectPrincipal(this)"><div class="principal-avatar" style="font-size:8px">ALL</div>All Principals<span class="principal-prop-count" id="pc-all">8</span></div>
     <div class="principal-item" data-pid="APJCJM" onclick="selectPrincipal(this)"><div class="principal-avatar pa-APJCJM">AC</div>APJCJM<span class="principal-alert-dot" id="pad-APJCJM"></span><span class="principal-prop-count" id="pc-APJCJM">2</span></div>
-    <div class="principal-item" data-pid="ECJIV" onclick="selectPrincipal(this)"><div class="principal-avatar pa-ECJIV">EC</div>ECJIV<span class="principal-prop-count" id="pc-ECJIV">2</span></div>
-    <div class="principal-item" data-pid="ELJ" onclick="selectPrincipal(this)"><div class="principal-avatar pa-ELJ">EL</div>ELJ<span class="principal-prop-count" id="pc-ELJ">2</span></div>
-    <div class="principal-item" data-pid="EBJ" onclick="selectPrincipal(this)"><div class="principal-avatar pa-EBJ">EB</div>EBJ<span class="principal-prop-count" id="pc-EBJ">2</span></div>
+    <div class="principal-item" data-pid="ECJIV" onclick="selectPrincipal(this)"><div class="principal-avatar pa-ECJIV">EC</div>ECJIV<span class="principal-alert-dot" id="pad-ECJIV" style="display:none"></span><span class="principal-prop-count" id="pc-ECJIV">2</span></div>
+    <div class="principal-item" data-pid="ELJ" onclick="selectPrincipal(this)"><div class="principal-avatar pa-ELJ">EL</div>ELJ<span class="principal-alert-dot" id="pad-ELJ" style="display:none"></span><span class="principal-prop-count" id="pc-ELJ">2</span></div>
+    <div class="principal-item" data-pid="EBJ" onclick="selectPrincipal(this)"><div class="principal-avatar pa-EBJ">EB</div>EBJ<span class="principal-alert-dot" id="pad-EBJ" style="display:none"></span><span class="principal-prop-count" id="pc-EBJ">2</span></div>
     <div class="sb-divider"></div>
     <div class="sb-section-label">Monitor</div>
     <div class="sb-item active" data-page="properties" onclick="nav(this)"><span class="sb-item-icon">🏠</span>Properties<span class="sb-item-badge" id="badge-alerts" style="display:none">0</span></div>
     <div class="sb-item" data-page="activity" onclick="nav(this)"><span class="sb-item-icon">⚡</span>Activity Feed</div>
-    <div class="sb-item" data-page="map" onclick="nav(this)"><span class="sb-item-icon">🗺️</span>Map View</div>
     <div class="sb-section-label">Analyze</div>
     <div class="sb-item" data-page="sources" onclick="nav(this)"><span class="sb-item-icon">🔗</span>Sources</div>
     <div class="sb-item" data-page="reports" onclick="nav(this)"><span class="sb-item-icon">📊</span>Reports</div>
@@ -538,22 +511,6 @@ function checkGate(){
       <div id="activity-list"></div>
     </div>
 
-    <div id="page-map" class="page">
-      <div class="map-toolbar">
-        <h3 style="font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:1px">Property Locations</h3>
-        <span class="prop-count-badge" id="map-prop-count">8 properties</span>
-        <button class="map-region-btn" onclick="mapGoTo('boston')">🏙 Boston</button>
-        <button class="map-region-btn" onclick="mapGoTo('florida')">🌴 Florida</button>
-        <button class="map-region-btn" onclick="mapFitAll()">⊞ Fit All</button>
-        <div class="map-legend">
-          <div class="map-legend-item"><div class="map-legend-dot" style="background:var(--red);box-shadow:0 0 5px var(--red)"></div>Alert</div>
-          <div class="map-legend-item"><div class="map-legend-dot" style="background:var(--amber);box-shadow:0 0 5px var(--amber)"></div>Active</div>
-          <div class="map-legend-item"><div class="map-legend-dot" style="background:var(--green)"></div>Clear</div>
-          <div class="map-legend-item" style="border-left:1px solid var(--border);padding-left:14px;color:var(--text3);font-style:italic">Ring = monitoring radius</div>
-        </div>
-      </div>
-      <div id="map-container" style="height:calc(100vh - 162px);border-radius:10px;overflow:hidden;border:1px solid var(--border)"></div>
-    </div>
 
     <div id="page-sources" class="page">
       <div id="sources-container"></div>
@@ -723,28 +680,6 @@ function getPropLinks(p){
   return PROP_LINKS['Beacon Hill'];
 }
 
-// ── PROPERTY COORDINATES ─────────────────────────────────────────────────
-const PROP_COORDS_MAP=[
-  {match:'56 Beacon',       coords:[42.3570,-71.0676]},
-  {match:'482 Island',      coords:[26.6913,-80.0390]},
-  {match:'Union Wharf',     coords:[42.3638,-71.0513]},
-  {match:'131 Commonwealth',coords:[42.3500,-71.0819]},
-  {match:'Louisburg',       coords:[42.3573,-71.0710]},
-  {match:'Winding Oak',     coords:[26.6597,-80.2518]},
-  {match:'1 Charles River', coords:[42.3591,-71.0718]},
-  {match:'3 Charles River', coords:[42.3591,-71.0720]},
-  {match:'1196 Canton',     coords:[42.2427,-71.0638]},
-  {match:'Dover Estate',   coords:[42.2431,-71.2817]},
-  {match:'1 Sandy',        coords:[41.2712,-70.0987]},
-  {match:'32B Hulbert',     coords:[41.2862,-70.0983]},
-  {match:'29 Hulbert',      coords:[41.2858,-70.0981]},
-  {match:'92 Blodgett',    coords:[44.2837,-73.9817]},
-  {match:'35 Hayride',      coords:[44.4629,-72.6807]}
-];
-function getPropCoords(p){
-  const m=PROP_COORDS_MAP.find(x=>p.addr.includes(x.match));
-  return m?m.coords:null;
-}
 
 // ── STATE ─────────────────────────────────────────────────────────────────
 let props=[...SEED_PROPS];
@@ -852,7 +787,6 @@ function selectPrincipal(el){
   document.getElementById('tb-principal-chip').textContent=selectedPrincipal==='all'?'All':selectedPrincipal;
   const cl=document.getElementById('chart-principal-label');if(cl)cl.textContent=selectedPrincipal==='all'?'All Properties':selectedPrincipal+' Portfolio';
   renderProps();renderActivity();updateSidebarCounts();renderSources();
-  if(document.getElementById('page-map').classList.contains('active'))renderMapMarkers();
 }
 function visibleProps(){return selectedPrincipal==='all'?props:props.filter(p=>p.principalId===selectedPrincipal);}
 function updateSidebarCounts(){
@@ -876,7 +810,7 @@ function updateSidebarCounts(){
 }
 
 // ── NAV ───────────────────────────────────────────────────────────────────
-const PT={properties:['Properties','All monitored properties'],activity:['Activity Feed','Click any alert to open its source'],map:['Map View','Live property locations with alert status'],sources:['Sources','Property-specific portals and news feeds'],reports:['Reports','Trends and email history'],notifications:['Notifications','Alert preferences'],settings:['Settings','Principals, data layer, credentials']};
+const PT={properties:['Properties','All monitored properties'],activity:['Activity Feed','Click any alert to open its source'],sources:['Sources','Property-specific portals and news feeds'],reports:['Reports','Trends and email history'],notifications:['Notifications','Alert preferences'],settings:['Settings','Principals, data layer, credentials']};
 function nav(el){
   document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));el.classList.add('active');
   closeMobMenu();
@@ -887,7 +821,6 @@ function nav(el){
   if(p==='reports')setTimeout(initChart,50);
   if(p==='notifications')renderNotifications();
   if(p==='sources')renderSources();
-  if(p==='map')setTimeout(initMap,50);
 }
 
 // ── SCOPE BADGE ───────────────────────────────────────────────────────────
@@ -920,20 +853,8 @@ function openDetail(id,filterType='all'){
   renderDetailActs(id);
   const propLinks=sheetSources[id]?sheetSources[id].map(s=>({label:s.label,url:s.url,icon:'🔗'})):getPropLinks(p);
   document.getElementById('dp-links').innerHTML=propLinks.map(l=>`<a href="${l.url}" target="_blank" style="display:flex;align-items:center;gap:7px;padding:7px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text2);text-decoration:none;font-size:11.5px;font-weight:500" onmouseover="this.style.background='var(--border2)';this.style.color='var(--text)'" onmouseout="this.style.background='var(--surface2)';this.style.color='var(--text2)'"><span>${l.icon}</span>${l.label}</a>`).join('');
-  const onMap=document.getElementById('page-map').classList.contains('active');
-  // On map page: slide panel over map without darkening overlay — map stays live
-  if(!onMap)document.getElementById('overlay').classList.add('open');
+  document.getElementById('overlay').classList.add('open');
   document.getElementById('detail-panel').classList.add('open');
-  // Pan map so selected pin is visible in the left portion (clear of the panel)
-  if(onMap&&mapInst){
-    const coords=getPropCoords(p);
-    if(coords){
-      const panelW=window.innerWidth<=768?0:420;
-      const offsetX=panelW/2; // shift map left so pin centers in visible area
-      mapInst.panTo(coords,{animate:true,duration:0.5});
-      setTimeout(()=>mapInst.panBy([offsetX/2,0],{animate:true,duration:0.3}),520);
-    }
-  }
 }
 function renderDetailCounts(id){
   const p=props.find(x=>x.id===id);if(!p)return;
@@ -962,10 +883,6 @@ function closeDetail(){
   document.getElementById('overlay').classList.remove('open');
   document.getElementById('detail-panel').classList.remove('open');
   renderProps();
-  // Re-fit map after panel closes so full map is visible again
-  if(document.getElementById('page-map').classList.contains('active')&&mapInst){
-    setTimeout(()=>{mapInst.invalidateSize();},320);
-  }
 }
 
 // ── ACTIVITY FEED ─────────────────────────────────────────────────────────
@@ -1092,54 +1009,6 @@ function renderIntelPanel(){
   }).join(''):'<div class="intel-empty">No activity yet — awaiting first scan.</div>';
 }
 
-// ── MAP ───────────────────────────────────────────────────────────────────
-let mapInst=null,mapLayers=[];
-function initMap(){
-  if(!window.L){setTimeout(initMap,200);return;}
-  const el=document.getElementById('map-container');if(!el)return;
-  if(!mapInst){
-    mapInst=L.map('map-container',{zoomControl:true,scrollWheelZoom:true});
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
-      attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>',
-      subdomains:'abcd',maxZoom:19
-    }).addTo(mapInst);
-  }
-  renderMapMarkers();
-  setTimeout(()=>{mapInst.invalidateSize();mapFitAll();},150);
-}
-function renderMapMarkers(){
-  if(!mapInst)return;
-  mapLayers.forEach(l=>mapInst.removeLayer(l));mapLayers=[];
-  const vp=visibleProps();
-  vp.forEach(p=>{
-    const coords=getPropCoords(p);if(!coords)return;
-    const hasAlert=!seenProps.has(p.id)&&Object.values(p.counts).some(v=>v>0);
-    const total=Object.values(p.counts).reduce((a,b)=>a+b,0);
-    const color=p.status==='red'?'#ef4444':p.status==='yellow'?'#f59e0b':'#22c55e';
-    const icon=L.divIcon({
-      className:'',
-      html:`<div style="position:relative;width:36px;height:36px">
-        ${hasAlert?`<div style="position:absolute;inset:-4px;border-radius:50%;border:2px solid ${color};animation:mapPulse 1.6s ease-out infinite;opacity:0.7"></div>`:''}
-        <div style="width:36px;height:36px;border-radius:50%;background:${color};border:2.5px solid #111;display:flex;align-items:center;justify-content:center;color:#111;font-size:11px;font-weight:800;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.6)">${total||'·'}</div>
-      </div>`,
-      iconSize:[36,36],iconAnchor:[18,18]
-    });
-    const marker=L.marker(coords,{icon}).addTo(mapInst);
-    marker.bindTooltip(`<strong>${p.addr}</strong><br>${p.city}, ${p.state}<br>${total} activit${total===1?'y':'ies'}`,{direction:'top',offset:[0,-20],className:'map-tooltip'});
-    marker.on('click',()=>openDetail(p.id));
-    mapLayers.push(marker);
-  });
-}
-function mapGoTo(id){
-  const p=props.find(x=>x.id===id);if(!p||!mapInst)return;
-  const coords=getPropCoords(p);if(!coords)return;
-  mapInst.flyTo(coords,16,{animate:true,duration:0.8});
-}
-function mapFitAll(){
-  if(!mapInst||!mapLayers.length)return;
-  const group=L.featureGroup(mapLayers);
-  try{mapInst.fitBounds(group.getBounds().pad(0.2));}catch(e){}
-}
 
 // ── MOBILE MENU ───────────────────────────────────────────────────────────
 function toggleMobMenu(){
@@ -1159,7 +1028,6 @@ function runScan(){
   if(btn){btn.textContent='Scanning…';btn.disabled=true;}
   loadFromSheets(false).finally(()=>{
     if(btn){btn.textContent='▶ Run Scan';btn.disabled=false;}
-    if(document.getElementById('page-map').classList.contains('active'))renderMapMarkers();
   });
 }
 
