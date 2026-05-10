@@ -1010,7 +1010,11 @@ function renderDetailCounts(id){
 function renderDetailActs(id){
   const p=props.find(x=>x.id===id);if(!p)return;
   let acts=activities.filter(a=>a.propId===id);
-  if(detailActFilter!=='all')acts=acts.filter(a=>a.type===detailActFilter);
+  if(detailActFilter!=='all'){
+    if(detailActFilter==='rumor')acts=acts.filter(a=>['rumor','forsale','news','other'].includes(a.type));
+    else if(detailActFilter==='crime')acts=acts.filter(a=>['crime','legal','court','fire'].includes(a.type));
+    else acts=acts.filter(a=>a.type===detailActFilter);
+  }
   acts=acts.slice(0,7);
   const titleEl=document.getElementById('dp-activity-title');
   if(titleEl)titleEl.textContent=detailActFilter==='all'?'Recent Activity — click to open source ↗':detailActFilter.charAt(0).toUpperCase()+detailActFilter.slice(1)+' Activity — click to clear filter';
@@ -1033,7 +1037,11 @@ function renderActivity(){
   const list=document.getElementById('activity-list');
   const ppids=new Set(visibleProps().map(p=>p.id));
   let filtered=activities.filter(a=>ppids.has(a.propId));
-  if(activeFilter!=='all'&&activeFilter!=='nearby')filtered=filtered.filter(a=>a.type===activeFilter);
+  if(activeFilter!=='all'&&activeFilter!=='nearby'){
+    if(activeFilter==='rumor')filtered=filtered.filter(a=>['rumor','forsale','news','other'].includes(a.type));
+    else if(activeFilter==='crime')filtered=filtered.filter(a=>['crime','legal','court','fire'].includes(a.type));
+    else filtered=filtered.filter(a=>a.type===activeFilter);
+  }
   if(activeFilter==='nearby')filtered=filtered.filter(a=>a.scope==='nearby');
   if(!filtered.length){list.innerHTML='<div class="empty-state"><div class="empty-state-icon">⚡</div><div class="empty-state-text">No activity for this filter.</div><div class="empty-state-sub">New findings will appear here after the next scan.</div></div>';return;}
   list.innerHTML=filtered.map(a=>{
