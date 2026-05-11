@@ -387,47 +387,116 @@ select.field-input{appearance:none;cursor:pointer}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
 
 /* ── MOBILE ────────────────────────────────────────────────────────────── */
-#mob-menu-btn{display:none;background:none;border:none;color:var(--text2);cursor:pointer;padding:4px 6px;font-size:20px;line-height:1;align-items:center;justify-content:center;flex-shrink:0}
+#mob-menu-btn{display:none;background:none;border:none;color:var(--text2);cursor:pointer;padding:6px 8px;font-size:20px;line-height:1;align-items:center;justify-content:center;flex-shrink:0;-webkit-tap-highlight-color:transparent}
 #mob-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:199;display:none;backdrop-filter:blur(2px)}
 #mob-overlay.open{display:block}
+/* FAB — floating add button (hidden on desktop) */
+#mob-fab{display:none;position:fixed;bottom:calc(24px + env(safe-area-inset-bottom,0px));right:20px;width:54px;height:54px;border-radius:50%;background:var(--accent);border:none;color:#fff;font-size:28px;font-weight:300;line-height:1;cursor:pointer;z-index:90;box-shadow:0 4px 20px rgba(59,130,246,0.45);align-items:center;justify-content:center;transition:transform 0.12s,opacity 0.2s;-webkit-tap-highlight-color:transparent}
+#mob-fab:active{transform:scale(0.88)}
+/* Drag handle bar for bottom sheet (hidden on desktop) */
+.dp-handle-bar{display:none;justify-content:center;padding:10px 0 2px;cursor:grab;flex-shrink:0;touch-action:none;user-select:none}
+.dp-handle-inner{width:38px;height:4px;border-radius:2px;background:var(--border2)}
+
 @media(max-width:768px){
-  body{overflow:hidden}
-  /* Sidebar becomes a slide-in drawer */
-  #sidebar{position:fixed;left:-244px;top:0;height:100vh;z-index:200;transition:left 0.28s cubic-bezier(0.16,1,0.3,1);box-shadow:4px 0 32px rgba(0,0,0,0.6)}
-  #sidebar.mob-open{left:0}
+  /* ── Layout ── */
+  body{overflow:hidden;position:fixed;width:100%}
+  #sidebar{position:fixed;left:-250px;top:0;height:100%;width:242px;min-width:242px;z-index:200;transition:left 0.28s cubic-bezier(0.16,1,0.3,1)}
+  #sidebar.mob-open{left:0;box-shadow:4px 0 32px rgba(0,0,0,0.6)}
   #mob-menu-btn{display:flex}
-  /* Main fills full width */
+  #mob-fab{display:flex}
   #main{width:100%}
-  /* Topbar */
-  #topbar{padding:0 10px;gap:6px}
+
+  /* ── Topbar ── */
+  #topbar{padding:0 8px;gap:6px;height:48px;min-height:48px}
   .tb-page-sub{display:none}
   .tb-btn:not(.primary){display:none}
-  /* Content */
-  #content{padding:10px}
-  /* Property rows reflow */
-  .prop-card-top{width:100%}
+  .tb-page-title{font-size:14px}
+  .tb-principal-chip{max-width:60px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px;padding:2px 7px}
+
+  /* ── Content area — bottom padding clears FAB + safe area ── */
+  #content{padding:10px 10px calc(88px + env(safe-area-inset-bottom,0px)) 10px}
+
+  /* ── Property cards ── */
+  .prop-card-top{width:100%;min-height:52px}
   .prop-addr-block{min-width:0;flex:1;padding:10px 0 4px}
-  .prop-pills{width:100%;padding:0 8px 8px 36px;order:10}
-  .pills-col{flex-direction:row;flex-wrap:wrap;gap:4px}
+  .prop-addr{font-size:14px;letter-spacing:-0.2px}
+  .prop-city{font-size:12px}
+  .prop-pills{width:100%;padding:0 8px 10px 36px;gap:5px}
+  .pills-col{display:contents}
+  .pill{padding:5px 9px;font-size:10.5px;min-height:28px}
   .prop-status{padding:8px 10px 0 0}
   .prop-actions{display:none}
-  /* Add form */
+
+  /* ── Add form ── */
   .add-form-grid{grid-template-columns:1fr 1fr}
   .add-form-row2{grid-template-columns:1fr}
-  /* Detail panel full-width */
-  #detail-panel{width:100%;right:-100%;border-left:none;border-top:1px solid var(--border);border-radius:16px 16px 0 0;top:auto;bottom:-100%;height:92vh;transition:bottom 0.3s cubic-bezier(0.16,1,0.3,1)}
-  #detail-panel.open{right:0;bottom:0}
-  /* Activity filters wrap */
-  .activity-filters{gap:5px}
-  .filter-chip{font-size:10.5px;padding:3px 9px}
-  /* Sources grid single column */
+
+  /* ── Detail panel — bottom sheet via transform ── */
+  #detail-panel{
+    width:100%;left:0;right:0;top:auto;bottom:0;
+    height:92svh;
+    border-left:none;border-top:1px solid var(--border);
+    border-radius:16px 16px 0 0;
+    transform:translateY(110%);
+    transition:transform 0.32s cubic-bezier(0.16,1,0.3,1);
+    box-shadow:none!important
+  }
+  #detail-panel.open{
+    right:0;bottom:0;
+    transform:translateY(0);
+    box-shadow:0 -8px 48px rgba(0,0,0,0.65)!important
+  }
+  .dp-handle-bar{display:flex}
+  .dp-header{padding:10px 16px 12px}
+  .dp-body{padding:12px 16px calc(24px + env(safe-area-inset-bottom,0px))}
+
+  /* ── Activity filters — horizontal scroll, no wrap ── */
+  .activity-filters{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:4px;gap:5px}
+  .activity-filters::-webkit-scrollbar{display:none}
+  .filter-chip{flex-shrink:0;white-space:nowrap;font-size:11px;padding:6px 13px;min-height:34px;display:flex;align-items:center}
+
+  /* ── Sources ── */
   .sources-grid{grid-template-columns:1fr}
-  /* Reports grid */
-  .report-chart-card~div[style*="grid"]{grid-template-columns:1fr!important}
-  /* Settings/Notif rows */
-  .setting-input{width:100%;margin-top:4px}
-  .setting-row{flex-wrap:wrap}
-  /* dp counts grid stays 3-col — compact enough */
+  .source-link{padding:9px 0;min-height:42px;align-items:center}
+
+  /* ── Feed cards ── */
+  .feed-card-link{padding:10px 12px;gap:8px}
+  .feed-header{gap:4px}
+  .feed-time{font-size:9.5px}
+  .feed-desc{font-size:12.5px;line-height:1.5}
+
+  /* ── Reports — toolbar stacks on mobile ── */
+  .rpt-toolbar{flex-direction:column!important;align-items:stretch!important;gap:8px!important}
+  .rpt-toolbar-btns{display:flex;width:100%;gap:6px;margin-left:0!important}
+  .rpt-toolbar-btns .tb-btn{flex:1;text-align:center;justify-content:center}
+  /* Stats + coverage 2-column */
+  .rpt-stat-row{grid-template-columns:1fr 1fr}
+  .rpt-cov-grid{grid-template-columns:1fr 1fr}
+  /* Charts single column */
+  .rpt-ch-grid{grid-template-columns:1fr}
+  /* Risk 2-column */
+  .rpt-risk-grid{grid-template-columns:1fr 1fr}
+  /* Event rows — drop third column to second row */
+  .rpt-event-row{grid-template-columns:60px 1fr;gap:8px;align-items:start}
+  .rpt-event-row>div:last-child{grid-column:2;display:flex;flex-wrap:wrap;gap:4px;align-items:center;margin-top:2px}
+  /* Alert rows — bigger tap targets */
+  .rpt-alert-row{padding:10px 12px;gap:8px}
+  .rpt-rbtn{padding:7px 11px;font-size:11px;min-height:32px}
+
+  /* ── Settings & Notifications ── */
+  .setting-input{width:100%;margin-top:6px}
+  .setting-row{flex-wrap:wrap;gap:4px;min-height:44px;align-items:center}
+  .toggle-row{min-height:48px;gap:10px}
+}
+
+/* ── Extra-small phones (≤380px) ── */
+@media(max-width:380px){
+  .rpt-stat-row{grid-template-columns:1fr}
+  .rpt-cov-grid{grid-template-columns:1fr}
+  .rpt-risk-grid{grid-template-columns:1fr}
+  .dp-counts-grid{grid-template-columns:1fr 1fr}
+  #gate-input,#gate-btn{width:85vw;max-width:260px}
+  .prop-addr{font-size:13.5px}
 }
 
 </style>
@@ -592,12 +661,12 @@ function checkGate(){
 
     <div id="page-reports" class="page">
       <!-- TOOLBAR -->
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+      <div class="rpt-toolbar" style="display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap">
         <span id="rpt-range" style="font-size:11px;color:var(--text3)"></span>
-        <div style="margin-left:auto;display:flex;gap:6px">
+        <div class="rpt-toolbar-btns" style="margin-left:auto;display:flex;gap:6px">
           <button class="tb-btn" id="rpt-f-unreviewed" onclick="setRptFilter('unreviewed')">Unreviewed</button>
           <button class="tb-btn" id="rpt-f-all" onclick="setRptFilter('all')">All Alerts</button>
-          <button class="tb-btn primary" id="rpt-digest-btn" onclick="rptDigest()">📧 Send Digest</button>
+          <button class="tb-btn primary" id="rpt-digest-btn" onclick="rptDigest()">📧 Digest</button>
         </div>
       </div>
       <!-- STATS -->
@@ -694,8 +763,12 @@ function checkGate(){
   </div>
 </div>
 
+<!-- MOBILE FAB -->
+<button id="mob-fab" onclick="openAddForm()" aria-label="Add property" title="Add Property">+</button>
+
 <div id="overlay" onclick="closeDetail()"></div>
 <div id="detail-panel">
+  <div class="dp-handle-bar" id="dp-handle"><div class="dp-handle-inner"></div></div>
   <div class="dp-header">
     <div>
       <div class="dp-addr" id="dp-addr">—</div>
@@ -757,7 +830,7 @@ const SEED_PROPS=[
   {id:'prop_131_commonwealth',principalId:'ECJIV',addr:'131 Commonwealth Avenue',city:'Boston',state:'MA',zip:'02116',notes:'Back Bay — Back Bay Architectural Commission oversight',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}},
   {id:'prop_1_charles_river',principalId:'EBJ',addr:'1 Charles River Square',city:'Boston',state:'MA',zip:'02114',notes:'Beacon Hill — Charles River Square',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}},
   {id:'prop_3_charles_river',principalId:'EBJ',addr:'3 Charles River Square',city:'Boston',state:'MA',zip:'02114',notes:'Beacon Hill — Charles River Square',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}},
-  {id:'prop_1196_canton',principalId:'APJCJM',addr:'1196 Canton Ave',city:'Milton',state:'MA',zip:'02186',notes:'Milton — Planning Board and local news monitored',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}},
+  {id:'prop_milton_estate',principalId:'APJCJM',addr:'Milton Estate',city:'Milton',state:'MA',zip:'02186',notes:'Multi-parcel: 1134, 1150, 1196 Canton Ave — Milton Planning Board, Norfolk County',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}},
   {id:'prop_dover_estate',principalId:'ELJ',addr:'Dover Estate',city:'Dover',state:'MA',zip:'02030',notes:'Multi-parcel estate: 20,29,33,39,45,49,56,62,64,68,74 Farm St · 20,36,40 Pegan Ln — Norfolk County',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}},
   {id:'prop_1_sandy',principalId:'APJCJM',addr:'1 Sandy Drive',city:'Nantucket',state:'MA',zip:'02554',notes:'Nantucket HDC Historic District / Nantucket Harbor area',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}},
   {id:'prop_32b_hulbert',principalId:'APJCJM',addr:'32B Hulbert Avenue',city:'Nantucket',state:'MA',zip:'02554',notes:'Nantucket HDC Historic District / Waterfront / Nantucket Harbor',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}},
@@ -794,8 +867,8 @@ function getPropLinks(p){
 
 
 // ── STATE ─────────────────────────────────────────────────────────────────
-const RPTS_SENS={prop_18_louisburg:1,prop_56_beacon:1,prop_131_commonwealth:1,prop_1_charles_river:2,prop_3_charles_river:2,prop_32b_hulbert:2,prop_29_hulbert:2,prop_1_sandy:2,prop_16_union:2,prop_dover_estate:2,prop_482_island:3,prop_92_blodgett:3,prop_1196_canton:4,prop_35_hayride:4,prop_2929_winding_oak:4};
-const RPTS_SN={prop_56_beacon:'56 Beacon St',prop_482_island:'482 Island Dr',prop_16_union:'16 Union Wharf',prop_131_commonwealth:'131 Commonwealth',prop_18_louisburg:'18 Louisburg Sq',prop_2929_winding_oak:'2929 Winding Oak',prop_1_charles_river:'1 Charles River',prop_3_charles_river:'3 Charles River',prop_1196_canton:'1196 Canton Ave',prop_35_hayride:'35 Hayride Dr',prop_92_blodgett:'92 Blodgett Way',prop_dover_estate:'Dover Estate',prop_1_sandy:'1 Sandy Dr',prop_32b_hulbert:'32B Hulbert Ave',prop_29_hulbert:'29 Hulbert Ave'};
+const RPTS_SENS={prop_18_louisburg:1,prop_56_beacon:1,prop_131_commonwealth:1,prop_1_charles_river:2,prop_3_charles_river:2,prop_32b_hulbert:2,prop_29_hulbert:2,prop_1_sandy:2,prop_16_union:2,prop_dover_estate:2,prop_482_island:3,prop_92_blodgett:3,prop_milton_estate:4,prop_35_hayride:4,prop_2929_winding_oak:4};
+const RPTS_SN={prop_56_beacon:'56 Beacon St',prop_482_island:'482 Island Dr',prop_16_union:'16 Union Wharf',prop_131_commonwealth:'131 Commonwealth',prop_18_louisburg:'18 Louisburg Sq',prop_2929_winding_oak:'2929 Winding Oak',prop_1_charles_river:'1 Charles River',prop_3_charles_river:'3 Charles River',prop_milton_estate:'Milton Estate',prop_35_hayride:'35 Hayride Dr',prop_92_blodgett:'92 Blodgett Way',prop_dover_estate:'Dover Estate',prop_1_sandy:'1 Sandy Dr',prop_32b_hulbert:'32B Hulbert Ave',prop_29_hulbert:'29 Hulbert Ave'};
 const RPTS_SLBL={1:'★★★ Critical',2:'★★ High',3:'★ Medium',4:'Standard'};
 const RPTS_SCSS={1:'background:rgba(239,68,68,.15);color:var(--red);border:1px solid rgba(239,68,68,.3)',2:'background:rgba(245,158,11,.15);color:var(--amber);border:1px solid rgba(245,158,11,.3)',3:'background:rgba(34,197,94,.15);color:var(--green);border:1px solid rgba(34,197,94,.3)',4:'background:var(--surface2);color:var(--text3);border:1px solid var(--border)'};
 const ETYPES_C={hearing:'#7c3aed',meeting:'#0891b2',deadline:'#dc2626',inspection:'#d97706',review:'#ea580c',other:'#64748b'};
@@ -998,6 +1071,9 @@ function openDetail(id,filterType='all'){
   document.getElementById('dp-links').innerHTML=propLinks.map(l=>`<a href="${l.url}" target="_blank" style="display:flex;align-items:center;gap:7px;padding:7px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text2);text-decoration:none;font-size:11.5px;font-weight:500" onmouseover="this.style.background='var(--border2)';this.style.color='var(--text)'" onmouseout="this.style.background='var(--surface2)';this.style.color='var(--text2)'"><span>${l.icon}</span>${l.label}</a>`).join('');
   document.getElementById('overlay').classList.add('open');
   document.getElementById('detail-panel').classList.add('open');
+  // Hide FAB on mobile while panel is open
+  const fab=document.getElementById('mob-fab');
+  if(fab&&window.innerWidth<=768){fab.style.opacity='0';setTimeout(()=>{fab.style.display='none';},200);}
 }
 function renderDetailCounts(id){
   const p=props.find(x=>x.id===id);if(!p)return;
@@ -1028,7 +1104,11 @@ function filterDetailActs(type,id){
 function closeDetail(){
   selectedPropId=null;detailActFilter='all';
   document.getElementById('overlay').classList.remove('open');
-  document.getElementById('detail-panel').classList.remove('open');
+  const dp=document.getElementById('detail-panel');
+  dp.classList.remove('open');dp.style.transform=''; // reset any partial swipe
+  // Restore FAB on mobile
+  const fab=document.getElementById('mob-fab');
+  if(fab&&window.innerWidth<=768){fab.style.opacity='0';fab.style.display='flex';requestAnimationFrame(()=>{fab.style.opacity='1';});}
   renderProps();
 }
 
@@ -1413,6 +1493,37 @@ function runScan(){
     if(btn){btn.textContent='▶ Run Scan';btn.disabled=false;}
   });
 }
+
+// ── SWIPE TO CLOSE (detail panel bottom sheet on mobile) ─────────────────
+(function(){
+  const panel=document.getElementById('detail-panel');
+  let sy=0,st=0,active=false;
+  function onStart(e){
+    if(window.innerWidth>768)return;
+    sy=e.touches[0].clientY;st=Date.now();active=true;
+    panel.style.transition='none';
+  }
+  function onMove(e){
+    if(!active)return;
+    const dy=e.touches[0].clientY-sy;
+    if(dy>0){e.preventDefault();panel.style.transform='translateY('+dy+'px)';}
+  }
+  function onEnd(e){
+    if(!active)return;
+    active=false;panel.style.transition='';
+    const dy=e.changedTouches[0].clientY-sy,dt=Date.now()-st;
+    if(dy>90||(dy>40&&dt<280))closeDetail();
+    else panel.style.transform='';
+  }
+  // Attach only to handle bar + header (not scrollable body)
+  ['#dp-handle','.dp-header'].forEach(sel=>{
+    const el=document.querySelector(sel);
+    if(!el)return;
+    el.addEventListener('touchstart',onStart,{passive:true});
+    el.addEventListener('touchmove',onMove,{passive:false});
+    el.addEventListener('touchend',onEnd,{passive:true});
+  });
+})();
 
 // ── INIT ──────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded',()=>{
