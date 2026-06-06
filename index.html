@@ -807,7 +807,8 @@ const PROP_SRC_OVERRIDES={
   'Dover Estate':{landmarks:'https://www.doverma.org/planning-board',rumor:'https://dover.wickedlocal.com',permits:'https://www.doverma.org/building-department'},
   'Nantucket Estate':{landmarks:'https://www.nantucket-ma.gov/189/Historic-District-Commission',rumor:'https://www.ack.net',news:'https://nantucketcurrent.com'},
   '92 Blodgett':{landmarks:'https://apa.ny.gov',rumor:'https://www.adirondackdailyenterprise.com',news:'https://www.adirondackexplorer.org'},
-  'Wellington':{planning:'https://www.wellingtonfl.gov/373/Planning-Zoning',rumor:'https://wellingtonthemagazine.com',news:'https://www.palmbeachpost.com'}
+  'Wellington':{planning:'https://www.wellingtonfl.gov/373/Planning-Zoning',rumor:'https://wellingtonthemagazine.com',news:'https://www.palmbeachpost.com'},
+  'North St Canton':{landmarks:'https://www.town.canton.ma.us/planning',rumor:'https://www.cantontimes.net',news:'https://www.cantontimes.net',permit:'https://www.town.canton.ma.us/building'}
 };
 const SRC_LABEL={permit:'Building Permits',complaint:'311 / Complaints',crime:'Crime Reports',landmarks:'Landmarks / Arch. Commission',planning:'Planning Commission',court:'Court Records',rumor:'Local News',news:'Local News'};
 function srcUrl(type,state,addr){
@@ -836,7 +837,8 @@ const SEED_PROPS=[
   {id:'prop_nantucket_estate',principalId:'APJCJM',addr:'Nantucket Estate',city:'Nantucket',state:'MA',zip:'02554',notes:'1 Sandy Dr · 32B & 29 Hulbert Ave — Nantucket HDC Historic District / Waterfront',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}},
   {id:'prop_92_blodgett',principalId:'APJCJM',addr:'92 Blodgett Way',city:'Lake Placid',state:'NY',zip:'12946',notes:'Adirondack Park Agency oversight / Essex County / Mirror Lake',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}},
   {id:'prop_35_hayride',principalId:'APJCJM',addr:'35 Hayride Drive',city:'Stowe',state:'VT',zip:'05672',notes:'Stowe — Vermont Act 250 / Lamoille County / Stowe Reporter monitored',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}},
-  {id:'prop_mandarin_boston',principalId:'APJCJM',addr:'Mandarin Oriental Boston',city:'Boston',state:'MA',zip:'02199',notes:'776 Boylston St W12A · W12B · 778 Boylston St APT 7G — Back Bay Architectural Commission oversight',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}}
+  {id:'prop_mandarin_boston',principalId:'APJCJM',addr:'Mandarin Oriental Boston',city:'Boston',state:'MA',zip:'02199',notes:'776 Boylston St W12A · W12B · 778 Boylston St APT 7G — Back Bay Architectural Commission oversight',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}},
+  {id:'prop_north_canton',principalId:'APJCJM',addr:'North St Canton',city:'Canton',state:'MA',zip:'02021',notes:'20 & 30 North Street, Canton, MA — Canton Planning / Norfolk County',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}}
 ];
 const SEED_ACTIVITIES=[
   {id:1,propId:'prop_56_beacon',type:'permit',scope:'property',nearAddr:'',desc:'Renovation permit application filed for exterior work at 56 Beacon St',time:'Apr 28, 2026 · 9:14 AM',sourceUrl:''},
@@ -861,6 +863,7 @@ function getPropLinks(p){
   if(p.addr.includes('Commonwealth')||p.addr.includes('Mandarin Oriental'))return PROP_LINKS['Back Bay'];
   if(p.addr.includes('Nantucket Estate'))return[{label:'Nantucket HDC',url:'https://www.nantucket-ma.gov/189/Historic-District-Commission',icon:'🏛️'},{label:'Nantucket Building Dept',url:'https://www.nantucket-ma.gov/187/Building',icon:'📋'},{label:'Nantucket Planning Board',url:'https://www.nantucket-ma.gov/197/Planning-Board',icon:'🗺️'},{label:'ACK.net',url:'https://www.ack.net',icon:'📰'},{label:'Nantucket Current',url:'https://nantucketcurrent.com',icon:'📰'}];
   if(p.addr.includes('Union Wharf'))return PROP_LINKS['North End'];
+  if(p.addr.includes('North St Canton'))return[{label:'Canton Building Dept',url:'https://www.town.canton.ma.us/building',icon:'🏗️'},{label:'Canton Planning Board',url:'https://www.town.canton.ma.us/planning',icon:'🏛️'},{label:'Norfolk County Deeds',url:'https://www.masslandrecords.com',icon:'📜'},{label:'Canton Times',url:'https://www.cantontimes.net',icon:'📰'},{label:'Canton MA Gov',url:'https://www.town.canton.ma.us',icon:'🗺️'}];
   if(p.city==='Wellington')return PROP_LINKS['Wellington'];
   if(p.state==='FL')return PROP_LINKS['Palm Beach'];
   return PROP_LINKS['Beacon Hill'];
@@ -868,8 +871,8 @@ function getPropLinks(p){
 
 
 // ── STATE ─────────────────────────────────────────────────────────────────
-const RPTS_SENS={prop_18_louisburg:1,prop_56_beacon:1,prop_131_commonwealth:1,prop_mandarin_boston:2,prop_nantucket_estate:2,prop_1_charles_river:2,prop_3_charles_river:2,prop_16_union:2,prop_dover_estate:2,prop_482_island:3,prop_92_blodgett:3,prop_milton_estate:4,prop_35_hayride:4,prop_2929_winding_oak:4,prop_louisburg_farm_fl:4};
-const RPTS_SN={prop_56_beacon:'56 Beacon St',prop_482_island:'482 Island Dr',prop_16_union:'16 Union Wharf',prop_131_commonwealth:'131 Commonwealth',prop_18_louisburg:'18 Louisburg Sq',prop_2929_winding_oak:'2929 Winding Oak',prop_1_charles_river:'1 Charles River',prop_3_charles_river:'3 Charles River',prop_milton_estate:'Milton Estate',prop_35_hayride:'35 Hayride Dr',prop_92_blodgett:'92 Blodgett Way',prop_dover_estate:'Dover Estate',prop_nantucket_estate:'Nantucket Estate',prop_mandarin_boston:'Mandarin Oriental',prop_louisburg_farm_fl:'Louisburg Farm FL'};
+const RPTS_SENS={prop_18_louisburg:1,prop_56_beacon:1,prop_131_commonwealth:1,prop_mandarin_boston:2,prop_nantucket_estate:2,prop_1_charles_river:2,prop_3_charles_river:2,prop_16_union:2,prop_dover_estate:2,prop_482_island:3,prop_92_blodgett:3,prop_milton_estate:4,prop_35_hayride:4,prop_2929_winding_oak:4,prop_louisburg_farm_fl:4,prop_north_canton:4};
+const RPTS_SN={prop_56_beacon:'56 Beacon St',prop_482_island:'482 Island Dr',prop_16_union:'16 Union Wharf',prop_131_commonwealth:'131 Commonwealth',prop_18_louisburg:'18 Louisburg Sq',prop_2929_winding_oak:'2929 Winding Oak',prop_1_charles_river:'1 Charles River',prop_3_charles_river:'3 Charles River',prop_milton_estate:'Milton Estate',prop_35_hayride:'35 Hayride Dr',prop_92_blodgett:'92 Blodgett Way',prop_dover_estate:'Dover Estate',prop_nantucket_estate:'Nantucket Estate',prop_mandarin_boston:'Mandarin Oriental',prop_louisburg_farm_fl:'Louisburg Farm FL',prop_north_canton:'North St Canton'};
 const RPTS_SLBL={1:'★★★ Critical',2:'★★ High',3:'★ Medium',4:'Standard'};
 const RPTS_SCSS={1:'background:rgba(239,68,68,.15);color:var(--red);border:1px solid rgba(239,68,68,.3)',2:'background:rgba(245,158,11,.15);color:var(--amber);border:1px solid rgba(245,158,11,.3)',3:'background:rgba(34,197,94,.15);color:var(--green);border:1px solid rgba(34,197,94,.3)',4:'background:var(--surface2);color:var(--text3);border:1px solid var(--border)'};
 const ETYPES_C={hearing:'#7c3aed',meeting:'#0891b2',deadline:'#dc2626',inspection:'#d97706',review:'#ea580c',other:'#64748b'};

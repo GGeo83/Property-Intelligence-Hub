@@ -37,7 +37,7 @@ const PRINCIPAL_DISPLAY = {
 const PROP_PRINCIPAL_MAP = {
   prop_56_beacon:'APJCJM', prop_482_island:'APJCJM', prop_milton_estate:'APJCJM',
   prop_35_hayride:'APJCJM', prop_92_blodgett:'APJCJM', prop_nantucket_estate:'APJCJM',
-  prop_mandarin_boston:'APJCJM',
+  prop_mandarin_boston:'APJCJM', prop_north_canton:'APJCJM',
   prop_16_union:'ECJIV', prop_131_commonwealth:'ECJIV',
   prop_18_louisburg:'ELJ', prop_2929_winding_oak:'ELJ', prop_louisburg_farm_fl:'ELJ', prop_dover_estate:'ELJ',
   prop_1_charles_river:'EBJ', prop_3_charles_river:'EBJ',
@@ -52,6 +52,7 @@ const PROP_SHORT_NAMES = {
   prop_92_blodgett:'92 Blodgett Way', prop_dover_estate:'Dover Estate',
   prop_nantucket_estate:'Nantucket Estate',
   prop_mandarin_boston:'Mandarin Oriental',
+  prop_north_canton:'North St Canton',
 };
 
 const TYPE_COLORS_EMAIL = {
@@ -93,6 +94,7 @@ function setupSheet() {
     ['prop_dover_estate',     'ELJ',    'Dover Estate',            'Dover',      'MA', '02030', 'active', '', '', '', '', '', '', 'Multi-parcel estate: 20,29,33,39,45,49,56,62,64,68,74 Farm St · 20,36,40 Pegan Ln — Norfolk County'],
     ['prop_nantucket_estate', 'APJCJM', 'Nantucket Estate',         'Nantucket',  'MA', '02554', 'active', '', '', '', '', '', '', '1 Sandy Dr · 32B & 29 Hulbert Ave — Nantucket HDC Historic District / Waterfront'],
     ['prop_mandarin_boston',  'APJCJM', 'Mandarin Oriental Boston', 'Boston',    'MA', '02199', 'active', '', '', '', '', '', '', '776 Boylston St W12A · W12B · 778 Boylston St APT 7G — Back Bay Architectural Commission oversight'],
+    ['prop_north_canton',     'APJCJM', 'North St Canton',          'Canton',    'MA', '02021', 'active', '', '', '', '', '', '', '20 & 30 North Street, Canton, MA — Canton Planning Board / Norfolk County'],
   ];
   properties.forEach(row => propsSheet.appendRow(row));
 
@@ -141,6 +143,7 @@ function addNewProperties() {
     ['prop_dover_estate',      'ELJ',    'Dover Estate',              'Dover',      'MA','02030','active','','','','','','','Multi-parcel estate: 20,29,33,39,45,49,56,62,64,68,74 Farm St · 20,36,40 Pegan Ln — Norfolk County'],
     ['prop_nantucket_estate',  'APJCJM', 'Nantucket Estate',           'Nantucket',  'MA','02554','active','','','','','','','1 Sandy Dr · 32B & 29 Hulbert Ave — Nantucket HDC Historic District / Waterfront'],
     ['prop_mandarin_boston',   'APJCJM', 'Mandarin Oriental Boston',  'Boston',     'MA','02199','active','','','','','','','776 Boylston St W12A · W12B · 778 Boylston St APT 7G — Back Bay Architectural Commission oversight'],
+    ['prop_north_canton',      'APJCJM', 'North St Canton',           'Canton',     'MA','02021','active','','','','','','','20 & 30 North Street, Canton, MA — Canton Planning Board / Norfolk County'],
   ];
 
   let propsAdded = 0;
@@ -703,5 +706,11 @@ function _getNewPropertySources() {
     ['prop_mandarin_boston','Mandarin Oriental Boston','complaints','Boston 311','https://311.boston.gov',2,''],
     ['prop_mandarin_boston','Mandarin Oriental Boston','crime','BPD Crime Incident Reports','https://data.boston.gov/dataset/crime-incident-reports',2,''],
     ['prop_mandarin_boston','Mandarin Oriental Boston','news','Back Bay Sun','https://www.backbaysun.com',1,'PRIMARY'],
+    // North St Canton — 20 & 30 North Street, Canton, MA
+    ['prop_north_canton','North St Canton','permits','Canton Building Dept','https://www.town.canton.ma.us/building',1,''],
+    ['prop_north_canton','North St Canton','planning','Canton Planning Board','https://www.town.canton.ma.us/planning',1,''],
+    ['prop_north_canton','North St Canton','permits','Norfolk County Deeds','https://www.masslandrecords.com',1,''],
+    ['prop_north_canton','North St Canton','news','Canton Times','https://www.cantontimes.net',1,'PRIMARY'],
+    ['prop_north_canton','North St Canton','news','Wicked Local Canton','https://canton.wickedlocal.com',2,''],
   ];
 }
