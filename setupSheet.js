@@ -565,6 +565,67 @@ function clearSeedData() {
 
 
 // ─────────────────────────────────────────────────────────────────────────────
+// 8. MIGRATE ACTIVITY PROP IDs (run ONCE after consolidation)
+//
+// Rewrites old/retired propIds in the activities tab to their current equivalents.
+// Safe to re-run — only touches rows that match a retired propId.
+//
+// HOW TO USE:
+//   Select "migrateActivityPropIds" in the dropdown > Run
+//   Check Execution Log for a summary of what was updated.
+// ─────────────────────────────────────────────────────────────────────────────
+function migrateActivityPropIds() {
+  const ALIASES = {
+    // Mandarin Oriental consolidation
+    'prop_mandarin_w12a' : 'prop_mandarin_boston',
+    'prop_mandarin_w12b' : 'prop_mandarin_boston',
+    'prop_mandarin_7g'   : 'prop_mandarin_boston',
+    // Nantucket Estate consolidation
+    'prop_1_sandy'       : 'prop_nantucket_estate',
+    'prop_32b_hulbert'   : 'prop_nantucket_estate',
+    'prop_29_hulbert'    : 'prop_nantucket_estate',
+    // Louisburg Farm FL consolidation
+    'prop_lf_3315'       : 'prop_louisburg_farm_fl',
+    'prop_lf_3261'       : 'prop_louisburg_farm_fl',
+    // Milton Estate rename
+    'prop_1196_canton'   : 'prop_milton_estate',
+    // Louisburg Square alias
+    'prop_3_louisburg'   : 'prop_18_louisburg',
+  };
+
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName('activities');
+  if (!sheet) { Logger.log('⚠ activities tab not found'); return; }
+
+  const data = sheet.getDataRange().getValues();
+  let updated = 0;
+  const summary = {};
+
+  for (let i = 1; i < data.length; i++) {
+    const oldId = data[i][1]; // column B = propId
+    const newId = ALIASES[oldId];
+    if (newId) {
+      sheet.getRange(i + 1, 2).setValue(newId);       // update propId
+      sheet.getRange(i + 1, 3).setValue(                // update principalId
+        PROP_PRINCIPAL_MAP[newId] || sheet.getRange(i + 1, 3).getValue()
+      );
+      summary[oldId] = (summary[oldId] || 0) + 1;
+      updated++;
+    }
+  }
+
+  if (updated === 0) {
+    Logger.log('✅ MIGRATION COMPLETE — no retired propIds found. Sheet is already clean.');
+  } else {
+    Logger.log('✅ MIGRATION COMPLETE — ' + updated + ' rows updated:');
+    Object.entries(summary).forEach(([old, count]) => {
+      Logger.log('  ' + old + ' → ' + ALIASES[old] + ' (' + count + ' rows)');
+    });
+  }
+}
+
+
+// ─────────────────────────────────────────────────────────────────────────────
 // PRIVATE HELPERS
 // ─────────────────────────────────────────────────────────────────────────────
 

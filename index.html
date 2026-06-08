@@ -871,6 +871,28 @@ function getPropLinks(p){
 
 
 // ── STATE ─────────────────────────────────────────────────────────────────
+// ── PROP ID ALIAS MAP — maps retired propIds → current propId ────────────────
+// Needed so old Google Sheet activity rows still surface under the correct card.
+// Add entries here whenever a propId is renamed or consolidated.
+const PROP_ID_ALIASES={
+  // Mandarin Oriental consolidation
+  'prop_mandarin_w12a':'prop_mandarin_boston',
+  'prop_mandarin_w12b':'prop_mandarin_boston',
+  'prop_mandarin_7g'  :'prop_mandarin_boston',
+  // Nantucket Estate consolidation
+  'prop_1_sandy'      :'prop_nantucket_estate',
+  'prop_32b_hulbert'  :'prop_nantucket_estate',
+  'prop_29_hulbert'   :'prop_nantucket_estate',
+  // Louisburg Farm FL consolidation
+  'prop_lf_3315'      :'prop_louisburg_farm_fl',
+  'prop_lf_3261'      :'prop_louisburg_farm_fl',
+  // Milton Estate rename
+  'prop_1196_canton'  :'prop_milton_estate',
+  // Louisburg Square (old scan used prop_3_louisburg for 18 Louisburg Sq)
+  'prop_3_louisburg'  :'prop_18_louisburg',
+};
+function resolveAlias(id){return PROP_ID_ALIASES[id]||id;}
+
 const RPTS_SENS={prop_18_louisburg:1,prop_56_beacon:1,prop_131_commonwealth:1,prop_mandarin_boston:2,prop_nantucket_estate:2,prop_1_charles_river:2,prop_3_charles_river:2,prop_16_union:2,prop_dover_estate:2,prop_482_island:3,prop_92_blodgett:3,prop_milton_estate:4,prop_35_hayride:4,prop_2929_winding_oak:4,prop_louisburg_farm_fl:4,prop_north_canton:4};
 const RPTS_SN={prop_56_beacon:'56 Beacon St',prop_482_island:'482 Island Dr',prop_16_union:'16 Union Wharf',prop_131_commonwealth:'131 Commonwealth',prop_18_louisburg:'18 Louisburg Sq',prop_2929_winding_oak:'2929 Winding Oak',prop_1_charles_river:'1 Charles River',prop_3_charles_river:'3 Charles River',prop_milton_estate:'Milton Estate',prop_35_hayride:'35 Hayride Dr',prop_92_blodgett:'92 Blodgett Way',prop_dover_estate:'Dover Estate',prop_nantucket_estate:'Nantucket Estate',prop_mandarin_boston:'Mandarin Oriental',prop_louisburg_farm_fl:'Louisburg Farm FL',prop_north_canton:'North St Canton'};
 const RPTS_SLBL={1:'★★★ Critical',2:'★★ High',3:'★ Medium',4:'Standard'};
@@ -918,7 +940,7 @@ async function loadFromSheets(silent=false){
     // Parse activities (all — needed for YoY + reports)
     if(ad.values&&ad.values.length>0){
       const live=ad.values.filter(r=>r[6])
-        .map((r,i)=>({id:r[0]||('act_'+i),propId:r[1]||'',principalId:r[2]||'',type:r[3]||'other',
+        .map((r,i)=>({id:r[0]||('act_'+i),propId:resolveAlias(r[1]||''),principalId:r[2]||'',type:r[3]||'other',
           scope:r[4]||'property',nearAddr:r[5]||'',desc:r[6]||'',time:r[7]||'',
           sourceUrl:r[8]||'',createdAt:r[9]||r[7]||'',status:r[10]||''}))
         .reverse();
