@@ -1072,7 +1072,7 @@ function scopeBadge(a){if(a.scope==='nearby')return`<span class="scope-badge nea
 
 // ── RENDER PROPS ──────────────────────────────────────────────────────────
 function renderProps(){
-  const list=document.getElementById('prop-list'),vp=visibleProps();
+  const list=document.getElementById('prop-list'),vp=visibleProps().slice().sort((a,b)=>a.addr.localeCompare(b.addr));
   document.getElementById('props-header-label').textContent=selectedPrincipal==='all'?'Monitored Properties':selectedPrincipal+' — Properties';
   document.getElementById('prop-count-badge').textContent=vp.length+' propert'+(vp.length===1?'y':'ies');
   updateSidebarCounts();
