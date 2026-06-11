@@ -181,9 +181,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);display:flex
 .page{display:none}.page.active{display:block}
 
 /* DESKTOP TWO-COLUMN LAYOUT */
-.props-desktop-grid{display:grid;grid-template-columns:1fr 320px;gap:20px;align-items:start}
+.props-desktop-grid{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:20px;align-items:start}
 .props-left-col{min-width:0}
-@media(max-width:1024px){.props-desktop-grid{grid-template-columns:1fr}.intel-panel{display:none}}
+@media(max-width:1024px){.props-desktop-grid{grid-template-columns:minmax(0,1fr)}.intel-panel{display:none}}
 
 /* INTELLIGENCE PANEL */
 .intel-panel{position:sticky;top:0;display:flex;flex-direction:column;gap:14px}
@@ -222,8 +222,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);display:flex
 .intel-empty{font-size:11px;color:var(--text3);padding:4px 0}
 
 /* PROPERTY LIST */
-#prop-list{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-@media(max-width:1200px){#prop-list{grid-template-columns:1fr}}
+#prop-list{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
+@media(max-width:1200px){#prop-list{grid-template-columns:minmax(0,1fr)}}
 .list-header{display:flex;align-items:center;margin-bottom:10px;gap:10px}
 .list-header h3{font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:1px}
 .prop-count-badge{background:var(--surface2);border:1px solid var(--border2);color:var(--text2);font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px}
