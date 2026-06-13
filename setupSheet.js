@@ -523,6 +523,20 @@ function doPost(e) {
       return ok({ok:true, action:'deleteProperties', propIds:data.propIds, deletedRows:totalDeleted});
     }
 
+    // ── sendEmail (server-side send via the script owner's Gmail — no tool approval needed) ──
+    // Used by the scheduled scans to deliver their digest reliably on an unattended schedule.
+    // Sends FROM the account that owns/deployed this script (geovanny22@gmail.com).
+    if (data.action === 'sendEmail') {
+      const to = data.to || 'ggordillo@lthill.com';
+      if (!data.subject) return ok({ok:false, error:'subject required'});
+      const opts = { name: data.fromName || 'Property Intelligence Hub' };
+      if (data.htmlBody) opts.htmlBody = data.htmlBody;
+      if (data.cc) opts.cc = data.cc;
+      if (data.replyTo) opts.replyTo = data.replyTo;
+      MailApp.sendEmail(to, data.subject, data.body || '', opts);
+      return ok({ok:true, action:'sendEmail', to:to, subject:data.subject});
+    }
+
     return ok({ok:false,error:'Unknown action: ' + data.action});
 
   } catch(err) {
