@@ -9,6 +9,10 @@
  *   sendWeeklyDigest()    — Send HTML email digest to each principal. Manual only (dashboard "Send Digest" button).
  *   removeWeeklyDigest()  — Deletes the retired Monday-9am digest trigger. Run ONCE to retire it.
  *   doPost(e)             — Web App endpoint — handles all webhook POSTs from hub and scan skills.
+ *   runFeedIngestion()    — Pull deterministic feeds (Boston permits API + Gmail alerts) into activities. Daily trigger.
+ *   setupFeedIngestion()  — Installs the daily ~6am feed-ingestion trigger. Run ONCE.
+ *   ingestBostonPermits() — Analyze Boston building-permits API → on-block permits for the 6 Boston properties.
+ *   ingestEmailAlerts()   — Gmail "PIH-Feed" label (Registry/Fraud/Google alerts) → activities.
  *
  * DEDUPLICATION STRATEGY (in doPost):
  *   Before inserting any activity, a fingerprint is computed:
@@ -633,6 +637,183 @@ function migrateActivityPropIds() {
       Logger.log('  ' + old + ' → ' + ALIASES[old] + ' (' + count + ' rows)');
     });
   }
+}
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 9. FEED INGESTION (deterministic data feeds — no AI/scraping)
+//
+// Pulls structured records from official sources straight into the activities tab,
+// deduped by the same fingerprint logic the scans use. The Friday AI scans then
+// only need to cover sources with no feed (BLC/BBAC/HDC agendas, town portals,
+// for-sale vetting) and the synthesis/email.
+//
+// SETUP:
+//   1. Run setupFeedIngestion() ONCE to install a daily ~6am trigger.
+//   2. (Email tier) In Gmail, create a label "PIH-Feed" and filters that apply it
+//      to: Registry Consumer Notification emails, PBC Property Fraud Alerts, and
+//      Google Alerts for your addresses. ingestEmailAlerts() turns those into
+//      activities, then removes the label so each email is ingested once.
+//   3. First run will prompt for Gmail read + external-fetch authorization — approve.
+//
+// EXTENDING (same pattern, next phase):
+//   • More Boston datasets (violations / 311 / crime) — add their CKAN resource ids
+//     and field maps; reuse _ingestBostonDataset-style calls.
+//   • Vermont Act 250 (VCGI ArcGIS REST FeatureServer) — query by town, map fields.
+//   • RSS (CivicPlus /rss.aspx, local news) — UrlFetchApp + XmlService.parse.
+// ─────────────────────────────────────────────────────────────────────────────
+
+const FEED_LOOKBACK_DAYS = 14;
+const BOSTON_PERMITS_RESOURCE = '6ddcd912-32a0-43df-9908-63574f8c7e77'; // Analyze Boston: Approved Building Permits
+
+// Per Boston property: address text to query (full-text on the address field) plus
+// the house-number range that defines its block, so we keep only on-block permits.
+const BOSTON_PERMIT_TARGETS = [
+  {propId:'prop_56_beacon',        street:'Beacon St',        own:56,  lo:1,   hi:90},
+  {propId:'prop_18_louisburg',     street:'Louisburg Sq',     own:18,  lo:1,   hi:30},
+  {propId:'prop_1_charles_river',  street:'Charles River Sq', own:1,   lo:1,   hi:30},
+  {propId:'prop_3_charles_river',  street:'Charles River Sq', own:3,   lo:1,   hi:30},
+  {propId:'prop_131_commonwealth', street:'Commonwealth Ave', own:131, lo:115, hi:147},
+  {propId:'prop_16_union',         street:'Union Wharf',      own:16,  lo:1,   hi:60},
+  {propId:'prop_mandarin_boston',  street:'Boylston St',      own:776, lo:760, hi:790},
+];
+
+// Email routing: first matching keyword (specific → generic) sets the propId.
+const FEED_GMAIL_LABEL = 'PIH-Feed';
+const FEED_ADDRESS_KEYWORDS = [
+  {kw:'old hampton',      propId:'prop_louisburg_farm_fl'},
+  {kw:'louisburg farm',   propId:'prop_louisburg_farm_fl'},
+  {kw:'winding oak',      propId:'prop_2929_winding_oak'},
+  {kw:'island drive',     propId:'prop_482_island'},
+  {kw:'island dr',        propId:'prop_482_island'},
+  {kw:'hulbert',          propId:'prop_nantucket_estate'},
+  {kw:'sandy dr',         propId:'prop_nantucket_estate'},
+  {kw:'blodgett',         propId:'prop_92_blodgett'},
+  {kw:'mirror lake',      propId:'prop_92_blodgett'},
+  {kw:'hayride',          propId:'prop_35_hayride'},
+  {kw:'pegan',            propId:'prop_dover_estate'},
+  {kw:'farm street',      propId:'prop_dover_estate'},
+  {kw:'north street',     propId:'prop_north_canton'},
+  {kw:'canton avenue',    propId:'prop_milton_estate'},
+  {kw:'canton ave',       propId:'prop_milton_estate'},
+  {kw:'louisburg square', propId:'prop_18_louisburg'},
+  {kw:'louisburg sq',     propId:'prop_18_louisburg'},
+  {kw:'charles river',    propId:'prop_1_charles_river'},
+  {kw:'commonwealth',     propId:'prop_131_commonwealth'},
+  {kw:'union wharf',      propId:'prop_16_union'},
+  {kw:'boylston',         propId:'prop_mandarin_boston'},
+  {kw:'mandarin',         propId:'prop_mandarin_boston'},
+  {kw:'beacon street',    propId:'prop_56_beacon'},
+  {kw:'beacon st',        propId:'prop_56_beacon'},
+];
+
+// Master — run by the daily trigger.
+function runFeedIngestion() {
+  const b = ingestBostonPermits();
+  const e = ingestEmailAlerts();
+  Logger.log('✅ FEED INGESTION COMPLETE — Boston permits +' + (b ? b.inserted : 0) +
+             ' new, email +' + (e ? e.inserted : 0) + ' new.');
+}
+
+function setupFeedIngestion() {
+  ScriptApp.getProjectTriggers().forEach(t => {
+    if (t.getHandlerFunction() === 'runFeedIngestion') ScriptApp.deleteTrigger(t);
+  });
+  ScriptApp.newTrigger('runFeedIngestion').timeBased().everyDays(1).atHour(6).create();
+  Logger.log('✅ Daily feed ingestion installed (~6am). Run runFeedIngestion() once now to test + authorize.');
+}
+
+function removeFeedIngestion() {
+  let n = 0;
+  ScriptApp.getProjectTriggers().forEach(t => {
+    if (t.getHandlerFunction() === 'runFeedIngestion') { ScriptApp.deleteTrigger(t); n++; }
+  });
+  Logger.log('Removed ' + n + ' feed-ingestion trigger(s).');
+}
+
+// ── Analyze Boston — Approved Building Permits (CKAN datastore_search) ──────────
+function ingestBostonPermits() {
+  const actsSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('activities');
+  const cutoff = new Date(); cutoff.setDate(cutoff.getDate() - FEED_LOOKBACK_DAYS);
+  let inserted = 0, dupes = 0, scanned = 0;
+
+  BOSTON_PERMIT_TARGETS.forEach(t => {
+    const url = 'https://data.boston.gov/api/3/action/datastore_search'
+      + '?resource_id=' + BOSTON_PERMITS_RESOURCE
+      + '&limit=100'
+      + '&sort=' + encodeURIComponent('issued_date desc')
+      + '&q=' + encodeURIComponent(JSON.stringify({ address: t.street }));
+    let records;
+    try {
+      const resp = UrlFetchApp.fetch(url, { muteHttpExceptions: true });
+      if (resp.getResponseCode() !== 200) { Logger.log('Boston ' + t.propId + ' HTTP ' + resp.getResponseCode()); return; }
+      const data = JSON.parse(resp.getContentText());
+      if (!data.success) { Logger.log('Boston ' + t.propId + ' API success=false'); return; }
+      records = (data.result && data.result.records) || [];
+    } catch (e) { Logger.log('Boston ' + t.propId + ' fetch error: ' + e); return; }
+
+    records.forEach(r => {
+      scanned++;
+      const d = new Date(r.issued_date);
+      if (isNaN(d) || d < cutoff) return;                       // recent only
+      const num = parseInt(r.address, 10);                       // leading house number
+      if (isNaN(num) || num < t.lo || num > t.hi) return;        // on-block only
+      const onProp = (num === t.own);
+      const val = (r.declared_valuation && r.declared_valuation !== '$0.00') ? ' (' + r.declared_valuation + ')' : '';
+      const who = r.applicant ? ' · ' + r.applicant : '';
+      const result = _insertActivityIfNew(actsSheet, {
+        propId: t.propId,
+        actType: 'permit',
+        scope: onProp ? 'on_property' : 'nearby',
+        nearAddr: r.address || '',
+        desc: '[Auto · Boston ISD] ' + (r.permittypedescr || 'Permit') + ' — ' + (r.description || '') + val + who + ' · Permit ' + (r.permitnumber || ''),
+        // unique per-permit fragment so the dedup fingerprint treats each permit distinctly
+        sourceUrl: 'https://data.boston.gov/dataset/approved-building-permits#permit-' + (r.permitnumber || r._id),
+        time: r.issued_date
+      });
+      result.duplicate ? dupes++ : inserted++;
+    });
+  });
+
+  Logger.log('Boston permits: scanned ' + scanned + ', inserted ' + inserted + ', dupes ' + dupes);
+  return { inserted: inserted, dupes: dupes };
+}
+
+// ── Gmail alert ingestion — official email alerts → activities ─────────────────
+// Handles MA Registry Consumer Notification, PBC Property Fraud Alert, Google Alerts.
+function ingestEmailAlerts() {
+  const label = GmailApp.getUserLabelByName(FEED_GMAIL_LABEL);
+  if (!label) { Logger.log('Gmail label "' + FEED_GMAIL_LABEL + '" not found — create it + filters to enable email ingestion.'); return { inserted: 0, skipped: 0 }; }
+  const actsSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('activities');
+  const threads = label.getThreads(0, 50);
+  let inserted = 0, skipped = 0;
+
+  threads.forEach(thread => {
+    thread.getMessages().forEach(msg => {
+      const subject = msg.getSubject() || '';
+      const body = (msg.getPlainBody() || '').substring(0, 2000);
+      const from = msg.getFrom() || '';
+      const hay = (subject + ' ' + body).toLowerCase();
+      const hit = FEED_ADDRESS_KEYWORDS.find(k => hay.indexOf(k.kw) !== -1);
+      if (!hit) { skipped++; return; }                            // no confident property match → leave for review
+      const isLegal = /recorded|deed|lien|fraud|lis pendens|notification service|mortgage|conveyance/i.test(hay);
+      const actType = isLegal ? 'legal' : 'news';
+      const result = _insertActivityIfNew(actsSheet, {
+        propId: hit.propId,
+        actType: actType,
+        scope: 'nearby',
+        nearAddr: '',
+        desc: '[Auto · Email] ' + subject + (from ? ' — ' + from.replace(/<.*>/, '').trim() : ''),
+        sourceUrl: 'https://mail.google.com/mail/u/0/#all/' + msg.getId(),
+        time: Utilities.formatDate(msg.getDate(), Session.getScriptTimeZone(), "yyyy-MM-dd'T'HH:mm:ss")
+      });
+      if (!result.duplicate) inserted++;
+    });
+    label.removeFromThread(thread);                               // processed — don't re-ingest
+  });
+
+  Logger.log('Email alerts: inserted ' + inserted + ', unmatched (left for review) ' + skipped);
+  return { inserted: inserted, skipped: skipped };
 }
 
 
