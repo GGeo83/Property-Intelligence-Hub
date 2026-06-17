@@ -602,7 +602,7 @@ function checkGate(){
     <span class="tb-page-sub" id="tb-sub">All monitored properties</span>
     <div class="tb-spacer"></div>
     <button class="tb-btn" onclick="openAddForm()">+ Add Property</button>
-    <button class="tb-btn primary" onclick="runScan()">▶ Run Scan</button>
+    <button class="tb-btn primary" onclick="runScan()" title="Reload the latest data from the Google Sheet">↻ Refresh</button>
   </div>
   <div id="content">
 
@@ -1227,7 +1227,7 @@ function addProp(){
   fetch(WEBHOOK,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'addProperty',propId,principalId,addr,city,state,zip,status:'active',notes})}).catch(()=>{});
   closeAddForm();renderProps();updateSidebarCounts();
 }
-function removeProp(id){if(!confirm('Remove this property?'))return;props=props.filter(p=>p.id!==id);renderProps();updateSidebarCounts();}
+function removeProp(id){if(!confirm('Remove this property?'))return;props=props.filter(p=>p.id!==id);fetch(WEBHOOK,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'deleteProperty',propId:id})}).catch(()=>{});renderProps();updateSidebarCounts();}
 
 // ── REPORTS PAGE ──────────────────────────────────────────────────────────
 function rptPrincipalChip(pid){const pr=PRINCIPALS.find(p=>p.id===pid);return pr?`<span style="font-weight:800;color:${pr.color}">${pr.initials}</span>`:''}
@@ -1533,9 +1533,9 @@ function closeMobMenu(){
 // ── RUN SCAN ──────────────────────────────────────────────────────────────
 function runScan(){
   const btn=document.querySelector('[onclick="runScan()"]');
-  if(btn){btn.textContent='Scanning…';btn.disabled=true;}
+  if(btn){btn.textContent='Refreshing…';btn.disabled=true;}
   loadFromSheets(false).finally(()=>{
-    if(btn){btn.textContent='▶ Run Scan';btn.disabled=false;}
+    if(btn){btn.textContent='↻ Refresh';btn.disabled=false;}
   });
 }
 
