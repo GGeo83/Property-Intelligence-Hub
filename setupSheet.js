@@ -6,8 +6,8 @@
  *   addNewProperties()    — Append only new properties/sources without touching activity data.
  *   addUpgradesToSheet()  — Safe migration: adds status column to activities, creates events tab.
  *   clearSeedData()       — Wipe demo/seed rows from activities, events, scan_log. Run after testing.
- *   sendWeeklyDigest()    — Send HTML email digest to each principal. Run manually or via trigger.
- *   setupWeeklyDigest()   — Installs a Monday-9am time trigger for sendWeeklyDigest. Run ONCE.
+ *   sendWeeklyDigest()    — Send HTML email digest to each principal. Manual only (dashboard "Send Digest" button).
+ *   removeWeeklyDigest()  — Deletes the retired Monday-9am digest trigger. Run ONCE to retire it.
  *   doPost(e)             — Web App endpoint — handles all webhook POSTs from hub and scan skills.
  *
  * DEDUPLICATION STRATEGY (in doPost):
@@ -213,12 +213,9 @@ function addUpgradesToSheet() {
 // ─────────────────────────────────────────────────────────────────────────────
 // 4. SEND WEEKLY DIGEST (email per principal — filtered to their properties)
 //
-// HOW TO USE (manual):
-//   Select "sendWeeklyDigest" in dropdown > Run
-//
-// HOW TO USE (automated trigger):
-//   Run setupWeeklyDigest() ONCE to install a Monday 9am trigger.
-//   After that it runs automatically every Monday.
+// MANUAL ONLY. Triggered on demand by the dashboard's "Send Digest" button
+// (doPost action:"sendDigest"), or by selecting "sendWeeklyDigest" > Run here.
+// The automatic Monday trigger has been retired — see removeWeeklyDigest().
 // ─────────────────────────────────────────────────────────────────────────────
 function sendWeeklyDigest() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -373,22 +370,22 @@ function _buildDigestHtml(pid, acts, events) {
 
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 5. SETUP WEEKLY TRIGGER (run ONCE — installs Monday 9am automatic trigger)
+// 5. REMOVE WEEKLY DIGEST TRIGGER (RETIRED)
+//
+// The automatic Monday 9am digest has been retired — the three Friday scheduled
+// scans now email ggordillo@lthill.com directly, so the Monday digest is no
+// longer needed. Run removeWeeklyDigest() ONCE to delete any installed trigger.
+// (sendWeeklyDigest() is kept only for the dashboard's manual "Send Digest"
+// button via the sendDigest webhook action.)
 // ─────────────────────────────────────────────────────────────────────────────
-function setupWeeklyDigest() {
-  // Remove any existing sendWeeklyDigest triggers first
+function removeWeeklyDigest() {
+  let removed = 0;
   ScriptApp.getProjectTriggers().forEach(t => {
-    if (t.getHandlerFunction() === 'sendWeeklyDigest') ScriptApp.deleteTrigger(t);
+    if (t.getHandlerFunction() === 'sendWeeklyDigest') { ScriptApp.deleteTrigger(t); removed++; }
   });
-
-  ScriptApp.newTrigger('sendWeeklyDigest')
-    .timeBased()
-    .onWeekDay(ScriptApp.WeekDay.MONDAY)
-    .atHour(9)
-    .create();
-
-  Logger.log('✅ Weekly digest trigger installed — will run every Monday at 9am.');
-  Logger.log('To remove it: go to Apps Script > Triggers (clock icon) and delete.');
+  Logger.log(removed
+    ? '✅ Removed ' + removed + ' Monday digest trigger(s). No more automatic Monday emails.'
+    : '✅ No Monday digest trigger was installed — nothing to remove.');
 }
 
 
@@ -698,7 +695,7 @@ function _insertActivityIfNew(actsSheet, act) {
 
 function _getAllSources() {
   return [
-    ['prop_56_beacon','56 Beacon Street','landmarks','Boston Landmarks Commission','https://www.boston.gov/departments/landmarks-commission',1,'Mandatory login: ggordillo@lthill.com / LTHill2024!'],
+    ['prop_56_beacon','56 Beacon Street','landmarks','Boston Landmarks Commission','https://www.boston.gov/departments/landmarks-commission',1,'Login required (credentials held privately in scan config)'],
     ['prop_56_beacon','56 Beacon Street','news','Beacon Hill Civic Association','https://www.beaconhillcivic.org',1,'Neighborhood alerts, BLC hearing notices'],
     ['prop_56_beacon','56 Beacon Street','news','Patch Beacon Hill','https://patch.com/massachusetts/beaconhill',2,''],
     ['prop_56_beacon','56 Beacon Street','news','Boston.com Beacon Hill','https://www.boston.com/tag/beacon-hill/',2,''],

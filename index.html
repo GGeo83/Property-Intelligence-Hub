@@ -822,7 +822,7 @@ const PROP_SRC_OVERRIDES={
   '131 Commonwealth':{landmarks:'https://www.boston.gov/departments/back-bay-architectural-commission',rumor:'https://www.backbaysun.com'},
   'Mandarin Oriental':{landmarks:'https://www.boston.gov/departments/back-bay-architectural-commission',rumor:'https://www.backbaysun.com',planning:'https://www.bostonplans.org'},
   '16 Union':{rumor:'https://northendwaterfront.com',planning:'https://www.bostonplans.org'},
-  'Dover Estate':{landmarks:'https://www.doverma.org/planning-board',rumor:'https://dover.wickedlocal.com',permits:'https://www.doverma.org/building-department'},
+  'Dover Estate':{landmarks:'https://www.doverma.org/planning-board',rumor:'https://dover.wickedlocal.com',permit:'https://www.doverma.org/building-department'},
   'Nantucket Estate':{landmarks:'https://www.nantucket-ma.gov/189/Historic-District-Commission',rumor:'https://www.ack.net',news:'https://nantucketcurrent.com'},
   '92 Blodgett':{landmarks:'https://apa.ny.gov',rumor:'https://www.adirondackdailyenterprise.com',news:'https://www.adirondackexplorer.org'},
   'Wellington':{planning:'https://www.wellingtonfl.gov/373/Planning-Zoning',rumor:'https://wellingtonthemagazine.com',news:'https://www.palmbeachpost.com'},
@@ -1224,7 +1224,7 @@ function addProp(){
   const propId='prop_'+addr.toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,'').substring(0,32)+'_'+Date.now().toString(36);
   const newProp={id:propId,principalId,addr,city,state,zip,notes,status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}};
   props.push(newProp);
-  fetch(WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'addProperty',propId,principalId,addr,city,state,zip,status:'active',notes})}).catch(()=>{});
+  fetch(WEBHOOK,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'addProperty',propId,principalId,addr,city,state,zip,status:'active',notes})}).catch(()=>{});
   closeAddForm();renderProps();updateSidebarCounts();
 }
 function removeProp(id){if(!confirm('Remove this property?'))return;props=props.filter(p=>p.id!==id);renderProps();updateSidebarCounts();}
@@ -1386,12 +1386,9 @@ function renderRptCoverage(){
     </div>`;
   }
   const scans=[
-    {label:'Beacon Hill',type:'weekly-beacon-hill',icon:'🏛️'},
-    {label:'Back Bay + North End',type:'weekly-back-bay',icon:'🏙️'},
-    {label:'Nantucket',type:'weekly-nantucket',icon:'🌊'},
-    {label:'New England Inland',type:'weekly-new-england',icon:'🌲'},
+    {label:'Massachusetts',type:'weekly-massachusetts',icon:'🏛️'},
+    {label:'VT / NY',type:'weekly-vtny',icon:'🌲'},
     {label:'Florida',type:'weekly-florida',icon:'🌴'},
-    {label:'Weekly Report',type:'weekly',icon:'📋'},
     {label:'Total Activity',type:'__stats',icon:'📊'}
   ];
   const el=document.getElementById('rpt-cov');
