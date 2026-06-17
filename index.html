@@ -835,6 +835,8 @@ function srcUrl(type,state,addr){
   return(SRC[state]||SRC.MA)[type]||(state==='FL'?'https://discover.pbc.gov':'https://data.boston.gov');
 }
 function srcLabel(type){return SRC_LABEL[type]||'Source';}
+// Sheet stores zip as a number, so leading zeros are lost (02108 → 2108). Re-pad 1–5 digit numeric zips to 5.
+function padZip(z){z=String(z==null?'':z).trim();return /^\d{1,5}$/.test(z)?z.padStart(5,'0'):z;}
 
 // ── SEED DATA (fallback when sheet is loading or empty) ───────────────────
 const TC={permit:'#60a5fa',complaint:'#fbbf24',crime:'#f87171',landmarks:'#c084fc',planning:'#2dd4bf',rumor:'#fb923c',forsale:'#34d399',legal:'#f87171',news:'#818cf8',fire:'#f87171',court:'#e879f9',other:'#6b7280'};
@@ -948,7 +950,7 @@ async function loadFromSheets(silent=false){
     if(pd.values&&pd.values.length>0){
       props=pd.values.filter(r=>r[0]&&r[2]).map(r=>({
         id:r[0],principalId:r[1]||'',addr:r[2]||'',city:r[3]||'',
-        state:r[4]||'',zip:r[5]||'',type:'Residential',notes:r[13]||'',
+        state:r[4]||'',zip:padZip(r[5]),type:'Residential',notes:r[13]||'',
         status:r[6]==='active'?'green':r[6]||'green',
         counts:{permit:parseInt(r[7])||0,complaint:parseInt(r[8])||0,crime:parseInt(r[9])||0,
                 landmarks:parseInt(r[10])||0,planning:parseInt(r[11])||0,rumor:parseInt(r[12])||0}
