@@ -43,7 +43,7 @@ const PROP_PRINCIPAL_MAP = {
   prop_35_hayride:'APJCJM', prop_92_blodgett:'APJCJM', prop_nantucket_estate:'APJCJM',
   prop_mandarin_boston:'APJCJM', prop_north_canton:'APJCJM',
   prop_16_union:'ECJIV', prop_131_commonwealth:'ECJIV',
-  prop_18_louisburg:'ELJ', prop_2929_winding_oak:'ELJ', prop_louisburg_farm_fl:'ELJ', prop_dover_estate:'ELJ',
+  prop_18_louisburg:'ELJ', prop_2929_winding_oak:'ELJ', prop_louisburg_farm_fl:'ELJ', prop_dover_estate:'ELJ', prop_511_seaview:'ELJ',
   prop_1_charles_river:'EBJ', prop_3_charles_river:'EBJ',
 };
 
@@ -57,6 +57,7 @@ const PROP_SHORT_NAMES = {
   prop_nantucket_estate:'Nantucket Estate',
   prop_mandarin_boston:'Mandarin Oriental',
   prop_north_canton:'North St Canton',
+  prop_511_seaview:'511 Sea View Ave',
 };
 
 const TYPE_COLORS_EMAIL = {
@@ -99,6 +100,7 @@ function setupSheet() {
     ['prop_nantucket_estate', 'APJCJM', 'Nantucket Estate',         'Nantucket',  'MA', '02554', 'active', '', '', '', '', '', '', '1 Sandy Dr · 32B & 29 Hulbert Ave — Nantucket HDC Historic District / Waterfront'],
     ['prop_mandarin_boston',  'APJCJM', 'Mandarin Oriental Boston', 'Boston',    'MA', '02199', 'active', '', '', '', '', '', '', '776 Boylston St W12A · W12B · 778 Boylston St APT 7G — Back Bay Architectural Commission oversight'],
     ['prop_north_canton',     'APJCJM', 'North St Canton',          'Canton',    'MA', '02021', 'active', '', '', '', '', '', '', '20 & 30 North Street, Canton, MA — Canton Planning Board / Norfolk County'],
+    ['prop_511_seaview',      'ELJ',    '511 Sea View Avenue',      'Osterville','MA', '02655', 'active', '', '', '', '', '', '', 'Osterville waterfront (Nantucket Sound) — Town of Barnstable Building/Conservation, Barnstable County'],
   ];
   properties.forEach(row => propsSheet.appendRow(row));
 
@@ -148,6 +150,7 @@ function addNewProperties() {
     ['prop_nantucket_estate',  'APJCJM', 'Nantucket Estate',           'Nantucket',  'MA','02554','active','','','','','','','1 Sandy Dr · 32B & 29 Hulbert Ave — Nantucket HDC Historic District / Waterfront'],
     ['prop_mandarin_boston',   'APJCJM', 'Mandarin Oriental Boston',  'Boston',     'MA','02199','active','','','','','','','776 Boylston St W12A · W12B · 778 Boylston St APT 7G — Back Bay Architectural Commission oversight'],
     ['prop_north_canton',      'APJCJM', 'North St Canton',           'Canton',     'MA','02021','active','','','','','','','20 & 30 North Street, Canton, MA — Canton Planning Board / Norfolk County'],
+    ['prop_511_seaview',       'ELJ',    '511 Sea View Avenue',       'Osterville', 'MA','02655','active','','','','','','','Osterville waterfront (Nantucket Sound) — Town of Barnstable Building/Conservation, Barnstable County'],
   ];
 
   let propsAdded = 0;
@@ -965,5 +968,12 @@ function _getNewPropertySources() {
     ['prop_north_canton','North St Canton','permits','Norfolk County Deeds','https://www.masslandrecords.com',1,''],
     ['prop_north_canton','North St Canton','news','Canton Times','https://www.cantontimes.net',1,'PRIMARY'],
     ['prop_north_canton','North St Canton','news','Wicked Local Canton','https://canton.wickedlocal.com',2,''],
+    // 511 Sea View Ave — Osterville (Town of Barnstable, Barnstable County)
+    ['prop_511_seaview','511 Sea View Ave','permits','Barnstable Permits (OpenGov)','https://barnstablema.portal.opengov.com/',1,''],
+    ['prop_511_seaview','511 Sea View Ave','permits','Barnstable Building Division','https://barnstable.gov/departments/building/',1,''],
+    ['prop_511_seaview','511 Sea View Ave','planning','Barnstable Conservation Commission','https://town.barnstable.ma.us/departments/Conservation/',1,'HIGH PRIORITY waterfront / Ch.91'],
+    ['prop_511_seaview','511 Sea View Ave','permits','Barnstable County Deeds','https://www.barnstabledeeds.org',1,''],
+    ['prop_511_seaview','511 Sea View Ave','news','Cape Cod Times','https://www.capecodtimes.com',1,'PRIMARY'],
+    ['prop_511_seaview','511 Sea View Ave','news','Barnstable Patriot','https://barnstablepatriot.com',2,''],
   ];
 }
