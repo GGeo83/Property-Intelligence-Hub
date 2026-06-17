@@ -62,7 +62,7 @@ const PROP_SHORT_NAMES = {
 const TYPE_COLORS_EMAIL = {
   permit:'#2563eb', complaint:'#d97706', crime:'#dc2626', legal:'#dc2626',
   court:'#9333ea', fire:'#dc2626', landmarks:'#7c3aed', planning:'#0891b2',
-  rumor:'#ea580c', forsale:'#16a34a', news:'#6366f1', other:'#94a3b8',
+  rumor:'#ea580c', forsale:'#16a34a', news:'#6366f1', advisory:'#ca8a04', other:'#94a3b8',
 };
 
 
