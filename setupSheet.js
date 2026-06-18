@@ -42,7 +42,7 @@ const PROP_PRINCIPAL_MAP = {
   prop_56_beacon:'APJCJM', prop_482_island:'APJCJM', prop_milton_estate:'APJCJM',
   prop_35_hayride:'APJCJM', prop_92_blodgett:'APJCJM', prop_nantucket_estate:'APJCJM',
   prop_mandarin_boston:'APJCJM', prop_north_canton:'APJCJM',
-  prop_16_union:'ECJIV', prop_131_commonwealth:'ECJIV',
+  prop_16_union:'ECJIV', prop_131_commonwealth:'ECJIV', prop_3_louisburg_sq:'ECJIV',
   prop_18_louisburg:'ELJ', prop_2929_winding_oak:'ELJ', prop_louisburg_farm_fl:'ELJ', prop_dover_estate:'ELJ', prop_511_seaview:'ELJ',
   prop_1_charles_river:'EBJ', prop_3_charles_river:'EBJ',
 };
@@ -58,6 +58,7 @@ const PROP_SHORT_NAMES = {
   prop_mandarin_boston:'Mandarin Oriental',
   prop_north_canton:'North St Canton',
   prop_511_seaview:'511 Sea View Ave',
+  prop_3_louisburg_sq:'3 Louisburg Sq',
 };
 
 const TYPE_COLORS_EMAIL = {
@@ -101,6 +102,7 @@ function setupSheet() {
     ['prop_mandarin_boston',  'APJCJM', 'Mandarin Oriental Boston', 'Boston',    'MA', '02199', 'active', '', '', '', '', '', '', '776 Boylston St W12A · W12B · 778 Boylston St APT 7G — Back Bay Architectural Commission oversight'],
     ['prop_north_canton',     'APJCJM', 'North St Canton',          'Canton',    'MA', '02021', 'active', '', '', '', '', '', '', '20 & 30 North Street, Canton, MA — Canton Planning Board / Norfolk County'],
     ['prop_511_seaview',      'ELJ',    '511 Sea View Avenue',      'Osterville','MA', '02655', 'active', '', '', '', '', '', '', 'Osterville waterfront (Nantucket Sound) — Town of Barnstable Building/Conservation, Barnstable County'],
+    ['prop_3_louisburg_sq',   'ECJIV',  '3 Louisburg Square',       'Boston',    'MA', '02108', 'active', '', '', '', '', '', '', 'Beacon Hill — private trust square (Louisburg Square) / BLC oversight'],
   ];
   properties.forEach(row => propsSheet.appendRow(row));
 
@@ -151,6 +153,7 @@ function addNewProperties() {
     ['prop_mandarin_boston',   'APJCJM', 'Mandarin Oriental Boston',  'Boston',     'MA','02199','active','','','','','','','776 Boylston St W12A · W12B · 778 Boylston St APT 7G — Back Bay Architectural Commission oversight'],
     ['prop_north_canton',      'APJCJM', 'North St Canton',           'Canton',     'MA','02021','active','','','','','','','20 & 30 North Street, Canton, MA — Canton Planning Board / Norfolk County'],
     ['prop_511_seaview',       'ELJ',    '511 Sea View Avenue',       'Osterville', 'MA','02655','active','','','','','','','Osterville waterfront (Nantucket Sound) — Town of Barnstable Building/Conservation, Barnstable County'],
+    ['prop_3_louisburg_sq',    'ECJIV',  '3 Louisburg Square',        'Boston',     'MA','02108','active','','','','','','','Beacon Hill — private trust square (Louisburg Square) / BLC oversight'],
   ];
 
   let propsAdded = 0;
@@ -674,6 +677,7 @@ const BOSTON_PERMITS_RESOURCE = '6ddcd912-32a0-43df-9908-63574f8c7e77'; // Analy
 const BOSTON_PERMIT_TARGETS = [
   {propId:'prop_56_beacon',        street:'Beacon St',        own:56,  lo:1,   hi:90},
   {propId:'prop_18_louisburg',     street:'Louisburg Sq',     own:18,  lo:1,   hi:30},
+  {propId:'prop_3_louisburg_sq',   street:'Louisburg Sq',     own:3,   lo:1,   hi:30},
   {propId:'prop_1_charles_river',  street:'Charles River Sq', own:1,   lo:1,   hi:30},
   {propId:'prop_3_charles_river',  street:'Charles River Sq', own:3,   lo:1,   hi:30},
   {propId:'prop_131_commonwealth', street:'Commonwealth Ave', own:131, lo:115, hi:147},
@@ -699,6 +703,7 @@ const FEED_ADDRESS_KEYWORDS = [
   {kw:'north street',     propId:'prop_north_canton'},
   {kw:'canton avenue',    propId:'prop_milton_estate'},
   {kw:'canton ave',       propId:'prop_milton_estate'},
+  {kw:'3 louisburg',      propId:'prop_3_louisburg_sq'},
   {kw:'louisburg square', propId:'prop_18_louisburg'},
   {kw:'louisburg sq',     propId:'prop_18_louisburg'},
   {kw:'charles river',    propId:'prop_1_charles_river'},
@@ -975,5 +980,10 @@ function _getNewPropertySources() {
     ['prop_511_seaview','511 Sea View Ave','permits','Barnstable County Deeds','https://www.barnstabledeeds.org',1,''],
     ['prop_511_seaview','511 Sea View Ave','news','Cape Cod Times','https://www.capecodtimes.com',1,'PRIMARY'],
     ['prop_511_seaview','511 Sea View Ave','news','Barnstable Patriot','https://barnstablepatriot.com',2,''],
+    // 3 Louisburg Square — Boston Beacon Hill (BLC)
+    ['prop_3_louisburg_sq','3 Louisburg Sq','landmarks','Boston Landmarks Commission','https://www.boston.gov/departments/landmarks-commission',1,'Login required (credentials held privately in scan config)'],
+    ['prop_3_louisburg_sq','3 Louisburg Sq','news','Beacon Hill Civic Association','https://www.beaconhillcivic.org',1,''],
+    ['prop_3_louisburg_sq','3 Louisburg Sq','permits','Boston Inspectional Services','https://www.boston.gov/departments/inspectional-services',1,''],
+    ['prop_3_louisburg_sq','3 Louisburg Sq','permits','Suffolk County Deeds','https://www.masslandrecords.com',1,''],
   ];
 }

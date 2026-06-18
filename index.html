@@ -568,10 +568,10 @@ function checkGate(){
   <nav class="sb-nav">
     <div class="sb-section-label">Principal</div>
     <div class="principal-item active" data-pid="all" onclick="selectPrincipal(this)"><div class="principal-avatar" style="font-size:8px">ALL</div>All Principals<span class="principal-prop-count" id="pc-all">8</span></div>
-    <div class="principal-item" data-pid="APJCJM" onclick="selectPrincipal(this)"><div class="principal-avatar pa-APJCJM">AC</div>APJCJM<span class="principal-alert-dot" id="pad-APJCJM"></span><span class="principal-prop-count" id="pc-APJCJM">2</span></div>
-    <div class="principal-item" data-pid="ECJIV" onclick="selectPrincipal(this)"><div class="principal-avatar pa-ECJIV">EC</div>ECJIV<span class="principal-alert-dot" id="pad-ECJIV" style="display:none"></span><span class="principal-prop-count" id="pc-ECJIV">2</span></div>
-    <div class="principal-item" data-pid="ELJ" onclick="selectPrincipal(this)"><div class="principal-avatar pa-ELJ">EL</div>ELJ<span class="principal-alert-dot" id="pad-ELJ" style="display:none"></span><span class="principal-prop-count" id="pc-ELJ">2</span></div>
-    <div class="principal-item" data-pid="EBJ" onclick="selectPrincipal(this)"><div class="principal-avatar pa-EBJ">EB</div>EBJ<span class="principal-alert-dot" id="pad-EBJ" style="display:none"></span><span class="principal-prop-count" id="pc-EBJ">2</span></div>
+    <div class="principal-item" data-pid="APJCJM" onclick="selectPrincipal(this)"><div class="principal-avatar pa-APJCJM">AC</div>AC<span class="principal-alert-dot" id="pad-APJCJM"></span><span class="principal-prop-count" id="pc-APJCJM">2</span></div>
+    <div class="principal-item" data-pid="ECJIV" onclick="selectPrincipal(this)"><div class="principal-avatar pa-ECJIV">EC</div>EC<span class="principal-alert-dot" id="pad-ECJIV" style="display:none"></span><span class="principal-prop-count" id="pc-ECJIV">2</span></div>
+    <div class="principal-item" data-pid="ELJ" onclick="selectPrincipal(this)"><div class="principal-avatar pa-ELJ">EL</div>EL<span class="principal-alert-dot" id="pad-ELJ" style="display:none"></span><span class="principal-prop-count" id="pc-ELJ">2</span></div>
+    <div class="principal-item" data-pid="EBJ" onclick="selectPrincipal(this)"><div class="principal-avatar pa-EBJ">EB</div>EB<span class="principal-alert-dot" id="pad-EBJ" style="display:none"></span><span class="principal-prop-count" id="pc-EBJ">2</span></div>
     <div class="sb-divider"></div>
     <div class="sb-section-label">Monitor</div>
     <div class="sb-item active" data-page="properties" onclick="nav(this)"><span class="sb-item-icon">🏠</span>Properties<span class="sb-item-badge" id="badge-alerts" style="display:none">0</span></div>
@@ -618,10 +618,10 @@ function checkGate(){
           <input class="field-input" id="f-notes" placeholder="Notes"/>
           <select class="field-input" id="f-principal">
             <option value="">— Select Principal —</option>
-            <option value="APJCJM">APJCJM</option>
-            <option value="ECJIV">ECJIV</option>
-            <option value="ELJ">ELJ</option>
-            <option value="EBJ">EBJ</option>
+            <option value="APJCJM">AC</option>
+            <option value="ECJIV">EC</option>
+            <option value="ELJ">EL</option>
+            <option value="EBJ">EB</option>
           </select>
         </div>
         <div class="form-actions">
@@ -750,10 +750,10 @@ function checkGate(){
 
     <div id="page-settings" class="page">
       <div class="settings-section"><div class="settings-section-title">Principals</div>
-        <div class="setting-row"><div class="setting-label"><div class="setting-label-text">APJCJM</div><div class="setting-label-sub">56 Beacon St · 482 Island Dr · Mandarin Oriental · and more</div></div><div class="setting-value accent">9 properties</div></div>
-        <div class="setting-row"><div class="setting-label"><div class="setting-label-text">ECJIV</div><div class="setting-label-sub">16 Union Wharf · 131 Commonwealth Ave</div></div><div class="setting-value accent">2 properties</div></div>
-        <div class="setting-row"><div class="setting-label"><div class="setting-label-text">ELJ</div><div class="setting-label-sub">18 Louisburg Square · 2929 Winding Oak Lane</div></div><div class="setting-value accent">2 properties</div></div>
-        <div class="setting-row"><div class="setting-label"><div class="setting-label-text">EBJ</div><div class="setting-label-sub">1 Charles River Square · 3 Charles River Square</div></div><div class="setting-value accent">2 properties</div></div>
+        <div class="setting-row"><div class="setting-label"><div class="setting-label-text">AC <span style="color:var(--text3);font-weight:400">(APJCJM)</span></div><div class="setting-label-sub">56 Beacon St · 482 Island Dr · Mandarin Oriental · and more</div></div><div class="setting-value accent">APJCJM</div></div>
+        <div class="setting-row"><div class="setting-label"><div class="setting-label-text">EC <span style="color:var(--text3);font-weight:400">(ECJIV)</span></div><div class="setting-label-sub">16 Union Wharf · 131 Commonwealth Ave · 3 Louisburg Square</div></div><div class="setting-value accent">ECJIV</div></div>
+        <div class="setting-row"><div class="setting-label"><div class="setting-label-text">EL <span style="color:var(--text3);font-weight:400">(ELJ)</span></div><div class="setting-label-sub">18 Louisburg Square · Dover Estate · 511 Sea View Ave · and more</div></div><div class="setting-value accent">ELJ</div></div>
+        <div class="setting-row"><div class="setting-label"><div class="setting-label-text">EB <span style="color:var(--text3);font-weight:400">(EBJ)</span></div><div class="setting-label-sub">1 Charles River Square · 3 Charles River Square</div></div><div class="setting-value accent">EBJ</div></div>
       </div>
       <div class="settings-section"><div class="settings-section-title">Data Layer</div>
         <div class="setting-row"><div class="setting-label"><div class="setting-label-text">Google Sheet</div><div class="setting-label-sub">Properties · Activities · Sources · Scan Log</div></div><div class="setting-value accent" style="color:var(--green)">● Connected</div></div>
@@ -842,6 +842,9 @@ function padZip(z){z=String(z==null?'':z).trim();return /^\d{1,5}$/.test(z)?z.pa
 // ── SEED DATA (fallback when sheet is loading or empty) ───────────────────
 const TC={permit:'#60a5fa',complaint:'#fbbf24',crime:'#f87171',landmarks:'#c084fc',planning:'#2dd4bf',rumor:'#fb923c',forsale:'#34d399',legal:'#f87171',news:'#818cf8',fire:'#f87171',court:'#e879f9',advisory:'#eab308',other:'#6b7280'};
 const PRINCIPALS=[{id:'APJCJM',initials:'AC',color:'#ec4899'},{id:'ECJIV',initials:'EC',color:'#ef4444'},{id:'ELJ',initials:'EL',color:'#3b82f6'},{id:'EBJ',initials:'EB',color:'#14b8a6'}];
+// Display callouts — entity codes are kept as the data IDs; users see the short callout.
+const PNAME={APJCJM:'AC',ECJIV:'EC',ELJ:'EL',EBJ:'EB'};
+function pName(id){return PNAME[id]||id;}
 
 const SEED_PROPS=[
   {id:'prop_56_beacon',principalId:'APJCJM',addr:'56 Beacon Street',city:'Boston',state:'MA',zip:'02108',notes:'Beacon Hill Historic District — BLC oversight',status:'amber',counts:{permit:3,complaint:1,crime:0,landmarks:2,planning:0,rumor:2}},
@@ -860,7 +863,8 @@ const SEED_PROPS=[
   {id:'prop_35_hayride',principalId:'APJCJM',addr:'35 Hayride Drive',city:'Stowe',state:'VT',zip:'05672',notes:'Stowe — Vermont Act 250 / Lamoille County / Stowe Reporter monitored',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}},
   {id:'prop_mandarin_boston',principalId:'APJCJM',addr:'Mandarin Oriental Boston',city:'Boston',state:'MA',zip:'02199',notes:'776 Boylston St W12A · W12B · 778 Boylston St APT 7G — Back Bay Architectural Commission oversight',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}},
   {id:'prop_north_canton',principalId:'APJCJM',addr:'North St Canton',city:'Canton',state:'MA',zip:'02021',notes:'20 & 30 North Street, Canton, MA — Canton Planning / Norfolk County',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}},
-  {id:'prop_511_seaview',principalId:'ELJ',addr:'511 Sea View Avenue',city:'Osterville',state:'MA',zip:'02655',notes:'Osterville waterfront (Nantucket Sound) — Town of Barnstable Building/Conservation / Barnstable County',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}}
+  {id:'prop_511_seaview',principalId:'ELJ',addr:'511 Sea View Avenue',city:'Osterville',state:'MA',zip:'02655',notes:'Osterville waterfront (Nantucket Sound) — Town of Barnstable Building/Conservation / Barnstable County',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}},
+  {id:'prop_3_louisburg_sq',principalId:'ECJIV',addr:'3 Louisburg Square',city:'Boston',state:'MA',zip:'02108',notes:'Beacon Hill — private trust square (Louisburg Square) / BLC oversight',status:'green',counts:{permit:0,complaint:0,crime:0,landmarks:0,planning:0,rumor:0}}
 ];
 const SEED_ACTIVITIES=[
   {id:1,propId:'prop_56_beacon',type:'permit',scope:'property',nearAddr:'',desc:'Renovation permit application filed for exterior work at 56 Beacon St',time:'Apr 28, 2026 · 9:14 AM',sourceUrl:''},
@@ -916,8 +920,8 @@ const PROP_ID_ALIASES={
 };
 function resolveAlias(id){return PROP_ID_ALIASES[id]||id;}
 
-const RPTS_SENS={prop_18_louisburg:1,prop_56_beacon:1,prop_131_commonwealth:1,prop_mandarin_boston:2,prop_nantucket_estate:2,prop_1_charles_river:2,prop_3_charles_river:2,prop_16_union:2,prop_dover_estate:2,prop_482_island:3,prop_92_blodgett:3,prop_milton_estate:4,prop_35_hayride:4,prop_2929_winding_oak:4,prop_louisburg_farm_fl:4,prop_north_canton:4,prop_511_seaview:2};
-const RPTS_SN={prop_56_beacon:'56 Beacon St',prop_482_island:'482 Island Dr',prop_16_union:'16 Union Wharf',prop_131_commonwealth:'131 Commonwealth',prop_18_louisburg:'18 Louisburg Sq',prop_2929_winding_oak:'2929 Winding Oak',prop_1_charles_river:'1 Charles River',prop_3_charles_river:'3 Charles River',prop_milton_estate:'Milton Estate',prop_35_hayride:'35 Hayride Dr',prop_92_blodgett:'92 Blodgett Way',prop_dover_estate:'Dover Estate',prop_nantucket_estate:'Nantucket Estate',prop_mandarin_boston:'Mandarin Oriental',prop_louisburg_farm_fl:'Louisburg Farm FL',prop_north_canton:'North St Canton',prop_511_seaview:'511 Sea View Ave'};
+const RPTS_SENS={prop_18_louisburg:1,prop_56_beacon:1,prop_131_commonwealth:1,prop_mandarin_boston:2,prop_nantucket_estate:2,prop_1_charles_river:2,prop_3_charles_river:2,prop_16_union:2,prop_dover_estate:2,prop_482_island:3,prop_92_blodgett:3,prop_milton_estate:4,prop_35_hayride:4,prop_2929_winding_oak:4,prop_louisburg_farm_fl:4,prop_north_canton:4,prop_511_seaview:2,prop_3_louisburg_sq:1};
+const RPTS_SN={prop_56_beacon:'56 Beacon St',prop_482_island:'482 Island Dr',prop_16_union:'16 Union Wharf',prop_131_commonwealth:'131 Commonwealth',prop_18_louisburg:'18 Louisburg Sq',prop_2929_winding_oak:'2929 Winding Oak',prop_1_charles_river:'1 Charles River',prop_3_charles_river:'3 Charles River',prop_milton_estate:'Milton Estate',prop_35_hayride:'35 Hayride Dr',prop_92_blodgett:'92 Blodgett Way',prop_dover_estate:'Dover Estate',prop_nantucket_estate:'Nantucket Estate',prop_mandarin_boston:'Mandarin Oriental',prop_louisburg_farm_fl:'Louisburg Farm FL',prop_north_canton:'North St Canton',prop_511_seaview:'511 Sea View Ave',prop_3_louisburg_sq:'3 Louisburg Sq'};
 const RPTS_SLBL={1:'★★★ Critical',2:'★★ High',3:'★ Medium',4:'Standard'};
 const RPTS_SCSS={1:'background:rgba(239,68,68,.15);color:var(--red);border:1px solid rgba(239,68,68,.3)',2:'background:rgba(245,158,11,.15);color:var(--amber);border:1px solid rgba(245,158,11,.3)',3:'background:rgba(34,197,94,.15);color:var(--green);border:1px solid rgba(34,197,94,.3)',4:'background:var(--surface2);color:var(--text3);border:1px solid var(--border)'};
 const ETYPES_C={hearing:'#7c3aed',meeting:'#0891b2',deadline:'#dc2626',inspection:'#d97706',review:'#ea580c',other:'#64748b'};
@@ -1051,7 +1055,7 @@ function selectPrincipal(el){
   document.querySelectorAll('.principal-item').forEach(i=>i.classList.remove('active'));
   el.classList.add('active');selectedPrincipal=el.dataset.pid;
   closeMobMenu();
-  document.getElementById('tb-principal-chip').textContent=selectedPrincipal==='all'?'All':selectedPrincipal;
+  document.getElementById('tb-principal-chip').textContent=selectedPrincipal==='all'?'All':pName(selectedPrincipal);
   renderProps();renderActivity();updateSidebarCounts();renderSources();
   if(document.getElementById('page-reports').classList.contains('active'))setTimeout(initReports,50);
 }
@@ -1100,7 +1104,7 @@ function renderProps(){
   document.getElementById('prop-count-badge').textContent=vp.length+' propert'+(vp.length===1?'y':'ies');
   updateSidebarCounts();
   if(!vp.length){const pid=selectedPrincipal==='all'?'any principal':selectedPrincipal;list.innerHTML=`<div class="empty-state"><div class="empty-state-icon">🏠</div><div class="empty-state-text">No properties under ${pid} yet.</div><div class="empty-state-sub">Click + Add Property to get started.</div></div>`;return;}
-  list.innerHTML=vp.map(p=>{const dotCls=p.status!=='green'&&seenProps.has(p.id)?p.status+' acknowledged':p.status;return`<div class="prop-row${selectedPropId===p.id?' selected':''}" onclick="openDetail('${p.id}')"><div class="prop-left-bar ${p.status}"></div><div class="prop-card-top"><div class="prop-dot-wrap"><div class="alert-dot ${dotCls}"></div></div><div class="prop-addr-block"><div class="prop-addr">${p.addr}</div><div class="prop-city">${p.city}, ${p.state} ${p.zip}</div>${selectedPrincipal==='all'?`<div class="prop-principal-tag">${p.principalId}</div>`:''}</div><div class="prop-status"><span class="status-badge ${p.status}">${p.status==='red'?'⚠ Alert':p.status==='amber'?'◉ Active':'● Clear'}</span></div><div class="prop-actions"><button class="row-btn" onclick="event.stopPropagation();openDetail('${p.id}')">Log</button><button class="row-btn del" onclick="event.stopPropagation();removeProp('${p.id}')">Remove</button></div></div><div class="prop-pills"><div class="pills-col"><span class="pill permit${p.counts.permit>0?' pill-click':''}" onclick="event.stopPropagation();openDetail('${p.id}','permit')" title="View permit activity"><span class="pill-n">${p.counts.permit}</span>Permits</span><span class="pill landmarks${p.counts.landmarks>0?' pill-click':''}" onclick="event.stopPropagation();openDetail('${p.id}','landmarks')" title="View landmarks activity"><span class="pill-n">${p.counts.landmarks}</span>Landmarks</span><span class="pill planning${p.counts.planning>0?' pill-click':''}" onclick="event.stopPropagation();openDetail('${p.id}','planning')" title="View planning activity"><span class="pill-n">${p.counts.planning}</span>Planning</span></div><div class="pills-col"><span class="pill complaint${p.counts.complaint>0?' pill-click':''}" onclick="event.stopPropagation();openDetail('${p.id}','complaint')" title="View complaint activity"><span class="pill-n">${p.counts.complaint}</span>Complaints</span><span class="pill crime${p.counts.crime>0?' pill-click':''}" onclick="event.stopPropagation();openDetail('${p.id}','crime')" title="View crime activity"><span class="pill-n">${p.counts.crime}</span>Crime</span><span class="pill rumor${p.counts.rumor>0?' pill-click':''}" onclick="event.stopPropagation();openDetail('${p.id}','rumor')" title="View rumor activity"><span class="pill-n">${p.counts.rumor}</span>Rumors</span></div></div></div>`}).join('');
+  list.innerHTML=vp.map(p=>{const dotCls=p.status!=='green'&&seenProps.has(p.id)?p.status+' acknowledged':p.status;return`<div class="prop-row${selectedPropId===p.id?' selected':''}" onclick="openDetail('${p.id}')"><div class="prop-left-bar ${p.status}"></div><div class="prop-card-top"><div class="prop-dot-wrap"><div class="alert-dot ${dotCls}"></div></div><div class="prop-addr-block"><div class="prop-addr">${p.addr}</div><div class="prop-city">${p.city}, ${p.state} ${p.zip}</div>${selectedPrincipal==='all'?`<div class="prop-principal-tag">${pName(p.principalId)}</div>`:''}</div><div class="prop-status"><span class="status-badge ${p.status}">${p.status==='red'?'⚠ Alert':p.status==='amber'?'◉ Active':'● Clear'}</span></div><div class="prop-actions"><button class="row-btn" onclick="event.stopPropagation();openDetail('${p.id}')">Log</button><button class="row-btn del" onclick="event.stopPropagation();removeProp('${p.id}')">Remove</button></div></div><div class="prop-pills"><div class="pills-col"><span class="pill permit${p.counts.permit>0?' pill-click':''}" onclick="event.stopPropagation();openDetail('${p.id}','permit')" title="View permit activity"><span class="pill-n">${p.counts.permit}</span>Permits</span><span class="pill landmarks${p.counts.landmarks>0?' pill-click':''}" onclick="event.stopPropagation();openDetail('${p.id}','landmarks')" title="View landmarks activity"><span class="pill-n">${p.counts.landmarks}</span>Landmarks</span><span class="pill planning${p.counts.planning>0?' pill-click':''}" onclick="event.stopPropagation();openDetail('${p.id}','planning')" title="View planning activity"><span class="pill-n">${p.counts.planning}</span>Planning</span></div><div class="pills-col"><span class="pill complaint${p.counts.complaint>0?' pill-click':''}" onclick="event.stopPropagation();openDetail('${p.id}','complaint')" title="View complaint activity"><span class="pill-n">${p.counts.complaint}</span>Complaints</span><span class="pill crime${p.counts.crime>0?' pill-click':''}" onclick="event.stopPropagation();openDetail('${p.id}','crime')" title="View crime activity"><span class="pill-n">${p.counts.crime}</span>Crime</span><span class="pill rumor${p.counts.rumor>0?' pill-click':''}" onclick="event.stopPropagation();openDetail('${p.id}','rumor')" title="View rumor activity"><span class="pill-n">${p.counts.rumor}</span>Rumors</span></div></div></div>`}).join('');
   renderIntelPanel();
 }
 
@@ -1115,7 +1119,7 @@ function openDetail(id,filterType='all'){
   document.getElementById('dp-addr').textContent=p.addr;
   document.getElementById('dp-city').textContent=`${p.city}, ${p.state} ${p.zip}`;
   document.getElementById('dp-notes').textContent=p.notes||'';
-  document.getElementById('dp-principal-tag').innerHTML=`<div class="dp-principal">◆ ${p.principalId}</div>`;
+  document.getElementById('dp-principal-tag').innerHTML=`<div class="dp-principal">◆ ${pName(p.principalId)}</div>`;
   renderDetailCounts(id);
   renderDetailActs(id);
   const propLinks=sheetSources[id]?sheetSources[id].map(s=>({label:s.label,url:s.url,icon:'🔗'})):getPropLinks(p);
@@ -1194,7 +1198,7 @@ function renderSources(){
       const srcs=sheetSources[p.id]||[];
       if(!srcs.length)return'';
       const srcBadge=s=>{const p=String(s.priority||'');const cls=p==='1'||p.toUpperCase()==='PRIMARY'?'primary':p.toUpperCase()==='CRITICAL'?'critical':'';const lbl=p==='1'?'Primary':p==='2'?'Secondary':p||'';return`<span class="source-badge ${cls}">${lbl}</span>`;};
-      return`<div class="source-card"><div class="source-card-title">🏠 <span>${p.addr}</span><span style="margin-left:auto;font-size:9px;color:var(--text3);font-weight:600;letter-spacing:0.5px;text-transform:uppercase">${p.principalId}</span></div>${srcs.map(s=>`<a href="${s.url}" target="_blank" class="source-link"><span style="font-size:12px;color:var(--text3)">🔗</span>${s.label}${srcBadge(s)}</a>`).join('')}</div>`;
+      return`<div class="source-card"><div class="source-card-title">🏠 <span>${p.addr}</span><span style="margin-left:auto;font-size:9px;color:var(--text3);font-weight:600;letter-spacing:0.5px;text-transform:uppercase">${pName(p.principalId)}</span></div>${srcs.map(s=>`<a href="${s.url}" target="_blank" class="source-link"><span style="font-size:12px;color:var(--text3)">🔗</span>${s.label}${srcBadge(s)}</a>`).join('')}</div>`;
     }).filter(Boolean).join('');
     container.innerHTML=cards?`<div class="sources-grid">${cards}</div>`:'<div class="empty-state"><div class="empty-state-icon">🔗</div><div class="empty-state-text">No sources loaded yet.</div><div class="empty-state-sub">Run setupSheet() in Apps Script to initialize property sources.</div></div>';
   } else {
