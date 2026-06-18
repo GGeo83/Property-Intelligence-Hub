@@ -897,7 +897,7 @@ function _getAllSources() {
     ['prop_482_island','482 Island Drive','news','Palm Beach Post','https://www.palmbeachpost.com',2,''],
     ['prop_482_island','482 Island Drive','crime','PBSO','https://www.pbso.org',2,''],
     ['prop_482_island','482 Island Drive','rumors','Dirt.com','https://www.dirt.com',2,'Luxury transactions, off-market rumors'],
-    ['prop_16_union','16 Union Wharf','news','North End Waterfront','https://northendwaterfront.com',1,'PRIMARY'],
+    ['prop_16_union','16 Union Wharf','news','North End Page','https://northend.page',1,'PRIMARY'],
     ['prop_16_union','16 Union Wharf','planning','Boston Harbor Association','https://www.tbha.org',1,''],
     ['prop_16_union','16 Union Wharf','planning','BPDA','https://www.bostonplans.org',1,''],
     ['prop_16_union','16 Union Wharf','permits','Boston Inspectional Services','https://www.boston.gov/departments/inspectional-services',1,''],
