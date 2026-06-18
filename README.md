@@ -37,7 +37,7 @@ The PIH is a single-page HTML dashboard that aggregates property intelligence fr
 - **Backend:** Google Sheets (properties, activities, sources, scan_log, events tabs)
 - **Write API:** Google Apps Script webhook (`setupSheet.js`) — handles `addProperty`, `updateProperty`, `deleteProperty`, `logScan`, and `logActivity` actions
 - **Read API:** Google Sheets API (public read via API key)
-- **Hosting:** Netlify (auto-deploy on push to `main`)
+- **Hosting:** GitHub Pages — auto-deploys on push to `main`. Live at https://light-hill.github.io/Property-Intelligence-Hub/
 - **Scans:** Claude scheduled agents running every Friday at 5pm — Massachusetts, VT/NY, and Florida
 
 ## Weekly Scans
@@ -54,8 +54,8 @@ Each scan checks permits, planning applications, landmarks/commission filings, f
 
 ## Deployment
 
-This is a static site — no build command or publish directory needed.
+This is a static site served by **GitHub Pages** from the `main` branch (root) — no build step.
 
-1. Fork or clone this repo
-2. Connect to Netlify via **Import from Git**
-3. Leave build settings blank → Deploy
+1. Settings → Pages → Source = `main` / `/ (root)`
+2. Push to `main` → GitHub Pages auto-rebuilds (~1–2 min; CDN-cached, append `?v=N` to force-refresh)
+3. Live at https://light-hill.github.io/Property-Intelligence-Hub/
