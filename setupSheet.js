@@ -6,8 +6,7 @@
  *   addNewProperties()    — Append only new properties/sources without touching activity data.
  *   addUpgradesToSheet()  — Safe migration: adds status column to activities, creates events tab.
  *   clearSeedData()       — Wipe demo/seed rows from activities, events, scan_log. Run after testing.
- *   sendWeeklyDigest()    — Send HTML email digest to each principal. Manual only (dashboard "Send Digest" button).
- *   removeWeeklyDigest()  — Deletes the retired Monday-9am digest trigger. Run ONCE to retire it.
+ *   removeWeeklyDigest()  — Deletes any lingering Monday-9am digest trigger (digest fully retired). Run ONCE.
  *   doPost(e)             — Web App endpoint — handles all webhook POSTs from hub and scan skills.
  *   runFeedIngestion()    — Pull deterministic feeds (Boston permits API + Gmail alerts) into activities. Daily trigger.
  *   setupFeedIngestion()  — Installs the daily ~6am feed-ingestion trigger. Run ONCE.
@@ -24,20 +23,9 @@
  */
 
 // ─────────────────────────────────────────────────────────────────────────────
-// CONFIGURATION — update email addresses before running sendWeeklyDigest
+// CONFIGURATION
 // ─────────────────────────────────────────────────────────────────────────────
-const PRINCIPAL_EMAILS = {
-  APJCJM: 'geovanny22@gmail.com',   // AC — update with actual recipient email
-  ECJIV:  'geovanny22@gmail.com',   // EC — update with actual recipient email
-  ELJ:    'geovanny22@gmail.com',   // EL — update with actual recipient email
-  EBJ:    'geovanny22@gmail.com',   // EB — update with actual recipient email
-};
-
-const PRINCIPAL_DISPLAY = {
-  APJCJM: 'AC', ECJIV: 'EC', ELJ: 'EL', EBJ: 'EB',
-};
-
-// propId → principalId (used for digest grouping)
+// propId → principalId — used by doPost to stamp principalId on activities/events.
 const PROP_PRINCIPAL_MAP = {
   prop_56_beacon:'APJCJM', prop_482_island:'APJCJM', prop_milton_estate:'APJCJM',
   prop_35_hayride:'APJCJM', prop_92_blodgett:'APJCJM', prop_nantucket_estate:'APJCJM',
@@ -45,26 +33,6 @@ const PROP_PRINCIPAL_MAP = {
   prop_16_union:'ECJIV', prop_131_commonwealth:'ECJIV', prop_3_louisburg_sq:'ECJIV',
   prop_18_louisburg:'ELJ', prop_2929_winding_oak:'ELJ', prop_louisburg_farm_fl:'ELJ', prop_dover_estate:'ELJ', prop_511_seaview:'ELJ',
   prop_1_charles_river:'EBJ', prop_3_charles_river:'EBJ',
-};
-
-const PROP_SHORT_NAMES = {
-  prop_56_beacon:'56 Beacon St', prop_482_island:'482 Island Dr',
-  prop_16_union:'16 Union Wharf', prop_131_commonwealth:'131 Commonwealth',
-  prop_18_louisburg:'18 Louisburg Sq', prop_2929_winding_oak:'2929 Winding Oak', prop_louisburg_farm_fl:'Louisburg Farm FL',
-  prop_1_charles_river:'1 Charles River Sq', prop_3_charles_river:'3 Charles River Sq',
-  prop_milton_estate:'Milton Estate', prop_35_hayride:'35 Hayride Dr',
-  prop_92_blodgett:'92 Blodgett Way', prop_dover_estate:'Dover Estate',
-  prop_nantucket_estate:'Nantucket Estate',
-  prop_mandarin_boston:'Mandarin Oriental',
-  prop_north_canton:'North St Canton',
-  prop_511_seaview:'511 Sea View Ave',
-  prop_3_louisburg_sq:'3 Louisburg Sq',
-};
-
-const TYPE_COLORS_EMAIL = {
-  permit:'#2563eb', complaint:'#d97706', crime:'#dc2626', legal:'#dc2626',
-  court:'#9333ea', fire:'#dc2626', landmarks:'#7c3aed', planning:'#0891b2',
-  rumor:'#ea580c', forsale:'#16a34a', news:'#6366f1', advisory:'#ca8a04', other:'#94a3b8',
 };
 
 
@@ -220,173 +188,14 @@ function addUpgradesToSheet() {
 }
 
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 4. SEND WEEKLY DIGEST (email per principal — filtered to their properties)
-//
-// MANUAL ONLY. Triggered on demand by the dashboard's "Send Digest" button
-// (doPost action:"sendDigest"), or by selecting "sendWeeklyDigest" > Run here.
-// The automatic Monday trigger has been retired — see removeWeeklyDigest().
-// ─────────────────────────────────────────────────────────────────────────────
-function sendWeeklyDigest() {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const actsSheet = ss.getSheetByName('activities');
-  const allRows = actsSheet.getDataRange().getValues().slice(1); // skip header
-
-  // Filter to last 7 days
-  const cutoff = new Date();
-  cutoff.setDate(cutoff.getDate() - 7);
-
-  const recent = allRows.filter(r => {
-    const d = new Date(r[9] || r[7]); // createdAt (col J) or time (col H)
-    return !isNaN(d) && d >= cutoff && r[6]; // has a description
-  });
-
-  if (recent.length === 0) {
-    Logger.log('No recent activity in last 7 days — digest not sent.');
-    return;
-  }
-
-  // Group by principal (resolve from propId if principalId missing)
-  const byPrincipal = {};
-  recent.forEach(r => {
-    const pid = PROP_PRINCIPAL_MAP[r[1]] || r[2] || 'UNKNOWN';
-    if (!byPrincipal[pid]) byPrincipal[pid] = [];
-    byPrincipal[pid].push(r);
-  });
-
-  // Fetch upcoming events for the next 14 days too
-  const eventsSheet = ss.getSheetByName('events');
-  const upcomingEvents = eventsSheet ? _getUpcomingEvents(eventsSheet, 14) : [];
-
-  // Send to each principal with activity
-  const sent = [];
-  Object.entries(byPrincipal).forEach(([pid, acts]) => {
-    const email = PRINCIPAL_EMAILS[pid];
-    if (!email) { Logger.log('⚠ No email configured for ' + pid); return; }
-
-    const principalEvents = upcomingEvents.filter(ev => PROP_PRINCIPAL_MAP[ev[0]] === pid || ev[1] === pid);
-    const html = _buildDigestHtml(pid, acts, principalEvents);
-    const dateStr = new Date().toLocaleDateString('en-US', {month:'long', day:'numeric', year:'numeric'});
-
-    MailApp.sendEmail({
-      to: email,
-      subject: `🏢 PIH Weekly Digest — ${PRINCIPAL_DISPLAY[pid] || pid} — ${dateStr}`,
-      htmlBody: html,
-    });
-    sent.push(pid + ' → ' + email);
-    Logger.log('✅ Sent to ' + pid + ' (' + email + '): ' + acts.length + ' activities');
-  });
-
-  Logger.log('✅ DIGEST COMPLETE — sent: ' + sent.join(', '));
-}
-
-function _getUpcomingEvents(eventsSheet, daysAhead) {
-  const now = new Date();
-  const horizon = new Date(); horizon.setDate(horizon.getDate() + daysAhead);
-  return eventsSheet.getDataRange().getValues().slice(1).filter(r => {
-    if (!r[3]) return false; // no date
-    const d = new Date(r[3]);
-    return !isNaN(d) && d >= now && d <= horizon;
-  }).sort((a, b) => new Date(a[3]) - new Date(b[3]));
-}
-
-function _buildDigestHtml(pid, acts, events) {
-  const pName = PRINCIPAL_DISPLAY[pid] || pid;
-  const dateStr = new Date().toLocaleDateString('en-US', {weekday:'long', month:'long', day:'numeric', year:'numeric'});
-  const critical = acts.filter(r => ['crime','legal','court','fire'].includes(r[3]));
-
-  // Group activities by propId
-  const byProp = {};
-  acts.forEach(r => {
-    const k = r[1] || 'unknown';
-    if (!byProp[k]) byProp[k] = [];
-    byProp[k].push(r);
-  });
-
-  const propRows = Object.entries(byProp).map(([propId, rows]) => {
-    const propName = PROP_SHORT_NAMES[propId] || propId;
-    const actRows = rows.map(r => {
-      const tc = TYPE_COLORS_EMAIL[r[3]] || '#94a3b8';
-      const tl = (r[3] || 'other').toUpperCase();
-      const age = r[9] ? Math.floor((new Date() - new Date(r[9]))/86400000) : '?';
-      return `<tr>
-        <td style="padding:8px 12px;border-bottom:1px solid #f1f5f9;font-size:13px;color:#0f172a;line-height:1.4">${r[6]}</td>
-        <td style="padding:8px 12px;border-bottom:1px solid #f1f5f9;white-space:nowrap">
-          <span style="background:${tc}18;color:${tc};border:1px solid ${tc}40;padding:2px 7px;border-radius:10px;font-size:10px;font-weight:700">${tl}</span>
-        </td>
-        <td style="padding:8px 12px;border-bottom:1px solid #f1f5f9;font-size:11px;color:#94a3b8;white-space:nowrap">${age}d ago</td>
-        <td style="padding:8px 12px;border-bottom:1px solid #f1f5f9;font-size:11px">
-          ${r[8] ? `<a href="${r[8]}" style="color:#3b82f6;text-decoration:none">Source ↗</a>` : ''}
-        </td>
-      </tr>`;
-    }).join('');
-
-    return `<div style="margin-bottom:20px">
-      <div style="font-size:13px;font-weight:700;color:#0f172a;padding:8px 12px;background:#f8fafc;border-left:3px solid #3b82f6;margin-bottom:0">${propName}</div>
-      <table style="width:100%;border-collapse:collapse;border:1px solid #e2e8f0">${actRows}</table>
-    </div>`;
-  }).join('');
-
-  const eventsHtml = events.length ? `
-    <div style="margin-bottom:24px">
-      <h3 style="font-size:13px;font-weight:700;color:#0f172a;margin:0 0 10px;text-transform:uppercase;letter-spacing:.05em">📅 Upcoming Events (Next 14 Days)</h3>
-      ${events.map(ev => {
-        const d = new Date(ev[3]);
-        const dateLabel = d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
-        return `<div style="padding:8px 12px;border-left:3px solid #f59e0b;background:#fffbeb;margin-bottom:6px;font-size:13px">
-          <strong style="color:#92400e">${dateLabel}</strong> — ${PROP_SHORT_NAMES[ev[0]]||ev[0]}: ${ev[4]}
-          ${ev[6] ? `<a href="${ev[6]}" style="color:#3b82f6;text-decoration:none;margin-left:8px">Details ↗</a>` : ''}
-        </div>`;
-      }).join('')}
-    </div>` : '';
-
-  return `<!DOCTYPE html>
-<html><head><meta charset="UTF-8"></head>
-<body style="font-family:Arial,sans-serif;max-width:620px;margin:0 auto;background:#f8fafc;padding:20px">
-  <div style="background:#1e293b;padding:20px 24px;border-radius:8px 8px 0 0">
-    <div style="font-size:18px;font-weight:800;color:#fff">📊 Property Intelligence Hub</div>
-    <div style="font-size:12px;color:#94a3b8;margin-top:4px">Weekly Digest · ${pName} · ${dateStr}</div>
-  </div>
-  <div style="background:#fff;padding:20px 24px;border:1px solid #e2e8f0;border-top:none">
-    ${critical.length ? `
-    <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:6px;padding:10px 14px;margin-bottom:20px">
-      <strong style="color:#dc2626;font-size:13px">⚠ ${critical.length} Critical Alert${critical.length>1?'s':''} This Week</strong>
-      <div style="font-size:12px;color:#7f1d1d;margin-top:3px">Crime · Legal · Fire activity detected — review immediately</div>
-    </div>` : ''}
-    <div style="display:flex;gap:16px;margin-bottom:24px">
-      <div style="flex:1;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:12px;text-align:center">
-        <div style="font-size:24px;font-weight:800;color:#0f172a">${acts.length}</div>
-        <div style="font-size:11px;color:#94a3b8;margin-top:2px">Total Alerts</div>
-      </div>
-      <div style="flex:1;background:${critical.length?'#fef2f2':'#f0fdf4'};border:1px solid ${critical.length?'#fecaca':'#bbf7d0'};border-radius:6px;padding:12px;text-align:center">
-        <div style="font-size:24px;font-weight:800;color:${critical.length?'#dc2626':'#16a34a'}">${critical.length}</div>
-        <div style="font-size:11px;color:#94a3b8;margin-top:2px">Critical</div>
-      </div>
-      <div style="flex:1;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:12px;text-align:center">
-        <div style="font-size:24px;font-weight:800;color:#0f172a">${Object.keys(byProp).length}</div>
-        <div style="font-size:11px;color:#94a3b8;margin-top:2px">Properties Active</div>
-      </div>
-    </div>
-    ${eventsHtml}
-    <h3 style="font-size:13px;font-weight:700;color:#0f172a;margin:0 0 12px;text-transform:uppercase;letter-spacing:.05em">🚨 This Week's Alerts</h3>
-    ${propRows}
-    <div style="margin-top:20px;padding-top:16px;border-top:1px solid #e2e8f0;font-size:11px;color:#94a3b8;text-align:center">
-      Property Intelligence Hub · Alerts are auto-generated by scan agents<br>
-      To manage alerts and view the live dashboard, open the PIH hub.
-    </div>
-  </div>
-</body></html>`;
-}
-
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 5. REMOVE WEEKLY DIGEST TRIGGER (RETIRED)
 //
-// The automatic Monday 9am digest has been retired — the three Friday scheduled
-// scans now email ggordillo@lthill.com directly, so the Monday digest is no
-// longer needed. Run removeWeeklyDigest() ONCE to delete any installed trigger.
-// (sendWeeklyDigest() is kept only for the dashboard's manual "Send Digest"
-// button via the sendDigest webhook action.)
+// The Monday 9am digest is fully retired (code removed) — the three Friday scans
+// now email ggordillo@lthill.com directly, and the dashboard's Monthly Report
+// button covers on-demand reporting. Run removeWeeklyDigest() ONCE to delete any
+// lingering Monday trigger so it doesn't error now that the digest code is gone.
 // ─────────────────────────────────────────────────────────────────────────────
 function removeWeeklyDigest() {
   let removed = 0;
@@ -475,12 +284,6 @@ function doPost(e) {
         ]);
       }
       return ok({ok:true,action:'addEvent',duplicate:isDupe});
-    }
-
-    // ── sendDigest (trigger digest on demand from report) ─────────────────────
-    if (data.action === 'sendDigest') {
-      sendWeeklyDigest();
-      return ok({ok:true,action:'sendDigest'});
     }
 
     // ── updateProperty (patch one or more columns on a matching propId row) ─────
